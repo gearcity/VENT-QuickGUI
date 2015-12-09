@@ -3,11 +3,11 @@ Hello everyone,
 
 This is the Visual Entertainment And Technologies, LLC fork of Kungfoomasta's QuickGUI for Ogre3d 1.x
 Since active development has stopped on QuickGUI, and since the source code to the stable versions has been lost,
-We went ahead and created this repo to preserve the old code as well distrubte bug fixes and change we made to QuickGUI 9.10 
+We went ahead and created this repo to preserve the old code as well distribute bug fixes and change we made to QuickGUI 9.10 
 for the production of GearCity. 
 
 We do not recommended to using QuickGUI for any new projects with Ogre3d. But if you have any old projects using QuickGUI
-feel free to use/contrubute to this repo.
+feel free to use/contribute to this repo.
 
 
 Should also note, there are no licensing in the files, I do have forum quotes of KungFooMasta mentioning it's under MIT.
