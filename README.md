@@ -6,7 +6,7 @@ Since active development has stopped on QuickGUI, and since the source code to t
 We went ahead and created this repo to preserve the old code as well distribute bug fixes and change we made to QuickGUI 9.10 
 for the production of GearCity. 
 
-We do not recommended to using QuickGUI for any new projects with Ogre3d. But if you have any old projects using QuickGUI
+We do not recommended using QuickGUI for any new projects with Ogre3d. But if you have any old projects using QuickGUI
 feel free to use/contribute to this repo.
 
 
