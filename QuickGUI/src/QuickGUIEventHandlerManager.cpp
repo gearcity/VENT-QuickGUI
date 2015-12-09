@@ -1,6 +1,6 @@
 #include "QuickGUIEventHandlerManager.h"
 
-template<> QuickGUI::EventHandlerManager* Ogre::Singleton<QuickGUI::EventHandlerManager>::ms_Singleton = 0;
+template<> QuickGUI::EventHandlerManager* Ogre::Singleton<QuickGUI::EventHandlerManager>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -14,13 +14,13 @@ namespace QuickGUI
 
 	EventHandlerManager* EventHandlerManager::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	EventHandlerManager& EventHandlerManager::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	void EventHandlerManager::executEventHandler(const Ogre::String& handlerName, EventArgs& args)

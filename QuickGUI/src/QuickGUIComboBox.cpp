@@ -162,6 +162,8 @@ namespace QuickGUI
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&ComboBox::onMouseButtonDown,this);
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_LEAVE,&ComboBox::onMouseLeave,this);
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_ENTER,&ComboBox::onMouseEnter,this);
+		//addWidgetEventHandler(WIDGET_EVENT_MOUSE_WHEEL,&ComboBox::onMouseWheel,this);
+
 
 		// Make a copy of the Text Desc.  The Text object will
 		// modify it directly, which is used for serialization.
@@ -294,20 +296,9 @@ namespace QuickGUI
 
 	void ComboBox::clearItems()
 	{
-		mMenuPanel->removeWidgets();
+		mMenuPanel->destroyWidgets();
 		mMenuPanel->setVisible(false);
 
-		if(mDesc->sheet != NULL)
-		{
-			for(std::list<ListItem*>::iterator it = mItems.begin(); it != mItems.end(); ++it)
-				mDesc->sheet->mFreeList.push_back((*it));
-		}
-		else
-		{
-			GUIManager* gm = Root::getSingleton().mGUIManagers.begin()->second;
-			for(std::list<ListItem*>::iterator it = mItems.begin(); it != mItems.end(); ++it)
-				gm->mFreeList.push_back((*it));
-		}
 		mItems.clear();
 
 		mSelectedItem = NULL;
@@ -394,7 +385,7 @@ namespace QuickGUI
 		return createTextItem("ListTextItem",index);
 	}
 
-	void ComboBox::destroyItem(unsigned int index)
+	bool ComboBox::destroyItem(int index)
 	{
 		WidgetFactory* f = FactoryManager::getSingleton().getWidgetFactory();
 
@@ -421,7 +412,7 @@ namespace QuickGUI
 		}
 
 		if(!itemRemovedFromList)
-			return;
+			return false;
 
 		float yPos = 0;
 		count = 0;
@@ -444,7 +435,10 @@ namespace QuickGUI
 		mMenuPanel->_adjustHeight();
 
 		redraw();
+
+		return true;
 	}
+
 
 	void ComboBox::destroyItem(ListItem* i)
 	{
@@ -488,7 +482,7 @@ namespace QuickGUI
 		return mDesc->combobox_dropDownWidth;
 	}
 
-	ListItem* ComboBox::getItem(unsigned int index)
+	ListItem* ComboBox::getItem(int index)
 	{
 		if(index >= mItems.size())
 			return NULL;
@@ -541,6 +535,11 @@ namespace QuickGUI
 
 			redraw();
 		}
+	}
+
+	std::list<ListItem*> ComboBox::getItemList()
+	{
+		return mItems;
 	}
 
 	void ComboBox::onDraw()
@@ -694,7 +693,7 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void ComboBox::selectItem(unsigned int index)
+	void ComboBox::selectItem(int index)
 	{
 		mSelectedItem = getItem(index);
 

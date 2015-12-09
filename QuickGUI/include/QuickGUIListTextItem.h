@@ -17,6 +17,7 @@ namespace QuickGUI
 		virtual ~ListTextItemDesc() {}
 	public:
 
+
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment listtextitem_verticalTextAlignment;
 

@@ -74,6 +74,11 @@ namespace QuickGUI
 		* Returns the amount of time needed to execute the timer's callback method.
 		*/
 		float getTimePeriod();
+
+		/**
+		* Returns true if the Timer is accumulating time, false otherwise.
+		*/
+		bool isUpdating();
 	
 		/**
 		* Resets the timer accumulator.

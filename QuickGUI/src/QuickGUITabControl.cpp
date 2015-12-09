@@ -237,14 +237,16 @@ namespace QuickGUI
 			{
 				updatePages = true;
 
-				removeChild((*it));
-				mTabs.erase(it);
+				
 
 				if(mDesc->sheet != NULL)
 					mDesc->sheet->mFreeList.push_back((*it));
 				else
 					Root::getSingleton().mGUIManagers.begin()->second->mFreeList.push_back((*it));
 
+					removeChild((*it));
+					mTabs.erase(it);
+					
 				--count;
 			}
 

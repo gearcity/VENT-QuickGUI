@@ -6,7 +6,7 @@
 #include "QuickGUIContainerWidget.h"
 #include "QuickGUISheet.h"
 
-template<> QuickGUI::SerialReader* Ogre::Singleton<QuickGUI::SerialReader>::ms_Singleton = 0;
+template<> QuickGUI::SerialReader* Ogre::Singleton<QuickGUI::SerialReader>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -17,13 +17,13 @@ namespace QuickGUI
 
 	SerialReader* SerialReader::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	SerialReader& SerialReader::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	bool SerialReader::begin(const Ogre::String& definitionType, const Ogre::String& definitionID)

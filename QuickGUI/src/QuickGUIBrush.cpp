@@ -5,7 +5,7 @@
 #include <OgreMaterialManager.h>
 #include <OgreGpuProgramManager.h> 
 
-template<> QuickGUI::Brush* Ogre::Singleton<QuickGUI::Brush>::ms_Singleton = 0;
+template<> QuickGUI::Brush* Ogre::Singleton<QuickGUI::Brush>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -72,13 +72,13 @@ namespace QuickGUI
 
 	Brush* Brush::getSingletonPtr(void)
 	{
-		return ms_Singleton;
+		return msSingleton;
 	}
 
 	Brush& Brush::getSingleton(void)
 	{
-		assert( ms_Singleton );
-		return ( *ms_Singleton );
+		assert( msSingleton );
+		return ( *msSingleton );
 	}
 
 	void Brush::_buildLineVertices(const Point& p1, const Point& p2, Vector3* verts)
@@ -244,7 +244,8 @@ namespace QuickGUI
 
 	void Brush::clear()
 	{
-		mRenderSystem->clearFrameBuffer(Ogre::FBT_COLOUR, Ogre::ColourValue(mColourValue.r,mColourValue.g,mColourValue.b,mColourValue.a));
+		//mRenderSystem->clearFrameBuffer(Ogre::FBT_COLOUR, Ogre::ColourValue(mColourValue.r,mColourValue.g,mColourValue.b,mColourValue.a));
+		mRenderSystem->clearFrameBuffer(Ogre::FBT_COLOUR,Ogre::ColourValue(0,0,0,0));
 	}
 
 	void Brush::drawLine(const Point& p1, const Point& p2)

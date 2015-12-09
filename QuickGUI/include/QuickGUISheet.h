@@ -294,6 +294,8 @@ namespace QuickGUI
 		using Widget::setVisible;
 		using Widget::setWidth;
 
+		std::list<Window*> mWindows;
+
 	protected:
 
 		/**
@@ -318,7 +320,7 @@ namespace QuickGUI
 		void _notifyNameUsed(const Ogre::String& name);
 
 		std::list<ModalWindow*> mModalWindows;
-		std::list<Window*> mWindows;
+		
 
 		Window* mWindowInFocus;
 		Widget* mKeyboardListener;

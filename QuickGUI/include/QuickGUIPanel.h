@@ -64,6 +64,11 @@ namespace QuickGUI
 	public:
 
 		/**
+		*Kill fucking chilrend because it's not in QUICKGUI PANEl >:|
+		**/
+		void clearChildren();
+
+		/**
 		* Internal function, do not use.
 		*/
 		virtual void _initialize(WidgetDesc* d);

@@ -246,6 +246,12 @@ namespace QuickGUI
 		* Removes all highlighting from text.
 		*/
 		void clearHighlights();
+
+		/**
+		* Returns true if any of the text is highlighted.
+		*/
+		bool getHighlight();
+
 		/**
 		* Clears text.
 		*/

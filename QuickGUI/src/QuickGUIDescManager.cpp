@@ -39,7 +39,7 @@
 #include "QuickGUITreeViewRadioButtonNode.h"
 #include "QuickGUIVScrollBar.h"
 
-template<> QuickGUI::DescManager* Ogre::Singleton<QuickGUI::DescManager>::ms_Singleton = 0;
+template<> QuickGUI::DescManager* Ogre::Singleton<QuickGUI::DescManager>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -136,13 +136,13 @@ namespace QuickGUI
 
 	DescManager* DescManager::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	DescManager& DescManager::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	void DescManager::destroyDesc(Desc* d)

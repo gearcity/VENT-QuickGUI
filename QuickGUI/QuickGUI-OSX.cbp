@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Lib_QuickGUI" />
+		<Option platforms="Mac;" />
+		<Option pch_mode="2" />
+		<Option compiler="clang" />
+		<Build>
+			<Target title="Release Win32">
+				<Option output="../bin/Lib_QuickGUI" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release" />
+				<Option type="3" />
+				<Option compiler="clang" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-DOSX" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DQUICKGUI_EXPORTS" />
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/QuickGUI/QuickGui/QuickGUI/include" />
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/Ogre/ogre_src_v1-8-1/OgreMain/include" />
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/Solutions/include" />
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/Ogre/Dependencies/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/QuickGUI/QuickGui/QuickGUI/include" />
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/Ogre/ogre_src_v1-8-1/OgreMain/include" />
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/Solutions/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add directory="/Users/Zorbon/Documents/Programming/GearCity/lib" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="cp ../bin/Lib_QuickGUI.dylib /Users/Zorbon/Documents/Programming/GearCity/lib/" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-DOSX" />
+		</Compiler>
+		<Linker>
+			<Add option="-install_name @rpath" />
+			<Add library="../../../lib/Ogre" />
+		</Linker>
+		<Unit filename="include/QuickGUI.h" />
+		<Unit filename="include/QuickGUIAnchors.h" />
+		<Unit filename="include/QuickGUIBorderEnums.h" />
+		<Unit filename="include/QuickGUIBrush.h" />
+		<Unit filename="include/QuickGUIBrushEnums.h" />
+		<Unit filename="include/QuickGUIButton.h" />
+		<Unit filename="include/QuickGUICharacter.h" />
+		<Unit filename="include/QuickGUICheckBox.h" />
+		<Unit filename="include/QuickGUIColorPicker.h" />
+		<Unit filename="include/QuickGUIComboBox.h" />
+		<Unit filename="include/QuickGUIComponentWidget.h" />
+		<Unit filename="include/QuickGUIConsole.h" />
+		<Unit filename="include/QuickGUIConsoleEnums.h" />
+		<Unit filename="include/QuickGUIConsoleInputHandler.h" />
+		<Unit filename="include/QuickGUIContainerWidget.h" />
+		<Unit filename="include/QuickGUIContextMenu.h" />
+		<Unit filename="include/QuickGUIDefinitionProperty.h" />
+		<Unit filename="include/QuickGUIDesc.h" />
+		<Unit filename="include/QuickGUIDescFactory.h" />
+		<Unit filename="include/QuickGUIDescManager.h" />
+		<Unit filename="include/QuickGUIEventArgs.h" />
+		<Unit filename="include/QuickGUIEventHandlerManager.h" />
+		<Unit filename="include/QuickGUIEventHandlerPointer.h" />
+		<Unit filename="include/QuickGUIEventTypes.h" />
+		<Unit filename="include/QuickGUIException.h" />
+		<Unit filename="include/QuickGUIExportDLL.h" />
+		<Unit filename="include/QuickGUIFactoryManager.h" />
+		<Unit filename="include/QuickGUIForwardDeclaredDesc.h" />
+		<Unit filename="include/QuickGUIHScrollBar.h" />
+		<Unit filename="include/QuickGUIImage.h" />
+		<Unit filename="include/QuickGUIKeyCode.h" />
+		<Unit filename="include/QuickGUILabel.h" />
+		<Unit filename="include/QuickGUIList.h" />
+		<Unit filename="include/QuickGUIListImageItem.h" />
+		<Unit filename="include/QuickGUIListItem.h" />
+		<Unit filename="include/QuickGUIListPanelItem.h" />
+		<Unit filename="include/QuickGUIListTextItem.h" />
+		<Unit filename="include/QuickGUIManager.h" />
+		<Unit filename="include/QuickGUIMenu.h" />
+		<Unit filename="include/QuickGUIMenuImageItem.h" />
+		<Unit filename="include/QuickGUIMenuItem.h" />
+		<Unit filename="include/QuickGUIMenuPanel.h" />
+		<Unit filename="include/QuickGUIMenuTextItem.h" />
+		<Unit filename="include/QuickGUIModalWindow.h" />
+		<Unit filename="include/QuickGUIMouseButtonID.h" />
+		<Unit filename="include/QuickGUIMouseCursor.h" />
+		<Unit filename="include/QuickGUIOgreEquivalents.h" />
+		<Unit filename="include/QuickGUIPadding.h" />
+		<Unit filename="include/QuickGUIPanel.h" />
+		<Unit filename="include/QuickGUIPoint.h" />
+		<Unit filename="include/QuickGUIProgressBar.h" />
+		<Unit filename="include/QuickGUIProgressBarEnums.h" />
+		<Unit filename="include/QuickGUIPropertyGrid.h" />
+		<Unit filename="include/QuickGUIPropertyGridBoolProperty.h" />
+		<Unit filename="include/QuickGUIPropertyGridComboBoxProperty.h" />
+		<Unit filename="include/QuickGUIPropertyGridItem.h" />
+		<Unit filename="include/QuickGUIPropertyGridSection.h" />
+		<Unit filename="include/QuickGUIPropertyGridTextProperty.h" />
+		<Unit filename="include/QuickGUIRadioButton.h" />
+		<Unit filename="include/QuickGUIRect.h" />
+		<Unit filename="include/QuickGUIRoot.h" />
+		<Unit filename="include/QuickGUIScriptDefinition.h" />
+		<Unit filename="include/QuickGUIScriptNode.h" />
+		<Unit filename="include/QuickGUIScriptProperty.h" />
+		<Unit filename="include/QuickGUIScriptReader.h" />
+		<Unit filename="include/QuickGUIScriptToken.h" />
+		<Unit filename="include/QuickGUIScriptWriter.h" />
+		<Unit filename="include/QuickGUIScrollBarButtonLayouts.h" />
+		<Unit filename="include/QuickGUISerialBase.h" />
+		<Unit filename="include/QuickGUISerialReader.h" />
+		<Unit filename="include/QuickGUISerialWriter.h" />
+		<Unit filename="include/QuickGUISerializable.h" />
+		<Unit filename="include/QuickGUISheet.h" />
+		<Unit filename="include/QuickGUISheetManager.h" />
+		<Unit filename="include/QuickGUISize.h" />
+		<Unit filename="include/QuickGUISkinDefinition.h" />
+		<Unit filename="include/QuickGUISkinDefinitionManager.h" />
+		<Unit filename="include/QuickGUISkinElement.h" />
+		<Unit filename="include/QuickGUISkinReference.h" />
+		<Unit filename="include/QuickGUISkinType.h" />
+		<Unit filename="include/QuickGUISkinTypeManager.h" />
+		<Unit filename="include/QuickGUIStringConverter.h" />
+		<Unit filename="include/QuickGUITab.h" />
+		<Unit filename="include/QuickGUITabControl.h" />
+		<Unit filename="include/QuickGUITabPage.h" />
+		<Unit filename="include/QuickGUIText.h" />
+		<Unit filename="include/QuickGUITextAlignment.h" />
+		<Unit filename="include/QuickGUITextArea.h" />
+		<Unit filename="include/QuickGUITextBox.h" />
+		<Unit filename="include/QuickGUITextCursor.h" />
+		<Unit filename="include/QuickGUITextInputValidator.h" />
+		<Unit filename="include/QuickGUITextLine.h" />
+		<Unit filename="include/QuickGUITextUser.h" />
+		<Unit filename="include/QuickGUITimer.h" />
+		<Unit filename="include/QuickGUITimerManager.h" />
+		<Unit filename="include/QuickGUITitleBar.h" />
+		<Unit filename="include/QuickGUIToolBar.h" />
+		<Unit filename="include/QuickGUIToolBarEnums.h" />
+		<Unit filename="include/QuickGUIToolBarItem.h" />
+		<Unit filename="include/QuickGUITreeView.h" />
+		<Unit filename="include/QuickGUITreeViewCheckBoxNode.h" />
+		<Unit filename="include/QuickGUITreeViewNode.h" />
+		<Unit filename="include/QuickGUITreeViewRadioButtonNode.h" />
+		<Unit filename="include/QuickGUIUVRect.h" />
+		<Unit filename="include/QuickGUIVScrollBar.h" />
+		<Unit filename="include/QuickGUIVertex.h" />
+		<Unit filename="include/QuickGUIWidget.h" />
+		<Unit filename="include/QuickGUIWidgetFactory.h" />
+		<Unit filename="include/QuickGUIWindow.h" />
+		<Unit filename="src/CMakeLists.txt" />
+		<Unit filename="src/QuickGUIBrush.cpp" />
+		<Unit filename="src/QuickGUIButton.cpp" />
+		<Unit filename="src/QuickGUICharacter.cpp" />
+		<Unit filename="src/QuickGUICheckBox.cpp" />
+		<Unit filename="src/QuickGUIColorPicker.cpp" />
+		<Unit filename="src/QuickGUIComboBox.cpp" />
+		<Unit filename="src/QuickGUIComponentWidget.cpp" />
+		<Unit filename="src/QuickGUIConsole.cpp" />
+		<Unit filename="src/QuickGUIContainerWidget.cpp" />
+		<Unit filename="src/QuickGUIContextMenu.cpp" />
+		<Unit filename="src/QuickGUIDefinitionProperty.cpp" />
+		<Unit filename="src/QuickGUIDescManager.cpp" />
+		<Unit filename="src/QuickGUIEventHandlerManager.cpp" />
+		<Unit filename="src/QuickGUIException.cpp" />
+		<Unit filename="src/QuickGUIFactoryManager.cpp" />
+		<Unit filename="src/QuickGUIForwardDeclaredDesc.cpp" />
+		<Unit filename="src/QuickGUIHScrollBar.cpp" />
+		<Unit filename="src/QuickGUIImage.cpp" />
+		<Unit filename="src/QuickGUILabel.cpp" />
+		<Unit filename="src/QuickGUIList.cpp" />
+		<Unit filename="src/QuickGUIListImageItem.cpp" />
+		<Unit filename="src/QuickGUIListItem.cpp" />
+		<Unit filename="src/QuickGUIListPanelItem.cpp" />
+		<Unit filename="src/QuickGUIListTextItem.cpp" />
+		<Unit filename="src/QuickGUIManager.cpp" />
+		<Unit filename="src/QuickGUIMenu.cpp" />
+		<Unit filename="src/QuickGUIMenuImageItem.cpp" />
+		<Unit filename="src/QuickGUIMenuItem.cpp" />
+		<Unit filename="src/QuickGUIMenuPanel.cpp" />
+		<Unit filename="src/QuickGUIMenuTextItem.cpp" />
+		<Unit filename="src/QuickGUIModalWindow.cpp" />
+		<Unit filename="src/QuickGUIMouseCursor.cpp" />
+		<Unit filename="src/QuickGUIOgreEquivalents.cpp" />
+		<Unit filename="src/QuickGUIPanel.cpp" />
+		<Unit filename="src/QuickGUIPoint.cpp" />
+		<Unit filename="src/QuickGUIProgressBar.cpp" />
+		<Unit filename="src/QuickGUIPropertyGrid.cpp" />
+		<Unit filename="src/QuickGUIPropertyGridBoolProperty.cpp" />
+		<Unit filename="src/QuickGUIPropertyGridComboBoxProperty.cpp" />
+		<Unit filename="src/QuickGUIPropertyGridItem.cpp" />
+		<Unit filename="src/QuickGUIPropertyGridSection.cpp" />
+		<Unit filename="src/QuickGUIPropertyGridTextProperty.cpp" />
+		<Unit filename="src/QuickGUIRadioButton.cpp" />
+		<Unit filename="src/QuickGUIRect.cpp" />
+		<Unit filename="src/QuickGUIRoot.cpp" />
+		<Unit filename="src/QuickGUIScriptDefinition.cpp" />
+		<Unit filename="src/QuickGUIScriptNode.cpp" />
+		<Unit filename="src/QuickGUIScriptReader.cpp" />
+		<Unit filename="src/QuickGUIScriptWriter.cpp" />
+		<Unit filename="src/QuickGUISerialBase.cpp" />
+		<Unit filename="src/QuickGUISerialReader.cpp" />
+		<Unit filename="src/QuickGUISerialWriter.cpp" />
+		<Unit filename="src/QuickGUISheet.cpp" />
+		<Unit filename="src/QuickGUISheetManager.cpp" />
+		<Unit filename="src/QuickGUISize.cpp" />
+		<Unit filename="src/QuickGUISkinDefinition.cpp" />
+		<Unit filename="src/QuickGUISkinDefinitionManager.cpp" />
+		<Unit filename="src/QuickGUISkinElement.cpp" />
+		<Unit filename="src/QuickGUISkinReference.cpp" />
+		<Unit filename="src/QuickGUISkinType.cpp" />
+		<Unit filename="src/QuickGUISkinTypeManager.cpp" />
+		<Unit filename="src/QuickGUIStringConverter.cpp" />
+		<Unit filename="src/QuickGUITab.cpp" />
+		<Unit filename="src/QuickGUITabControl.cpp" />
+		<Unit filename="src/QuickGUITabPage.cpp" />
+		<Unit filename="src/QuickGUIText.cpp" />
+		<Unit filename="src/QuickGUITextArea.cpp" />
+		<Unit filename="src/QuickGUITextBox.cpp" />
+		<Unit filename="src/QuickGUITextCursor.cpp" />
+		<Unit filename="src/QuickGUITextLine.cpp" />
+		<Unit filename="src/QuickGUITextUser.cpp" />
+		<Unit filename="src/QuickGUITimer.cpp" />
+		<Unit filename="src/QuickGUITimerManager.cpp" />
+		<Unit filename="src/QuickGUITitleBar.cpp" />
+		<Unit filename="src/QuickGUIToolBar.cpp" />
+		<Unit filename="src/QuickGUIToolBarItem.cpp" />
+		<Unit filename="src/QuickGUITreeView.cpp" />
+		<Unit filename="src/QuickGUITreeViewCheckBoxNode.cpp" />
+		<Unit filename="src/QuickGUITreeViewNode.cpp" />
+		<Unit filename="src/QuickGUITreeViewRadioButtonNode.cpp" />
+		<Unit filename="src/QuickGUIUVRect.cpp" />
+		<Unit filename="src/QuickGUIVScrollBar.cpp" />
+		<Unit filename="src/QuickGUIWidget.cpp" />
+		<Unit filename="src/QuickGUIWindow.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

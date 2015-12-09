@@ -1,7 +1,7 @@
 #include "QuickGUIScriptWriter.h"
 #include "QuickGUIScriptReader.h"
 
-template<> QuickGUI::ScriptWriter* Ogre::Singleton<QuickGUI::ScriptWriter>::ms_Singleton = 0;
+template<> QuickGUI::ScriptWriter* Ogre::Singleton<QuickGUI::ScriptWriter>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -20,13 +20,13 @@ namespace QuickGUI
 
 	ScriptWriter* ScriptWriter::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	ScriptWriter& ScriptWriter::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	void ScriptWriter::addDefinition(ScriptDefinition* d)

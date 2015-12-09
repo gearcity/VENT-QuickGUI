@@ -673,6 +673,16 @@ namespace QuickGUI
 		return false;
 	}
 
+	bool Widget::hasAnyEventHandlersForThisType(WidgetEvent EVENT)
+	{
+		if(mWidgetEventHandlers[EVENT].size() > 0)
+		{
+			return true;
+		}
+	
+		return false;
+	}
+
 	bool Widget::isChildOf(Widget* w)
 	{
 		// this widget cannot be a parent of a NULL pointer

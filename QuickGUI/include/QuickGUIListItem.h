@@ -46,6 +46,9 @@ namespace QuickGUI
 		static const Ogre::String DEFAULT;
 		static const Ogre::String OVER;
 		static const Ogre::String SELECTED;
+
+		using Widget::setScrollable;
+
 	public:
 		// List has to set positions to manage ListItems
 		friend class List;
@@ -105,6 +108,7 @@ namespace QuickGUI
 		void onMouseButtonDown(const EventArgs& args);
 		void onMouseEnter(const EventArgs& args);
 		void onMouseLeave(const EventArgs& args);
+		void onMouseWheel(const EventArgs& args);
 
 		/**
 		* Sets the listitem_index of the ListItem

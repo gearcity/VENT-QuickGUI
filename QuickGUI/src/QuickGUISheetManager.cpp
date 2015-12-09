@@ -2,7 +2,7 @@
 #include "QuickGUISheet.h"
 #include "QuickGUIDescManager.h"
 
-template<> QuickGUI::SheetManager* Ogre::Singleton<QuickGUI::SheetManager>::ms_Singleton = 0;
+template<> QuickGUI::SheetManager* Ogre::Singleton<QuickGUI::SheetManager>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -20,13 +20,13 @@ namespace QuickGUI
 
 	SheetManager* SheetManager::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	SheetManager& SheetManager::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	void SheetManager::cleanup()

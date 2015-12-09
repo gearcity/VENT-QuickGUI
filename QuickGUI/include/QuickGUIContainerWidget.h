@@ -166,6 +166,9 @@ namespace QuickGUI
 		*/
 		virtual void updateVirtualDimensions();
 
+		HScrollBar* mHScrollBar;
+		VScrollBar* mVScrollBar;
+
 	protected:
 		// The following functions are protected because all inheritted classes should not allow
 		// public access to them.  For example, a MenuItem is a Widget, but should not allow users
@@ -189,8 +192,7 @@ namespace QuickGUI
 
 		ContainerWidgetDesc* mDesc;
 
-		HScrollBar* mHScrollBar;
-		VScrollBar* mVScrollBar;
+		
 		/// Hides the ScrollBars if the VirtualArea is the same size as the ClientArea.
 		void _determineScrollBarVisibility();
 		

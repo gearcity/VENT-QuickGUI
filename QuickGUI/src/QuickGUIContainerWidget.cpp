@@ -28,12 +28,12 @@ namespace QuickGUI
 		ComponentWidgetDesc::resetToDefault();
 
 		containerwidget_clipChildrenToDimensions = true;
-		containerwidget_horzBarScrollPercent = 0.2;
-		containerwidget_horzButtonScrollPercent = 0.1;
+		containerwidget_horzBarScrollPercent = 0.1;
+		containerwidget_horzButtonScrollPercent = 0.02;
 		containerwidget_supportScrollBars = true;
 		containerwidget_scrollBarThickness = 15;
-		containerwidget_vertBarScrollPercent = 0.2;
-		containerwidget_vertButtonScrollPercent = 0.1;
+		containerwidget_vertBarScrollPercent = 0.1;
+		containerwidget_vertButtonScrollPercent = 0.02;
 		containerwidget_xScrollOffset = 0;
 		containerwidget_yScrollOffset = 0;
 	}
@@ -289,6 +289,7 @@ namespace QuickGUI
 				(*it)->removeEventHandler(WIDGET_EVENT_POSITION_CHANGED,this);
 			}
 
+			(*it)->destroy();
 
 		}
 		mChildren.clear();

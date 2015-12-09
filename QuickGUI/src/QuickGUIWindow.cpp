@@ -206,6 +206,12 @@ namespace QuickGUI
 		mWidgetDesc->sheet->destroyWindow(this);
 	}
 
+	void Window::clearChildren()
+	{
+		destroyChildren();
+		redraw();
+	}
+
 	bool Window::fireWindowEvent(WindowEvent EVENT, EventArgs& args)
 	{
 		if(mWindowEventHandlers[EVENT].empty())

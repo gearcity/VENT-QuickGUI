@@ -1,7 +1,7 @@
 #include "QuickGUISerialWriter.h"
 #include "QuickGUIScriptWriter.h"
 
-template<> QuickGUI::SerialWriter* Ogre::Singleton<QuickGUI::SerialWriter>::ms_Singleton = 0;
+template<> QuickGUI::SerialWriter* Ogre::Singleton<QuickGUI::SerialWriter>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -12,13 +12,13 @@ namespace QuickGUI
 
 	SerialWriter* SerialWriter::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	SerialWriter& SerialWriter::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	bool SerialWriter::begin(const Ogre::String& definitionType, const Ogre::String& definitionID)
@@ -124,10 +124,10 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
 
 		DefinitionProperty* newProp = OGRE_NEW_T(DefinitionProperty,Ogre::MEMCATEGORY_GENERAL)(propertyName);
-		newProp->mValues.push_back(Ogre::StringConverter::toString(member->a));
-		newProp->mValues.push_back(Ogre::StringConverter::toString(member->b));
-		newProp->mValues.push_back(Ogre::StringConverter::toString(member->g));
 		newProp->mValues.push_back(Ogre::StringConverter::toString(member->r));
+		newProp->mValues.push_back(Ogre::StringConverter::toString(member->g));
+		newProp->mValues.push_back(Ogre::StringConverter::toString(member->b));
+		newProp->mValues.push_back(Ogre::StringConverter::toString(member->a));
 		
 		if(mCurrentDefinition->mProperties.find(propertyName) != mCurrentDefinition->mProperties.end())
 			throw Exception(Exception::ERR_SERIALIZATION,"ScriptDefinition already contains the property \"" + propertyName + "\"!","SerialWriter::IO");

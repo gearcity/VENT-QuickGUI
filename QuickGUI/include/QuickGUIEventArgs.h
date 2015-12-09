@@ -31,7 +31,7 @@ namespace QuickGUI
 	class _QuickGUIExport EventArgs
 	{
 	public:
-		typedef enum Type
+		enum Type
 		{
 			TYPE_DEFAULT		=  0,
 			TYPE_WIDGET				,
@@ -66,6 +66,10 @@ namespace QuickGUI
 		{
 			type = TYPE_WIDGET;
 		}
+		WidgetEventArgs() : EventArgs(), widget(NULL)
+		{
+			type = TYPE_WIDGET;
+		}
 
 		//pointer to a Widget object of relevance to the event.
 		Widget*	widget;
@@ -80,6 +84,13 @@ namespace QuickGUI
 		{
 			type = TYPE_MOUSE;
 			button = MB_None;
+			autoRepeat = false;
+		}
+		MouseEventArgs() : WidgetEventArgs() 
+		{
+			type = TYPE_MOUSE;
+			button = MB_None;
+			autoRepeat = false;
 		}
 
 		// holds current mouse position. (pixels)
@@ -94,6 +105,8 @@ namespace QuickGUI
 		float			wheelChange;	
 		//! Bit field that holds status of Alt, Ctrl, Shift
 		unsigned int	keyModifiers;
+		// stores wether the event was caused via auto Repeat functionality, ie holding the mouse button down.
+		bool			autoRepeat;
 	};
 
 	/** Key EventArgs
@@ -106,13 +119,15 @@ namespace QuickGUI
 			type = TYPE_KEY;
 			scancode = KC_UNASSIGNED;
 			codepoint = 0;
+			autoRepeat = false;
 		}
 
-		KeyEventArgs() : WidgetEventArgs(NULL)
+		KeyEventArgs() : WidgetEventArgs()
 		{
 			type = TYPE_KEY;
 			scancode = KC_UNASSIGNED;
 			codepoint = 0;
+			autoRepeat = false;
 		}
 
 		// codepoint for the key (only used for Character inputs).
@@ -123,6 +138,8 @@ namespace QuickGUI
 		unsigned int					keyMask;
 		//! Bit field that holds status of Alt, Ctrl, Shift
 		unsigned int					keyModifiers;
+		// stores wether the event was caused via auto Repeat functionality, ie holding the key down.
+		bool							autoRepeat;
 	};
 
 	/** Text EventArgs
@@ -151,6 +168,10 @@ namespace QuickGUI
 	{
 	public:
 		ScrollEventArgs(Widget* w) : WidgetEventArgs(w), sliderIncreasedPosition(false)
+		{
+			type = TYPE_SCROLL;
+		}
+		ScrollEventArgs() : WidgetEventArgs(), sliderIncreasedPosition(false)
 		{
 			type = TYPE_SCROLL;
 		}

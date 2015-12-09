@@ -88,7 +88,7 @@ namespace QuickGUI
 		addWidgetEventHandler(WIDGET_EVENT_KEYBOARD_INPUT_GAIN,&TextBox::onKeyboardInputGain,this);
 		addWidgetEventHandler(WIDGET_EVENT_KEYBOARD_INPUT_LOSE,&TextBox::onKeyboardInputLose,this);
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&TextBox::onMouseButtonDown,this);
-		addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK_TRIPLE,&TextBox::onTripleClick,this);
+		addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK_DOUBLE,&TextBox::onTripleClick,this);
 		addWidgetEventHandler(WIDGET_EVENT_VISIBLE_CHANGED,&TextBox::onVisibleChanged,this);
 
 		mTextCursor = OGRE_NEW_T(TextCursor,Ogre::MEMCATEGORY_GENERAL)(this);
@@ -374,6 +374,12 @@ namespace QuickGUI
 
 	void TextBox::onKeyDown(const EventArgs& args)
 	{
+		if(mText->getHighlight())
+		{
+			mText->clearText();
+			setCursorIndex(0);
+		}
+
 		const KeyEventArgs kea = dynamic_cast<const KeyEventArgs&>(args);
 		mLastKnownInput.keyMask = kea.keyMask;
 		mLastKnownInput.keyModifiers = kea.keyModifiers;
@@ -381,6 +387,8 @@ namespace QuickGUI
 
 		mFunctionKeyDownLast = true;
 		mKeyDownTimer->start();
+
+
 
 		switch(kea.scancode)
 		{

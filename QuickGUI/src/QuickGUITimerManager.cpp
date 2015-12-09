@@ -1,6 +1,6 @@
 #include "QuickGUITimerManager.h"
 
-template<> QuickGUI::TimerManager* Ogre::Singleton<QuickGUI::TimerManager>::ms_Singleton = 0;
+template<> QuickGUI::TimerManager* Ogre::Singleton<QuickGUI::TimerManager>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -19,13 +19,13 @@ namespace QuickGUI
 
 	TimerManager* TimerManager::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	TimerManager& TimerManager::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	bool TimerManager::frameStarted(const Ogre::FrameEvent& evt)

@@ -31,7 +31,7 @@ namespace QuickGUI
 		/// number of pixels between from the top, bottom, and right of TitleBar right end
 		float					window_titleBarCloseButtonPadding;
 		Ogre::String			window_titleBarCloseButtonSkinType;
-		
+
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment	window_titlebarVerticalTextAlignment;
 
@@ -238,10 +238,15 @@ namespace QuickGUI
 		* Sets all characters within the defined range to the specified font.
 		*/
 		void setTitleBarTextFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex);
+/**
+		*Kill fucking chilrend because it's not in QUICKGUI PANEl >:|
+		**/
+		void clearChildren();
 		/**
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
+
 		void setTitleBarTextFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
@@ -287,13 +292,15 @@ namespace QuickGUI
 		using Widget::setVisible;
 		using Widget::setWidth;
 
+		TitleBar* mTitleBar;
+
 	protected:
 		Window(const Ogre::String& name);
 		virtual ~Window();
 
 		WindowDesc* mDesc;
 
-		TitleBar* mTitleBar;
+		
 
 		// Toggled true if the window's texture needs to be updated (redrawn).
 		bool mDirty;

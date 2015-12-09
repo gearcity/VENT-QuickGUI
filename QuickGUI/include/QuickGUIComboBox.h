@@ -149,10 +149,11 @@ namespace QuickGUI
 		ListTextItem* createTextItem(std::vector<TextSegment> segments, int index = -1);
 		ListTextItem* createTextItem(int index = -1);
 
+
 		/**
 		* Removes an Item from the List.
 		*/
-		void destroyItem(unsigned int index);
+		bool destroyItem(int index);
 		/**
 		* Removes an Item from the List.
 		*/
@@ -181,7 +182,13 @@ namespace QuickGUI
 		* Returns the Item at the index given.  If the index is invalid,
 		* NULL is returned.
 		*/
-		ListItem* getItem(unsigned int index);
+		ListItem* getItem(int index);
+
+		/**
+		*Get's a Item List
+		**/
+		std::list<ListItem*> getItemList();
+
 		/**
 		* Gets the height of each ListItem within this List.
 		*/
@@ -212,7 +219,7 @@ namespace QuickGUI
 		* Selects the item at index given.  If index is not valid,
 		* all items will be de-selected.
 		*/
-		void selectItem(unsigned int index);
+		void selectItem(int index);
 		/**
 		* Builds the Widget from a ScriptDefinition or Writes the widget to a ScriptDefinition.
 		*/

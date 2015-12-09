@@ -190,10 +190,10 @@ namespace QuickGUI
 
 				// If we click a widget other than the combobox, hide the list.
 				// If we did click the combobox, the combobox will hide the list automatically.
-				if(mDesc->guiManager->getLastClickedWidget() == NULL)
+				//if(mDesc->guiManager->getLastClickedWidget() == NULL)
 					cb->hideDropDownList();
-				else if(!mDesc->guiManager->getLastClickedWidget()->isComponentOf(cb))
-					cb->hideDropDownList();
+				//else if(!mDesc->guiManager->getLastClickedWidget()->isComponentOf(cb))
+				//	cb->hideDropDownList();
 			}
 		}
 	}
@@ -235,5 +235,12 @@ namespace QuickGUI
 		{
 			(*it)->setWidth(mClientDimensions.size.width);
 		}
+	}
+
+	void MenuPanel::destroyWidgets()
+	{
+		Window::destroyChildren();
+
+		_adjustHeight();
 	}
 }

@@ -54,6 +54,11 @@ namespace QuickGUI
 	public:
 
 		/**
+		* Destroy Widgets!!!!!!!!!!1!!!!11!!!
+		*/
+		void destroyWidgets();
+
+		/**
 		* Internal function, do not use.
 		*/
 		virtual void _initialize(WidgetDesc* d);

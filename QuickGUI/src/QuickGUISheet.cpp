@@ -181,13 +181,15 @@ namespace QuickGUI
 		mWindows.erase(it);
 
 		mWindows.push_back(w);
+
+		focusWindow(w);
 	}
 
 	void Sheet::cleanupWidgets()
 	{
 		// Clear out freelist
 		while(!mFreeList.empty())
-		{
+		{		
 			FactoryManager::getSingleton().getWidgetFactory()->destroyInstance(mFreeList.front());
 			mFreeList.pop_front();
 		}

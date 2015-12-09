@@ -737,7 +737,23 @@ namespace QuickGUI
 		{
 			(*it)->setHighlighted(false);
 		}
+	
 	}
+
+	bool Text::getHighlight()
+	{
+		for(std::list<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
+		{
+			if((*it)->getHighlighted())
+			{
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
 
 	void Text::clearText()
 	{

@@ -857,4 +857,10 @@ namespace QuickGUI
 			
 		brush->drawSkinElement(Rect(mTexturePosition,mWidgetDesc->widget_dimensions.size),mSkinElement);
 	}
+
+	void Panel::clearChildren()
+	{
+		destroyChildren();
+		redraw();
+	}
 }

@@ -422,6 +422,12 @@ namespace QuickGUI
 		bool hasEventHandler(WidgetEvent EVENT, void* obj);
 
 		/**
+		* Returns true if there exists a Widget Event handler for any object,
+		* false otherwise.
+		*/
+		bool hasAnyEventHandlersForThisType(WidgetEvent EVENT);
+	
+		/**
 		* Returns true if this widget is a child of the widget given.
 		*/
 		virtual bool isChildOf(Widget* w);

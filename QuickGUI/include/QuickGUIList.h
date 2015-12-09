@@ -159,6 +159,12 @@ namespace QuickGUI
 		* NULL is returned.
 		*/
 		ListItem* getItem(unsigned int index);
+
+		/**
+		* Gets Item List
+		**/
+		std::list<ListItem*> getItemList();
+
 		/**
 		* Gets the height of each ListItem within this List.
 		*/
@@ -201,6 +207,7 @@ namespace QuickGUI
 		* Recalculate Client widget_dimensions, relative to Widget's actual widget_dimensions.
 		*/
 		virtual void updateClientDimensions();
+
 
 	public:
 		// Here we have to call out any protected Widget set accesors we want to expose

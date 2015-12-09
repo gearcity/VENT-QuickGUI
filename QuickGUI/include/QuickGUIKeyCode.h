@@ -157,9 +157,10 @@ namespace QuickGUI
 	//! Enum of bit position of modifer
 	enum KeyModifier
 	{
-		SHIFT = 0x0000001,
-		CTRL  = 0x0000010,
-		ALT   = 0x0000100
+		SHIFT	=	0x01,
+		CTRL	=	0x02,
+		ALT		=	0x04,
+		NUMLOCK	=	0x08
 	};
 }
 

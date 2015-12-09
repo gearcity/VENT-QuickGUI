@@ -4,7 +4,7 @@
 
 #include "OgreMemoryAllocatorConfig.h"
 
-template<> QuickGUI::FactoryManager* Ogre::Singleton<QuickGUI::FactoryManager>::ms_Singleton = 0;
+template<> QuickGUI::FactoryManager* Ogre::Singleton<QuickGUI::FactoryManager>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -22,13 +22,13 @@ namespace QuickGUI
 
 	FactoryManager* FactoryManager::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	FactoryManager& FactoryManager::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	WidgetFactory* FactoryManager::getWidgetFactory()

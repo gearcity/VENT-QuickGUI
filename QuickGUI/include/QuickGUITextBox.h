@@ -41,6 +41,8 @@ namespace QuickGUI
 		Ogre::String textbox_textCursorDefaultSkinTypeName;
 		Point textbox_textPosition;
 
+		
+
 		/// Describes the Text used in this TextBox
 		TextDesc textDesc;
 

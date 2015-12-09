@@ -131,7 +131,7 @@ namespace QuickGUI
 
 	bool MouseCursor::getEnabled()
 	{
-		return mMouseCursorDesc.enabled;
+		return true;
 	}
 
 	float MouseCursor::getOpacity()

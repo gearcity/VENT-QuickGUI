@@ -24,7 +24,7 @@ namespace QuickGUI
 
 		listitem_index = -1;
 		listitem_selected = false;
-		containerwidget_supportScrollBars = false;
+		containerwidget_supportScrollBars = true;
 		widget_transparencyPicking = false;
 	}
 
@@ -40,6 +40,9 @@ namespace QuickGUI
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&ListItem::onMouseButtonDown,this);
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_ENTER,&ListItem::onMouseEnter,this);
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_LEAVE,&ListItem::onMouseLeave,this);
+		//addWidgetEventHandler(WIDGET_EVENT_MOUSE_LEAVE,&ListItem::onMouseWheel,this);
+		//addWidgetEventHandler(WIDGET_EVENT_MOUSE_WHEEL,&ListItem::onMouseWheel,this);
+
 	}
 
 	ListItem::~ListItem()
@@ -51,6 +54,8 @@ namespace QuickGUI
 		ContainerWidget::_initialize(d);
 
 		ListItemDesc* lid = dynamic_cast<ListItemDesc*>(d);
+		lid->containerwidget_supportScrollBars = true;
+		lid->widget_scrollable = true;
 		mDesc = dynamic_cast<ListItemDesc*>(mWidgetDesc);
 
 		setSkinType(d->widget_skinTypeName);
@@ -139,6 +144,59 @@ namespace QuickGUI
 			redraw();
 		}
 	}
+
+	void ListItem::onMouseWheel(const EventArgs& args)
+	{
+	/*	EventArgs Gargs = args;
+		
+		
+
+			if(mParentWidget->getClass() == "List")
+			{	//mParentWidget->fireWidgetEvent(WIDGET_EVENT_MOUSE_WHEEL,Gargs);
+				List* pList = dynamic_cast<List*>(mParentWidget);
+				//VScrollBar* vbard = static_cast<VScrollBar*>(mParentWidget->findFirstWidgetOfClass("vscrollbar"));
+
+
+
+				if(pList->mVScrollBar == 0 || pList->mVScrollBar->getVisible())
+				{
+					return;
+				}
+				else
+				{
+					const MouseEventArgs& mea = dynamic_cast<const MouseEventArgs&>(args);
+
+					if(mea.wheelChange > 0)
+						pList->mVScrollBar->scrollUp();
+					else
+						pList->mVScrollBar->scrollDown();
+				}
+			}
+			else if(mParentWidget->getClass() == "MenuPanel")
+			{
+				MenuPanel* lp = dynamic_cast<MenuPanel*>(mParentWidget);
+				if(lp->getOwner() != NULL)
+				{
+					if(lp->getOwner()->getClass() == "ComboBox")
+					{//mParentWidget->fireWidgetEvent(WIDGET_EVENT_MOUSE_WHEEL,Gargs);
+							VScrollBar* vbard = dynamic_cast<VScrollBar*>(mParentWidget->findFirstWidgetOfClass("vscrollbar"));
+							if(vbard == 0 || vbard->getVisible())
+							{
+								return;
+							}
+							else
+							{
+								const MouseEventArgs& mea = dynamic_cast<const MouseEventArgs&>(args);
+
+								if(mea.wheelChange > 0)
+									vbard->scrollUp();
+								else
+									vbard->scrollDown();
+							}
+					}
+				}
+			}
+	*/}
 
 	void ListItem::onMouseLeave(const EventArgs& args)
 	{

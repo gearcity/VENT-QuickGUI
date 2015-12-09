@@ -363,6 +363,7 @@ namespace QuickGUI
 					mDesc->sheet->mFreeList.push_back((*it));
 				else
 					Root::getSingleton().mGUIManagers.begin()->second->mFreeList.push_back((*it));
+				
 				mItems.erase(it);
 
 				--count;

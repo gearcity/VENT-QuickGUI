@@ -290,12 +290,16 @@ namespace QuickGUI
 
 		mButton_Up1 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Up1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&VScrollBar::onUpClicked,this);
+		//mButton_Up1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&VScrollBar::onUpClicked,this);
+		//mButton_Up1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK_DOUBLE,&VScrollBar::onUpClicked,this);
 		addComponent(UP1,mButton_Up1);
 		mButton_Up1->setPositionRelativeToParentClientDimensions(true);
 
 		bd->widget_dimensions.position.y = 15;
 		mButton_Down1 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Down1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&VScrollBar::onDownClicked,this);
+		//mButton_Down1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&VScrollBar::onDownClicked,this);
+		//mButton_Down1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK_DOUBLE,&VScrollBar::onDownClicked,this);
 		addComponent(DOWN1,mButton_Down1);
 		mButton_Down1->setPositionRelativeToParentClientDimensions(true);
 
@@ -303,12 +307,16 @@ namespace QuickGUI
 		bd->widget_dimensions.position.y = mWidgetDesc->widget_dimensions.size.height - (2 * bd->widget_dimensions.size.height);
 		mButton_Up2 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Up2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&VScrollBar::onUpClicked,this);
+		//mButton_Up2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&VScrollBar::onUpClicked,this);
+		//mButton_Up2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK_DOUBLE,&VScrollBar::onUpClicked,this);
 		addComponent(UP2,mButton_Up2);
 		mButton_Up2->setPositionRelativeToParentClientDimensions(true);
 
 		bd->widget_dimensions.position.y = mWidgetDesc->widget_dimensions.size.height - bd->widget_dimensions.size.height;
 		mButton_Down2 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Down2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&VScrollBar::onDownClicked,this);
+		//mButton_Down2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&VScrollBar::onDownClicked,this);
+		//mButton_Down2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK_DOUBLE,&VScrollBar::onDownClicked,this);
 		addComponent(DOWN2,mButton_Down2);
 		mButton_Down2->setPositionRelativeToParentClientDimensions(true);
 
@@ -430,7 +438,9 @@ namespace QuickGUI
 		Point p = mea.position - mWindow->getPosition() - mTexturePosition;
 		bool above = (p.y < mButton_Slider->getPosition().y);
 
-		if(mea.button == MB_Left)
+		setPercentage(p.y/this->getHeight());
+		
+		/*if(mea.button == MB_Left)
 		{
 			if(above)
 				setPercentage(mDesc->vscrollbar_sliderPercentage - mDesc->vscrollbar_barScrollPercent);
@@ -443,7 +453,7 @@ namespace QuickGUI
 				setPercentage(mDesc->vscrollbar_sliderPercentage + mDesc->vscrollbar_barScrollPercent);
 			else
 				setPercentage(mDesc->vscrollbar_sliderPercentage - mDesc->vscrollbar_barScrollPercent);
-		}
+		}*/
 	}
 
 	void VScrollBar::onSliderDragged(const EventArgs& args)

@@ -51,7 +51,7 @@
 #include "OgreStringConverter.h"
 #include "OgreViewport.h"
 
-template<> QuickGUI::Root* Ogre::Singleton<QuickGUI::Root>::ms_Singleton = 0;
+template<> QuickGUI::Root* Ogre::Singleton<QuickGUI::Root>::msSingleton = 0;
 
 namespace QuickGUI
 {
@@ -238,13 +238,13 @@ namespace QuickGUI
 
 	Root* Root::getSingletonPtr(void) 
 	{ 
-		return ms_Singleton; 
+		return msSingleton; 
 	}
 
 	Root& Root::getSingleton(void) 
 	{ 
-		assert( ms_Singleton );  
-		return ( *ms_Singleton ); 
+		assert( msSingleton );  
+		return ( *msSingleton ); 
 	}
 
 	GUIManager* Root::createGUIManager(GUIManagerDesc& d)
@@ -282,6 +282,7 @@ namespace QuickGUI
 
 	void Root::destroyGUIManager(const std::string& name)
 	{
+	
 		GUIManager* gm = mGUIManagers[name];
 		mGUIManagers.erase(mGUIManagers.find(name));
 		OGRE_DELETE_T(gm,GUIManager,Ogre::MEMCATEGORY_GENERAL);

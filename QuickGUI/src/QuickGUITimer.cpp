@@ -40,6 +40,11 @@ namespace QuickGUI
 		return mDesc.timePeriod;
 	}
 
+	bool Timer::isUpdating()
+	{
+		return mUpdate;
+	}
+
 	void Timer::reset()
 	{
 		mTimeAccumulator = 0;

@@ -216,13 +216,13 @@ namespace QuickGUI
 		// calculate the total distance the slider can move, ie how far will the slider go at 100%? (Answer: Slider bounds minus Slider width)
 		float maxSliderDisplacement = ((mSliderBounds.y - mSliderBounds.x) - mButton_Slider->getWidth());
 		// Percentage = displacement / max displacement.  Make sure to gaurd against a 0 max displacement!
-		if(maxSliderDisplacement < 0.001)
+		if(maxSliderDisplacement < 0.00000001)
 			mDesc->hscrollbar_sliderPercentage = 0.0;
 		else
 		{
 			mDesc->hscrollbar_sliderPercentage = (sliderPosition.x - mSliderBounds.x) / maxSliderDisplacement;
 			// Caps percentage to thousandths place
-			mDesc->hscrollbar_sliderPercentage = Ogre::Math::Floor(Ogre::Math::Ceil(mDesc->hscrollbar_sliderPercentage * 1000.0)) / 1000.0;
+			//mDesc->hscrollbar_sliderPercentage = Ogre::Math::Floor(Ogre::Math::Ceil(mDesc->hscrollbar_sliderPercentage * 1000.0)) / 1000.0;
 		}
 	}
 
@@ -287,15 +287,20 @@ namespace QuickGUI
 		bd->widget_verticalAnchor = ANCHOR_VERTICAL_TOP_BOTTOM;
 		bd->widget_dimensions.size.width = mWidgetDesc->widget_dimensions.size.height;
 		bd->widget_dimensions.size.height = mWidgetDesc->widget_dimensions.size.height;
+		
 
 		mButton_Left1 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Left1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&HScrollBar::onLeftButtonClicked,this);
+		//mButton_Left1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&HScrollBar::onLeftButtonClicked,this);
+		
 		addComponent(LEFT1,mButton_Left1);
 		mButton_Left1->setPositionRelativeToParentClientDimensions(true);
 
 		bd->widget_dimensions.position.x = 15;
 		mButton_Right1 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Right1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&HScrollBar::onRightButtonClicked,this);
+		//mButton_Right1->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&HScrollBar::onRightButtonClicked,this);
+		
 		addComponent(RIGHT1,mButton_Right1);
 		mButton_Right1->setPositionRelativeToParentClientDimensions(true);
 
@@ -303,12 +308,16 @@ namespace QuickGUI
 		bd->widget_dimensions.position.x = mWidgetDesc->widget_dimensions.size.width - (2 * bd->widget_dimensions.size.width);
 		mButton_Left2 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Left2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&HScrollBar::onLeftButtonClicked,this);
+		//mButton_Left2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&HScrollBar::onLeftButtonClicked,this);
+	
 		addComponent(LEFT2,mButton_Left2);
 		mButton_Left2->setPositionRelativeToParentClientDimensions(true);
 
 		bd->widget_dimensions.position.x = mWidgetDesc->widget_dimensions.size.width - bd->widget_dimensions.size.width;
 		mButton_Right2 = dynamic_cast<Button*>(_createWidget(bd));
 		mButton_Right2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&HScrollBar::onRightButtonClicked,this);
+		//mButton_Right2->addWidgetEventHandler(WIDGET_EVENT_MOUSE_CLICK,&HScrollBar::onRightButtonClicked,this);
+	
 		addComponent(RIGHT2,mButton_Right2);
 		mButton_Right2->setPositionRelativeToParentClientDimensions(true);
 
@@ -434,7 +443,9 @@ namespace QuickGUI
 		Point p = mea.position - mWindow->getPosition() - mTexturePosition;
 		bool left = (p.x < mButton_Slider->getPosition().x);
 
-		if(mea.button == MB_Left)
+		setPercentage(p.x/this->getWidth());
+
+		/*if(mea.button == MB_Left)
 		{
 			if(left)
 				setPercentage(mDesc->hscrollbar_sliderPercentage - mDesc->hscrollbar_barScrollPercent);
@@ -447,7 +458,7 @@ namespace QuickGUI
 				setPercentage(mDesc->hscrollbar_sliderPercentage + mDesc->hscrollbar_barScrollPercent);
 			else
 				setPercentage(mDesc->hscrollbar_sliderPercentage - mDesc->hscrollbar_barScrollPercent);
-		}
+		}*/
 	}
 
 	void HScrollBar::onSliderDragged(const EventArgs& args)
@@ -485,8 +496,8 @@ namespace QuickGUI
 			percentage = 0.0;
 		else if(percentage > 1.0)
 			percentage = 1.0;
-		else // Caps percentage to thousandths place
-			percentage = Ogre::Math::Floor(Ogre::Math::Ceil(percentage * 1000.0)) / 1000.0;
+		//else // Caps percentage to thousandths place
+			//percentage = Ogre::Math::Floor(Ogre::Math::Ceil(percentage * 1000.0)) / 1000.0;
 
 		// Set percentage property
 		mDesc->hscrollbar_sliderPercentage = percentage;

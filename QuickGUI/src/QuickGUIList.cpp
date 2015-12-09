@@ -138,7 +138,11 @@ namespace QuickGUI
 	{
 		ListItem* i = dynamic_cast<ListItem*>(w);
 
-		i->setWidth(mClientDimensions.size.width);
+		if(i->getWidth() < mClientDimensions.size.width)
+		{
+			i->setWidth(mClientDimensions.size.width);
+		}
+
 		i->setHeight(mDesc->list_itemHeight);
 		i->setSkinType(mSkinType->getSkinReference(LISTITEM)->typeName);
 
@@ -227,6 +231,11 @@ namespace QuickGUI
 
 		WidgetEventArgs args(this);
 		fireListEvent(LIST_EVENT_SELECTION_CHANGED,args);
+	}
+
+	std::list<ListItem*> List::getItemList()
+	{
+		return mItems;
 	}
 
 	void List::clearUserDefinedListEventHandler(ListEvent EVENT)
@@ -679,7 +688,12 @@ namespace QuickGUI
 
 		for(std::list<ListItem*>::iterator it = mItems.begin(); it != mItems.end(); ++it)
 		{
-			(*it)->setWidth(mClientDimensions.size.width);
+			if((*it)->getWidth() < mClientDimensions.size.width )
+			{
+				(*it)->setWidth(mClientDimensions.size.width);
+			}
 		}
 	}
+
+
 }

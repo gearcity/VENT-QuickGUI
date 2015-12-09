@@ -52,6 +52,7 @@ namespace QuickGUI
 
 	void ListTextItem::_initialize(WidgetDesc* d)
 	{
+
 		ListItem::_initialize(d);
 
 		mDesc = dynamic_cast<ListTextItemDesc*>(mWidgetDesc);
@@ -63,6 +64,7 @@ namespace QuickGUI
 		// Make a copy of the Text Desc.  The Text object will
 		// modify it directly, which is used for serialization.
 		mDesc->textDesc = ltid->textDesc;
+
 		mDesc->listtextitem_verticalTextAlignment = ltid->listtextitem_verticalTextAlignment;
 		TextUser::_initialize(this,mDesc);
 	}
