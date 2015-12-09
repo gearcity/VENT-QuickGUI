@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUILabel.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUISkinDefinition.h"
@@ -30,15 +59,11 @@ namespace QuickGUI
 
 		widget_dimensions.size = Size::ZERO;
 		widget_minSize = Size::ZERO;
-
-		label_verticalTextAlignment = TEXT_ALIGNMENT_VERTICAL_CENTER;
 	}
 
 	void LabelDesc::serialize(SerialBase* b)
 	{
 		WidgetDesc::serialize(b);
-
-		b->IO("VerticalTextAlignment",&label_verticalTextAlignment);
 
 		TextUserDesc::serialize(b);
 	}
@@ -61,10 +86,13 @@ namespace QuickGUI
 
 		LabelDesc* ld = dynamic_cast<LabelDesc*>(d);
 
+		mDesc->text_defaultColor = ld->text_defaultColor;
+		mDesc->text_defaultFontName = ld->text_defaultFontName;
+
 		setSkinType(d->widget_skinTypeName);
 
 		// Make a copy of the Text Desc.  The Text object will
-		// modify it directly, which is umSkinElementd for mSkinElementrialization.
+		// modify it directly, which is used for serialization.
 		mDesc->textDesc = ld->textDesc;
 
 		if(mDesc->widget_dimensions.size.width == 1)
@@ -84,19 +112,14 @@ namespace QuickGUI
 		// Now that dimensions may have changed, update client dimensions
 		updateClientDimensions();
 
-		mDesc->label_verticalTextAlignment = ld->label_verticalTextAlignment;
-		mDesc->textDesc.allottedWidth = mDesc->widget_dimensions.size.width - (mSkinElement->getBorderThickness(BORDER_LEFT) + mSkinElement->getBorderThickness(BORDER_RIGHT));
+		mDesc->textDesc.allottedSize.height = mDesc->widget_dimensions.size.height - (mSkinElement->getBorderThickness(BORDER_TOP) + mSkinElement->getBorderThickness(BORDER_BOTTOM));
+		mDesc->textDesc.allottedSize.width = mDesc->widget_dimensions.size.width - (mSkinElement->getBorderThickness(BORDER_LEFT) + mSkinElement->getBorderThickness(BORDER_RIGHT));
 		TextUser::_initialize(this,mDesc);
 	}
 
 	Ogre::String Label::getClass()
 	{
 		return "Label";
-	}
-
-	VerticalTextAlignment Label::getVerticalTextAlignment()
-	{
-		return mDesc->label_verticalTextAlignment;
 	}
 
 	void Label::onDraw()
@@ -110,24 +133,6 @@ namespace QuickGUI
 		ColourValue prevColor = brush->getColour();
 		Rect prevClipRegion = brush->getClipRegion();
 
-		// Center Text Vertically
-
-		float textHeight = mText->getTextHeight();
-		float yPos = 0;
-
-		switch(mDesc->label_verticalTextAlignment)
-		{
-		case TEXT_ALIGNMENT_VERTICAL_BOTTOM:
-			yPos = mDesc->widget_dimensions.size.height - mSkinElement->getBorderThickness(BORDER_BOTTOM) - textHeight;
-			break;
-		case TEXT_ALIGNMENT_VERTICAL_CENTER:
-			yPos = (mDesc->widget_dimensions.size.height / 2.0) - (textHeight / 2.0);
-			break;
-		case TEXT_ALIGNMENT_VERTICAL_TOP:
-			yPos = mSkinElement->getBorderThickness(BORDER_TOP);
-			break;
-		}
-
 		// Clip to client dimensions
 		Rect clipRegion(mClientDimensions);
 		clipRegion.translate(mTexturePosition);
@@ -136,7 +141,6 @@ namespace QuickGUI
 
 		// Adjust Rect to Text drawing region
 		clipRegion = mClientDimensions;
-		clipRegion.position.y = yPos;
 		clipRegion.translate(mTexturePosition);		
 
 		mText->draw(clipRegion.position);
@@ -145,18 +149,11 @@ namespace QuickGUI
 		brush->setColor(prevColor);
 	}
 
-	void Label::setVerticalTextAlignment(VerticalTextAlignment a)
-	{
-		mDesc->label_verticalTextAlignment = a;
-
-		redraw();
-	}
-
 	void Label::updateClientDimensions()
 	{
 		Widget::updateClientDimensions();
 		if(mText != NULL)
-			mText->setAllottedWidth(mClientDimensions.size.width);
+			mText->setAllottedSize(mClientDimensions.size);
 
 		redraw();
 	}

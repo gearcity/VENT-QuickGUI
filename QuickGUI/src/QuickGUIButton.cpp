@@ -1,6 +1,38 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIButton.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUISkinDefinition.h"
+#include "QuickGUIDescManager.h"
+
+#include "OgreFont.h"
 
 namespace QuickGUI
 {
@@ -41,8 +73,16 @@ namespace QuickGUI
 	{
 		LabelDesc::serialize(b);
 
-		b->IO("ImageName",&button_imageName);
-		b->IO("TileImage",&button_tileImage);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		ButtonDesc* defaultValues = DescManager::getSingleton().createDesc<ButtonDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("ImageName", &button_imageName, defaultValues->button_imageName);
+		b->IO("TileImage", &button_tileImage, defaultValues->button_tileImage);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 	}
 
 	Button::Button(const Ogre::String& name) :
@@ -116,24 +156,6 @@ namespace QuickGUI
 			brush->setClipRegion(prevClipRegion);
 		}
 
-		// Center Text Vertically
-
-		float textHeight = mText->getTextHeight();
-		float yPos = 0;
-
-		switch(mDesc->label_verticalTextAlignment)
-		{
-		case TEXT_ALIGNMENT_VERTICAL_BOTTOM:
-			yPos = mDesc->widget_dimensions.size.height - mSkinElement->getBorderThickness(BORDER_BOTTOM) - textHeight;
-			break;
-		case TEXT_ALIGNMENT_VERTICAL_CENTER:
-			yPos = (mDesc->widget_dimensions.size.height / 2.0) - (textHeight / 2.0);
-			break;
-		case TEXT_ALIGNMENT_VERTICAL_TOP:
-			yPos = mSkinElement->getBorderThickness(BORDER_TOP);
-			break;
-		}
-
 		// Clip to client dimensions
 		Rect clipRegion(mClientDimensions);
 		clipRegion.translate(mTexturePosition);
@@ -142,7 +164,6 @@ namespace QuickGUI
 
 		// Adjust Rect to Text drawing region
 		clipRegion = mClientDimensions;
-		clipRegion.position.y = yPos;
 		clipRegion.translate(mTexturePosition);		
 
 		// Draw text
@@ -205,7 +226,7 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void Button::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Button::setText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mText->setAllottedWidth(mClientDimensions.size.width);
 
@@ -217,6 +238,13 @@ namespace QuickGUI
 		mText->setAllottedWidth(mClientDimensions.size.width);
 
 		TextUser::setText(s,fontName,cv);
+	}
+
+	void Button::setText(Ogre::UTFString s, const ColourValue& cv)
+	{
+		mText->setAllottedWidth(mClientDimensions.size.width);
+
+		TextUser::setText(s,cv);
 	}
 
 	void Button::setText(Ogre::UTFString s)
@@ -247,7 +275,7 @@ namespace QuickGUI
 		// Many buttons have no text.  In this case, we don't need to adjust
 		// the Text's allotted width
 		if((mText != NULL) && (!mText->empty()))
-			mText->setAllottedWidth(mClientDimensions.size.width);
+			mText->setAllottedSize(mClientDimensions.size);
 
 		redraw();
 	}

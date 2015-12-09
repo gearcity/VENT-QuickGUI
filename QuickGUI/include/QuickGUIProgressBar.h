@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #ifndef QUICKGUIPROGRESSBAR_H
 #define QUICKGUIPROGRESSBAR_H
 
@@ -7,6 +36,13 @@
 #include "OgreImage.h"
 
 #include <vector>
+
+namespace Ogre
+{
+	// forward declarations
+	class Font;
+	class Texture;
+}
 
 namespace QuickGUI
 {
@@ -29,9 +65,6 @@ namespace QuickGUI
 		float progressbar_progress;
 
 		Ogre::String progressbar_userHandlers[PROGRESSBAR_EVENT_COUNT];
-
-		/// Vertical alignment of text within this widget's client area.
-		VerticalTextAlignment progressbar_verticalTextAlignment;
 
 		/**
 		* Returns the class of Desc object this is.
@@ -128,18 +161,19 @@ namespace QuickGUI
 		*/
 		ProgressBarFillDirection getFillDirection();
 		/**
-		* Gets the axis of progressbar_progress growth, either horizontal or vertical.
-		*/
-		ProgressBarLayout setLayout();
-		/**
 		* Gets the progressbar_progress of the ProgressBar, that is a visual indicator of percent complete.
 		*/
 		float getProgress();
+
 		/**
-		* Returns the vertical alignment of text within this widget's client area.
+		* Removes all Event Handlers registered by the given object.
 		*/
-		VerticalTextAlignment getVerticalTextAlignment();
-		
+		virtual void removeEventHandlers(void* obj);
+
+		/**
+		* Gets the axis of progressbar_progress growth, either horizontal or vertical.
+		*/
+		ProgressBarLayout setLayout();		
 		/**
 		* Sets the side of the bar texture that is clipped to simulate progressbar_progress.
 		*/
@@ -154,7 +188,7 @@ namespace QuickGUI
 		void setLayout(ProgressBarLayout l);
 		/**
 		* Sets the progressbar_progress of the ProgressBar, that is a visual indicator of percent complete.
-		* NOTE: values above and below 0 will be capped to 0/100%.
+		* NOTE: values will be capped to range [0.0,100.0].
 		*/
 		void setProgress(float percent);
 		/**
@@ -163,10 +197,6 @@ namespace QuickGUI
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
 		virtual void setSkinType(const Ogre::String type);
-		/**
-		* Sets the Vertical alignment of Text as displayed within the Label area.
-		*/
-		void setVerticalTextAlignment(VerticalTextAlignment a);
 
 		/**
 		* Recalculate Client dimensions, relative to Widget's actual dimensions.
@@ -187,6 +217,7 @@ namespace QuickGUI
 		using Widget::setMinSize;
 		using Widget::setPosition;
 		using Widget::setPositionRelativeToParentClientDimensions;
+		using Widget::setQueryFlags;
 		using Widget::setResizeFromAllSides;
 		using Widget::setResizeFromBottom;
 		using Widget::setResizeFromLeft;
@@ -212,7 +243,7 @@ namespace QuickGUI
 		std::vector<bool> mClipMap;
 
 		/// Modified texture to draw on top of background
-		Ogre::TexturePtr mOutputBarTexture;
+		Ogre::Texture* mOutputBarTexture;
 
 		Ogre::Image mBarImage;
 

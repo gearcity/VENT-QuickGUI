@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIComponentWidget.h"
 #include "QuickGUIBrush.h"
 #include "QuickGUISerialWriter.h"
@@ -5,6 +34,7 @@
 #include "QuickGUISheet.h"
 #include "QuickGUIFactoryManager.h"
 #include "QuickGUIWidgetFactory.h"
+#include "QuickGUIDescManager.h"
 
 namespace QuickGUI
 {
@@ -25,7 +55,15 @@ namespace QuickGUI
 	{
 		WidgetDesc::serialize(b);
 
-		b->IO("ClipComponentsToDimensions",&componentwidget_clipComponentsToDimensions);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		ComponentWidgetDesc* defaultValues = DescManager::getSingleton().createDesc<ComponentWidgetDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("ClipComponentsToDimensions",	&componentwidget_clipComponentsToDimensions, defaultValues->componentwidget_clipComponentsToDimensions);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 	}
 
 	ComponentWidget::ComponentWidget(const Ogre::String& name) :
@@ -194,10 +232,13 @@ namespace QuickGUI
 		brush->setClipRegion(prevClipRegion);
 	}
 
-	Widget* ComponentWidget::findWidgetAtPoint(const Point& p, bool ignoreDisabled)
+	Widget* ComponentWidget::findWidgetAtPoint(const Point& p, unsigned int queryFilter, bool ignoreDisabled)
 	{
 		// If we are not widget_visible, return NULL
 		if(!mWidgetDesc->widget_visible)
+			return NULL;
+
+		if((mWidgetDesc->widget_queryFlags & queryFilter) == 0)
 			return NULL;
 
 		// If we ignore disabled and this widget is !widget_enabled, return NULL
@@ -207,7 +248,7 @@ namespace QuickGUI
 		// Check components before verifying point is within bounds. (Components can lie outside widget dimensions)
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 		{
-			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
+			Widget* w = (*it).second->findWidgetAtPoint(p,queryFilter,ignoreDisabled);
 			if(w != NULL)
 				return w;
 		}
@@ -248,6 +289,14 @@ namespace QuickGUI
 	bool ComponentWidget::isComponentWidget()
 	{
 		return true;
+	}
+
+	void ComponentWidget::removeEventHandlers(void* obj)
+	{
+		Widget::removeEventHandlers(obj);
+
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+			(*it).second->removeEventHandlers(obj);
 	}
 
 	void ComponentWidget::setClipComponentsToDimensions(bool clip)

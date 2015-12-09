@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUISkinElement.h"
 #include "QuickGUIScriptDefinition.h"
 
@@ -35,9 +64,9 @@ namespace QuickGUI
 		float texHeight = tex->getHeight();
 
 		mBackgroundUV.left = mBorderThickness[BORDER_LEFT] / texWidth;
-		mBackgroundUV.right = 1.0 - (mBorderThickness[BORDER_RIGHT] / texWidth);
+		mBackgroundUV.right = (texWidth - mBorderThickness[BORDER_RIGHT]) / texWidth;
 		mBackgroundUV.top = mBorderThickness[BORDER_TOP] / texHeight;
-		mBackgroundUV.bottom = 1.0 - (mBorderThickness[BORDER_BOTTOM] / texHeight);
+		mBackgroundUV.bottom = (texHeight - mBorderThickness[BORDER_BOTTOM]) / texHeight;
 		
 		// Top Left Corner
 		mBorderUV[BORDER_TOP_LEFT].left = 0;
@@ -46,39 +75,39 @@ namespace QuickGUI
 		mBorderUV[BORDER_TOP_LEFT].bottom = mBorderThickness[BORDER_TOP] / texHeight;
 		// Top Side
 		mBorderUV[BORDER_TOP].left = mBorderThickness[BORDER_LEFT] / texWidth;
-		mBorderUV[BORDER_TOP].right = 1.0 - (mBorderThickness[BORDER_LEFT] / texWidth);
+		mBorderUV[BORDER_TOP].right = (texWidth - mBorderThickness[BORDER_RIGHT]) / texWidth;
 		mBorderUV[BORDER_TOP].top = 0;
 		mBorderUV[BORDER_TOP].bottom = mBorderThickness[BORDER_TOP] / texHeight;
 		// Top Right Corner
-		mBorderUV[BORDER_TOP_RIGHT].left = 1.0 - (mBorderThickness[BORDER_LEFT] / texWidth);
+		mBorderUV[BORDER_TOP_RIGHT].left = (texWidth - mBorderThickness[BORDER_RIGHT]) / texWidth;
 		mBorderUV[BORDER_TOP_RIGHT].right = 1.0;
 		mBorderUV[BORDER_TOP_RIGHT].top = 0;
 		mBorderUV[BORDER_TOP_RIGHT].bottom = mBorderThickness[BORDER_TOP] / texHeight;
 		// Right Side
-		mBorderUV[BORDER_RIGHT].left = 1.0 - (mBorderThickness[BORDER_LEFT] / texWidth);
+		mBorderUV[BORDER_RIGHT].left = (texWidth - mBorderThickness[BORDER_RIGHT]) / texWidth;
 		mBorderUV[BORDER_RIGHT].right = 1.0;
 		mBorderUV[BORDER_RIGHT].top = mBorderThickness[BORDER_TOP] / texHeight;
-		mBorderUV[BORDER_RIGHT].bottom = 1.0 - (mBorderThickness[BORDER_BOTTOM] / texHeight);
+		mBorderUV[BORDER_RIGHT].bottom = (texHeight - mBorderThickness[BORDER_BOTTOM]) / texHeight;
 		// Bottom Right Corner
-		mBorderUV[BORDER_BOTTOM_RIGHT].left = 1.0 - (mBorderThickness[BORDER_LEFT] / texWidth);
+		mBorderUV[BORDER_BOTTOM_RIGHT].left = (texWidth - mBorderThickness[BORDER_RIGHT]) / texWidth;
 		mBorderUV[BORDER_BOTTOM_RIGHT].right = 1.0;
-		mBorderUV[BORDER_BOTTOM_RIGHT].top = 1 - (mBorderThickness[BORDER_BOTTOM] / texHeight);
+		mBorderUV[BORDER_BOTTOM_RIGHT].top = (texHeight - mBorderThickness[BORDER_BOTTOM]) / texHeight;
 		mBorderUV[BORDER_BOTTOM_RIGHT].bottom = 1.0;
 		// Bottom Side
 		mBorderUV[BORDER_BOTTOM].left = mBorderThickness[BORDER_LEFT] / texWidth;
-		mBorderUV[BORDER_BOTTOM].right = 1.0 - (mBorderThickness[BORDER_RIGHT] / texWidth);
-		mBorderUV[BORDER_BOTTOM].top = 1 - (mBorderThickness[BORDER_BOTTOM] / texHeight);
+		mBorderUV[BORDER_BOTTOM].right = (texWidth - mBorderThickness[BORDER_RIGHT]) / texWidth;
+		mBorderUV[BORDER_BOTTOM].top = (texHeight - mBorderThickness[BORDER_BOTTOM]) / texHeight;
 		mBorderUV[BORDER_BOTTOM].bottom = 1.0;
 		// Left Bottom Corner
 		mBorderUV[BORDER_BOTTOM_LEFT].left = 0;
 		mBorderUV[BORDER_BOTTOM_LEFT].right = mBorderThickness[BORDER_LEFT] / texWidth;
-		mBorderUV[BORDER_BOTTOM_LEFT].top = 1 - (mBorderThickness[BORDER_BOTTOM] / texHeight);
+		mBorderUV[BORDER_BOTTOM_LEFT].top = (texHeight - mBorderThickness[BORDER_BOTTOM]) / texHeight;
 		mBorderUV[BORDER_BOTTOM_LEFT].bottom = 1.0;
 		// Left Side
 		mBorderUV[BORDER_LEFT].left = 0;
 		mBorderUV[BORDER_LEFT].right = mBorderThickness[BORDER_LEFT] / texWidth;
 		mBorderUV[BORDER_LEFT].top = mBorderThickness[BORDER_TOP] / texHeight;
-		mBorderUV[BORDER_LEFT].bottom = 1.0 - (mBorderThickness[BORDER_BOTTOM] / texHeight);
+		mBorderUV[BORDER_LEFT].bottom = (texHeight - mBorderThickness[BORDER_BOTTOM]) / texHeight;
 		
 		_updateTexture();
 
@@ -209,13 +238,13 @@ namespace QuickGUI
 		// Only write if texture name is valid, and only read if ScriptDefinition is not empty
 		if((b->isSerialWriter() && (mTextureName != "")) || (b->isSerialReader() && !(b->getCurrentDefinition()->isEmpty())))
 		{
-			b->IO("Texture",&mTextureName);
-			b->IO("TileBackground",&mTileBackground);
-			b->IO("Border_Bottom",&(mBorderThickness[BORDER_BOTTOM]));
-			b->IO("Border_Left",&(mBorderThickness[BORDER_LEFT]));
-			b->IO("Border_Right",&(mBorderThickness[BORDER_RIGHT]));
-			b->IO("Border_Top",&(mBorderThickness[BORDER_TOP]));
-			b->IO("TileBorders",&mTileBorders);
+			b->IO("Texture",&mTextureName,"");
+			b->IO("TileBackground",&mTileBackground,false);
+			b->IO("Border_Bottom",&(mBorderThickness[BORDER_BOTTOM]),0.0);
+			b->IO("Border_Left",&(mBorderThickness[BORDER_LEFT]),0.0);
+			b->IO("Border_Right",&(mBorderThickness[BORDER_RIGHT]),0.0);
+			b->IO("Border_Top",&(mBorderThickness[BORDER_TOP]),0.0);
+			b->IO("TileBorders",&mTileBorders,false);
 		}
 
 		b->end();

@@ -1,7 +1,37 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUICheckBox.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUISkinDefinition.h"
 #include "QuickGUIEventHandlerManager.h"
+#include "QuickGUIDescManager.h"
 
 namespace QuickGUI
 {
@@ -48,21 +78,29 @@ namespace QuickGUI
 	{
 		WidgetDesc::serialize(b);
 
-		b->IO("Checked",&checkbox_checked);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		CheckBoxDesc* defaultValues = DescManager::getSingleton().createDesc<CheckBoxDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("Checked", &checkbox_checked, defaultValues->checkbox_checked);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		if(b->begin("UserDefinedHandlers","CheckBoxEvents"))
 		{
 			if(b->isSerialReader())
 			{
 				for(int index = 0; index < CHECKBOX_EVENT_COUNT; ++index)
-					b->IO(StringConverter::toString(static_cast<CheckBoxEvent>(index)),&(checkbox_userHandlers[index]));
+					b->IO(StringConverter::toString(static_cast<CheckBoxEvent>(index)),&(checkbox_userHandlers[index]),"");
 			}
 			else
 			{
 				for(int index = 0; index < CHECKBOX_EVENT_COUNT; ++index)
 				{
 					if(checkbox_userHandlers[index] != "")
-						b->IO(StringConverter::toString(static_cast<CheckBoxEvent>(index)),&(checkbox_userHandlers[index]));
+						b->IO(StringConverter::toString(static_cast<CheckBoxEvent>(index)),&(checkbox_userHandlers[index]),"");
 				}
 			}
 			b->end();
@@ -210,6 +248,32 @@ namespace QuickGUI
 		}
 	}
 
+	void CheckBox::removeEventHandlers(void* obj)
+	{
+		Widget::removeEventHandlers(obj);
+
+		for(int index = 0; index < CHECKBOX_EVENT_COUNT; ++index)
+		{
+			std::vector<EventHandlerSlot*> updatedList;
+			std::vector<EventHandlerSlot*> listToCleanup;
+
+			for(std::vector<EventHandlerSlot*>::iterator it = mCheckBoxEventHandlers[index].begin(); it != mCheckBoxEventHandlers[index].end(); ++it)
+			{
+				if((*it)->getClass() == obj)
+					listToCleanup.push_back((*it));
+				else
+					updatedList.push_back((*it));
+			}
+
+			mCheckBoxEventHandlers[index].clear();
+			for(std::vector<EventHandlerSlot*>::iterator it = updatedList.begin(); it != updatedList.end(); ++it)
+				mCheckBoxEventHandlers[index].push_back((*it));
+
+			for(std::vector<EventHandlerSlot*>::iterator it = listToCleanup.begin(); it != listToCleanup.end(); ++it)
+				OGRE_DELETE_T((*it),EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
+		}
+	}
+
 	void CheckBox::setChecked(bool checked)
 	{
 		if(mDesc->checkbox_checked == checked)
@@ -226,6 +290,30 @@ namespace QuickGUI
 
 		WidgetEventArgs wea(this);
 		fireCheckBoxEvent(CHECKBOX_EVENT_CHECK_CHANGED,wea);
+	}
+
+	void CheckBox::setEnabled(bool enabled)
+	{
+		if(mWidgetDesc->widget_enabled == enabled)
+			return;
+
+		mWidgetDesc->widget_enabled = enabled;
+
+		if(!mWidgetDesc->widget_enabled)
+		{
+			if(mWidgetDesc->widget_disabledSkinType != "")
+				_setSkinType(mWidgetDesc->widget_disabledSkinType);
+		}
+		else
+			_setSkinType(mWidgetDesc->widget_skinTypeName);
+
+		if(mDesc->checkbox_checked)
+			mSkinElement = mSkinType->getSkinElement(CHECKED);
+		else
+			mSkinElement = mSkinType->getSkinElement(UNCHECKED);
+
+		WidgetEventArgs args(this);
+		fireWidgetEvent(WIDGET_EVENT_ENABLED_CHANGED,args);
 	}
 
 	void CheckBox::updateSkinElement()

@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIPropertyGrid.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUIFactoryManager.h"
@@ -22,10 +51,10 @@ namespace QuickGUI
 	{
 		SkinDefinition* d = OGRE_NEW_T(SkinDefinition,Ogre::MEMCATEGORY_GENERAL)("PropertyGrid");
 		d->defineSkinElement(BACKGROUND);
-		d->defineComponent(EXPAND);
-		d->defineComponent(MINIMIZE);
-		d->defineComponent(HSCROLLBAR);
-		d->defineComponent(VSCROLLBAR);
+		d->defineSkinReference(EXPAND,"Button");
+		d->defineSkinReference(MINIMIZE,"Button");
+		d->defineSkinReference(HSCROLLBAR,"HScrollBar");
+		d->defineSkinReference(VSCROLLBAR,"VScrollBar");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("PropertyGrid",d);
@@ -56,24 +85,32 @@ namespace QuickGUI
 	{
 		ContainerWidgetDesc::serialize(b);
 
-		b->IO("DoubleClickToToggle",&propertygrid_doubleClickToToggle);
-		b->IO("KeyNavigation",&propertygrid_keyNavigation);
-		b->IO("PropertyFieldWidth",&propertygrid_propertyFieldWidth);
-		b->IO("PropertyHeight",&propertygrid_itemHeight);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		PropertyGridDesc* defaultValues = DescManager::getSingleton().createDesc<PropertyGridDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("DoubleClickToToggle",	&propertygrid_doubleClickToToggle,	defaultValues->propertygrid_doubleClickToToggle);
+		b->IO("KeyNavigation",			&propertygrid_keyNavigation,		defaultValues->propertygrid_keyNavigation);
+		b->IO("PropertyFieldWidth",		&propertygrid_propertyFieldWidth,	defaultValues->propertygrid_propertyFieldWidth);
+		b->IO("PropertyHeight",			&propertygrid_itemHeight,			defaultValues->propertygrid_itemHeight);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		if(b->begin("UserDefinedHandlers","PropertyGridEvents"))
 		{
 			if(b->isSerialReader())
 			{
 				for(int index = 0; index < PROPERTYGRID_EVENT_COUNT; ++index)
-					b->IO(StringConverter::toString(static_cast<PropertyGridEvent>(index)),&(propertygrid_userHandlers[index]));
+					b->IO(StringConverter::toString(static_cast<PropertyGridEvent>(index)),&(propertygrid_userHandlers[index]),"");
 			}
 			else
 			{
 				for(int index = 0; index < PROPERTYGRID_EVENT_COUNT; ++index)
 				{
 					if(propertygrid_userHandlers[index] != "")
-						b->IO(StringConverter::toString(static_cast<PropertyGridEvent>(index)),&(propertygrid_userHandlers[index]));
+						b->IO(StringConverter::toString(static_cast<PropertyGridEvent>(index)),&(propertygrid_userHandlers[index]),"");
 				}
 			}
 			b->end();
@@ -330,6 +367,32 @@ namespace QuickGUI
 
 		if(mea.button == MB_Left)
 			selectItem(NULL);
+	}
+
+	void PropertyGrid::removeEventHandlers(void* obj)
+	{
+		ContainerWidget::removeEventHandlers(obj);
+
+		for(int index = 0; index < PROPERTYGRID_EVENT_COUNT; ++index)
+		{
+			std::vector<EventHandlerSlot*> updatedList;
+			std::vector<EventHandlerSlot*> listToCleanup;
+
+			for(std::vector<EventHandlerSlot*>::iterator it = mPropertyGridEventHandlers[index].begin(); it != mPropertyGridEventHandlers[index].end(); ++it)
+			{
+				if((*it)->getClass() == obj)
+					listToCleanup.push_back((*it));
+				else
+					updatedList.push_back((*it));
+			}
+
+			mPropertyGridEventHandlers[index].clear();
+			for(std::vector<EventHandlerSlot*>::iterator it = updatedList.begin(); it != updatedList.end(); ++it)
+				mPropertyGridEventHandlers[index].push_back((*it));
+
+			for(std::vector<EventHandlerSlot*>::iterator it = listToCleanup.begin(); it != listToCleanup.end(); ++it)
+				OGRE_DELETE_T((*it),EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
+		}
 	}
 
 	void PropertyGrid::selectItem(PropertyGridItem* pgp)

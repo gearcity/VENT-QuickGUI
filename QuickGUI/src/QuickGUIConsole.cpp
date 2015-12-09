@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIConsole.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUIRoot.h"
@@ -7,6 +36,8 @@
 #include "QuickGUITextArea.h"
 #include "QuickGUITextBox.h"
 #include "QuickGUIDescManager.h"
+
+#include "OgreFont.h"
 
 namespace QuickGUI
 {
@@ -18,8 +49,8 @@ namespace QuickGUI
 	{
 		SkinDefinition* d = OGRE_NEW_T(SkinDefinition,Ogre::MEMCATEGORY_GENERAL)("Console");
 		d->defineSkinElement(BACKGROUND);
-		d->defineComponent(TEXTBOX);
-		d->defineComponent(TEXTAREA);
+		d->defineSkinReference(TEXTBOX,"TextBox");
+		d->defineSkinReference(TEXTAREA,"TextArea");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("Console",d);
@@ -50,13 +81,21 @@ namespace QuickGUI
 	{
 		ComponentWidgetDesc::serialize(b);
 
-		b->IO("DisplayAreaHorizontalAlignment",&console_displayAreaHorizontalAlignment);
-		b->IO("InputBoxHeight",&console_inputBoxHeight);
-		b->IO("InputBoxDefaultColor",&console_inputBoxDefaultColor);
-		b->IO("InputBoxDefaultFontName",&console_inputBoxDefaultFontName);
-		b->IO("InputBoxHorizontalAlignment",&console_inputBoxHorizontalAlignment);
-		b->IO("InputBoxTextCursorDefaultSkinTypeName",&console_inputBoxTextCursorDefaultSkinTypeName);
-		b->IO("ConsoleLayout",&console_layout);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		ConsoleDesc* defaultValues = DescManager::getSingleton().createDesc<ConsoleDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("DisplayAreaHorizontalAlignment",			&console_displayAreaHorizontalAlignment,		defaultValues->console_displayAreaHorizontalAlignment);
+		b->IO("InputBoxHeight",							&console_inputBoxHeight,						defaultValues->console_inputBoxHeight);
+		b->IO("InputBoxDefaultColor",					&console_inputBoxDefaultColor,					defaultValues->console_inputBoxDefaultColor);
+		b->IO("InputBoxDefaultFontName",				&console_inputBoxDefaultFontName,				defaultValues->console_inputBoxDefaultFontName);
+		b->IO("InputBoxHorizontalAlignment",			&console_inputBoxHorizontalAlignment,			defaultValues->console_inputBoxHorizontalAlignment);
+		b->IO("InputBoxTextCursorDefaultSkinTypeName",	&console_inputBoxTextCursorDefaultSkinTypeName, defaultValues->console_inputBoxTextCursorDefaultSkinTypeName);
+		b->IO("ConsoleLayout",							&console_layout,								defaultValues->console_layout);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 	}
 
 	Console::Console(const Ogre::String& name) :
@@ -137,27 +176,39 @@ namespace QuickGUI
 		mInputBox->addWidgetEventHandler(WIDGET_EVENT_CHARACTER_KEY,function);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::addDisplayAreaText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv, bool newLine)
 	{
-		mDisplayArea->addText(s,fp,cv);
+		if(newLine)
+			mDisplayArea->addTextLine(s,fp,cv);
+		else
+			mDisplayArea->addText(s,fp,cv);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void Console::addDisplayAreaText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv, bool newLine)
 	{
-		mDisplayArea->addText(s,fontName,cv);
+		if(newLine)
+			mDisplayArea->addTextLine(s,fontName,cv);
+		else
+			mDisplayArea->addText(s,fontName,cv);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s)
+	void Console::addDisplayAreaText(Ogre::UTFString s, bool newLine)
 	{
-		mDisplayArea->addText(s);
+		if(newLine)
+			mDisplayArea->addTextLine(s);
+		else
+			mDisplayArea->addText(s);
 	}
 	
-	void Console::addDisplayAreaText(std::vector<TextSegment> segments)
+	void Console::addDisplayAreaText(std::vector<TextSegment> segments, bool newLine)
 	{
-		mDisplayArea->addText(segments);
+		if(newLine)
+			mDisplayArea->addTextLine(segments);
+		else
+			mDisplayArea->addText(segments);
 	}
 
-	void Console::addInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::addInputBoxText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mInputBox->addText(s,fp,cv);
 	}
@@ -323,7 +374,7 @@ namespace QuickGUI
 		setInputBoxText(s,Text::getFont(mDesc->console_inputBoxDefaultFontName),mDesc->console_inputBoxDefaultColor);
 	}
 
-	void Console::setInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::setInputBoxText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mInputBox->setText(s,fp,cv);
 	}

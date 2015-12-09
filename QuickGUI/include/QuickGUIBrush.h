@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #ifndef QUICKGUIBRUSH_H
 #define QUICKGUIBRUSH_H
 
@@ -16,11 +45,14 @@
 #include "OgreRenderSystem.h"
 #include "OgreRoot.h"
 #include "OgreSingleton.h"
-#include "OgreTexture.h"
-#include "OgreTextureManager.h"
-#include "OgreTextureUnitState.h"
 
 #include <vector>
+
+namespace Ogre
+{
+	// forward declarations
+	class Texture;
+}
 
 namespace QuickGUI
 {
@@ -77,16 +109,16 @@ namespace QuickGUI
 		* the portion of the currently set texture to draw to the rectangle area.  Texture
 		* is stretched to fit the dimensions.
 		*/
-		void drawRectangle(Rect r, UVRect ur);
+		void drawRectangle(Rect r, UVRect ur, int rotationInDegrees = 0, Point origin = Point::ZERO);
 		/**
 		* Draws the SkinElement to the Render Target.  The texture drawn is supplied by the
 		* Skin Element.  The Skin Element also defines border thickness, which is drawn as expected.
 		*/
-		void drawSkinElement(Rect r, SkinElement* e);
+		void drawSkinElement(Rect r, SkinElement* e, int rotationInDegrees = 0, Point origin = Point::ZERO);
 		/**
 		* Draws a tiled texture, defined by the uv coordinates, within the provided rectangle area.
 		*/
-		void drawTiledRectangle(Rect r, UVRect ur);
+		void drawTiledRectangle(Rect r, UVRect ur, int rotationInDegrees = 0, Point origin = Point::ZERO);
 
 		/**
 		* Renders all lines queued for drawing. (1 batch)
@@ -124,7 +156,7 @@ namespace QuickGUI
 		/**
 		* Retrieves the current texture used for drawing operations.
 		*/
-		Ogre::TexturePtr getTexture();
+		Ogre::Texture* getTexture();
 
 		/**
 		* Configures the Rendering system preparing it to draw in 2D.  Must be called
@@ -144,7 +176,7 @@ namespace QuickGUI
 		* Queues a non-tiled rectangle for drawing.  All Queued rects
 		* will have the same texture.
 		*/
-		void queueRect(Rect r, UVRect ur);
+		void queueRect(Rect r, UVRect ur, int rotationInDegrees = 0, Point origin = Point::ZERO);
 
 		/**
 		* Restores rendering system configuration.  Called after all drawing operations
@@ -175,7 +207,7 @@ namespace QuickGUI
 		/**
 		* This function specifies where to draw to.
 		*/
-		void setRenderTarget(Ogre::TexturePtr p);
+		void setRenderTarget(Ogre::Texture* p);
 		/**
 		* This function specifies where to draw to.  If NULL is passed in, the
 		* default viewport is written to.
@@ -188,7 +220,7 @@ namespace QuickGUI
 		/**
 		* Sets the current texture to draw with
 		*/
-		void setTexture(Ogre::TexturePtr p);
+		void setTexture(Ogre::Texture* p);
 
 		/**
 		* Updates the SceneManager, used to render any Materials.
@@ -216,10 +248,10 @@ namespace QuickGUI
 		Ogre::HardwareVertexBufferSharedPtr mVertexBuffer;
 		
 		Ogre::RenderOperation mRenderOperation;
-		Ogre::TexturePtr mDefaultTexture;
+		Ogre::Texture* mDefaultTexture;
 
 		/// Texture used for draw operations.
-		Ogre::TexturePtr mTexture;
+		Ogre::Texture* mTexture;
 
 		ColourValue mColourValue;
 
@@ -263,7 +295,9 @@ namespace QuickGUI
 		* Populates and fills vertex and uv information for rendering.
 		* NOTE: verts and uv should be arrays of size 6.
 		*/
-		void _buildQuadVertices(const Rect& dimensions, const UVRect& uvCoords, Vector3* verts, Vector2* uv);
+		void _buildQuadVertices(const Rect& dimensions, const UVRect& uvCoords, Vector3* verts, Vector2* uv, int rotationInDegrees = 0, Point origin = Point::ZERO);
+
+		void _rotatePoint(Vector3& v3, int rotationInDegrees, const Point& origin);
 	};
 }
 

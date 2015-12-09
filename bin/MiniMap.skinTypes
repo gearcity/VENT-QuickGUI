@@ -1,0 +1,27 @@
+Image minimap.camera.box
+{ 
+    SkinElement background
+    { 
+        Border_Bottom 0
+        Border_Left 0
+        Border_Right 0
+        Border_Top 0
+        Texture minimap.camera.box.png
+        TileBackground false
+        TileBorders false
+    } 
+} 
+
+Image MiniMap
+{
+    SkinElement background
+    {
+        Border_Bottom 53
+        Border_Left 70
+        Border_Right 70
+        Border_Top 46
+        Texture rotm.minimap.png
+        TileBackground false
+        TileBorders false
+    }
+}

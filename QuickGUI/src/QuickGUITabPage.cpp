@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUITabPage.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUITabControl.h"
@@ -8,6 +37,8 @@
 #include "QuickGUITab.h"
 #include "QuickGUIDescManager.h"
 #include "QuickGUIWidgetFactory.h"
+
+#include "OgreFont.h"
 
 namespace QuickGUI
 {
@@ -20,10 +51,10 @@ namespace QuickGUI
 	void TabPage::registerSkinDefinition()
 	{
 		SkinDefinition* d = OGRE_NEW_T(SkinDefinition,Ogre::MEMCATEGORY_GENERAL)("TabPage");
-		d->defineComponent(TAB);
-		d->defineComponent(TAB_OVER);
-		d->defineComponent(TAB_SELECTED);
-		d->defineComponent(PAGE);
+		d->defineSkinReference(TAB,"Tab");
+		d->defineSkinReference(TAB_OVER,"Tab");
+		d->defineSkinReference(TAB_SELECTED,"Tab");
+		d->defineSkinReference(PAGE,"Panel");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("TabPage",d);
@@ -156,10 +187,13 @@ namespace QuickGUI
 		brush->setClipRegion(prevClipRegion);
 	}
 
-	Widget* TabPage::findWidgetAtPoint(const Point& p, bool ignoreDisabled)
+	Widget* TabPage::findWidgetAtPoint(const Point& p, unsigned int queryFilter, bool ignoreDisabled)
 	{
 		// If we are not visible, return NULL
 		if(!mWidgetDesc->widget_visible)
+			return NULL;
+
+		if((mWidgetDesc->widget_queryFlags & queryFilter) == 0)
 			return NULL;
 
 		// If we ignore disabled and this widget is enabled, return NULL
@@ -276,7 +310,7 @@ namespace QuickGUI
 	{
 		mPage->removeChild(w);
 
-		std::vector<Widget*>::iterator it = std::find(mChildren.begin(),mChildren.end(),w);
+		std::list<Widget*>::iterator it = std::find(mChildren.begin(),mChildren.end(),w);
 		if(it == mChildren.end())
 			throw Exception(Exception::ERR_INVALID_CHILD,"Widget \"" + w->getName() + "\" is not a child of widget \"" + getName() + "\"","TabPage::removeChild");
 
@@ -342,7 +376,7 @@ namespace QuickGUI
 			// Serialize Page's children.  They will be properly added on serial read since TabPage::addChild really calls
 			// the pages addChild function.
 			b->begin("Child","Widgets");
-			for(std::vector<Widget*>::iterator it = mPage->mChildren.begin(); it != mPage->mChildren.end(); ++it)
+			for(std::list<Widget*>::iterator it = mPage->mChildren.begin(); it != mPage->mChildren.end(); ++it)
 			{
 				(*it)->serialize(b);
 			}
@@ -427,7 +461,7 @@ namespace QuickGUI
 		}
 	}
 
-	void TabPage::setTabText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TabPage::setTabText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mTab->setText(s,fp,cv);
 	}

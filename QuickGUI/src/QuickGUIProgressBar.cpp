@@ -1,7 +1,39 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIProgressBar.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUISkinDefinition.h"
 #include "QuickGUIEventHandlerManager.h"
+#include "QuickGUIDescManager.h"
+
+#include "OgreTexture.h"
 
 namespace QuickGUI
 {
@@ -37,7 +69,6 @@ namespace QuickGUI
 		progressbar_layout = PROGRESSBAR_LAYOUT_HORIZONTAL;
 		progressbar_clippingEdge = PROGRESSBAR_CLIP_LEFT_BOTTOM;
 		progressbar_progress = 100;
-		progressbar_verticalTextAlignment = TEXT_ALIGNMENT_VERTICAL_CENTER;
 
 		for(int index = 0; index < PROGRESSBAR_EVENT_COUNT; ++index)
 			progressbar_userHandlers[index] = "";
@@ -51,28 +82,34 @@ namespace QuickGUI
 	{
 		WidgetDesc::serialize(b);
 
-		b->IO("VerticalTextAlignment",&progressbar_verticalTextAlignment);
-
 		TextUserDesc::serialize(b);
 
-		b->IO("Progress",&progressbar_progress);
-		b->IO("FillDirection",&progressbar_fillDirection);
-		b->IO("Layout",&progressbar_layout);
-		b->IO("ClippingEdge",&progressbar_clippingEdge);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		ProgressBarDesc* defaultValues = DescManager::getSingleton().createDesc<ProgressBarDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("Progress",		&progressbar_progress,		defaultValues->progressbar_progress);
+		b->IO("FillDirection",	&progressbar_fillDirection, defaultValues->progressbar_fillDirection);
+		b->IO("Layout",			&progressbar_layout,		defaultValues->progressbar_layout);
+		b->IO("ClippingEdge",	&progressbar_clippingEdge,	defaultValues->progressbar_clippingEdge);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		if(b->begin("UserDefinedHandlers","ProgressBarEvents"))
 		{
 			if(b->isSerialReader())
 			{
 				for(int index = 0; index < PROGRESSBAR_EVENT_COUNT; ++index)
-					b->IO(StringConverter::toString(static_cast<ProgressBarEvent>(index)),&(progressbar_userHandlers[index]));
+					b->IO(StringConverter::toString(static_cast<ProgressBarEvent>(index)),&(progressbar_userHandlers[index]),"");
 			}
 			else
 			{
 				for(int index = 0; index < PROGRESSBAR_EVENT_COUNT; ++index)
 				{
 					if(progressbar_userHandlers[index] != "")
-						b->IO(StringConverter::toString(static_cast<ProgressBarEvent>(index)),&(progressbar_userHandlers[index]));
+						b->IO(StringConverter::toString(static_cast<ProgressBarEvent>(index)),&(progressbar_userHandlers[index]),"");
 				}
 			}
 			b->end();
@@ -81,7 +118,8 @@ namespace QuickGUI
 
 	ProgressBar::ProgressBar(const Ogre::String& name) :
 		Widget(name),
-		TextUser()
+		TextUser(),
+		mOutputBarTexture(NULL)
 	{
 	}
 
@@ -94,10 +132,10 @@ namespace QuickGUI
 				OGRE_DELETE_T((*it),EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
 		}
 
-		if(!mOutputBarTexture.isNull())
+		if(mOutputBarTexture != NULL)
 		{
 			Ogre::String textureName = mOutputBarTexture->getName();
-			mOutputBarTexture.setNull();
+			mOutputBarTexture = NULL;
 			Ogre::TextureManager::getSingletonPtr()->remove(textureName);
 		}
 	}
@@ -123,9 +161,8 @@ namespace QuickGUI
 		// Make a copy of the Text Desc.  The Text object will
 		// modify it directly, which is used for serialization.
 		mDesc->textDesc = pd->textDesc;
-
-		mDesc->textDesc.allottedWidth = pd->widget_dimensions.size.width - (mSkinElement->getBorderThickness(BORDER_LEFT) + mSkinElement->getBorderThickness(BORDER_RIGHT));
-		mDesc->progressbar_verticalTextAlignment = pd->progressbar_verticalTextAlignment;
+		mDesc->textDesc.allottedSize.height = mDesc->widget_dimensions.size.height - (mSkinElement->getBorderThickness(BORDER_TOP) + mSkinElement->getBorderThickness(BORDER_BOTTOM));
+		mDesc->textDesc.allottedSize.width = mDesc->widget_dimensions.size.width - (mSkinElement->getBorderThickness(BORDER_LEFT) + mSkinElement->getBorderThickness(BORDER_RIGHT));
 		TextUser::_initialize(this,mDesc);
 	}
 
@@ -200,6 +237,32 @@ namespace QuickGUI
 		return mDesc->progressbar_fillDirection;
 	}
 
+	void ProgressBar::removeEventHandlers(void* obj)
+	{
+		Widget::removeEventHandlers(obj);
+
+		for(int index = 0; index < PROGRESSBAR_EVENT_COUNT; ++index)
+		{
+			std::vector<EventHandlerSlot*> updatedList;
+			std::vector<EventHandlerSlot*> listToCleanup;
+
+			for(std::vector<EventHandlerSlot*>::iterator it = mProgressBarEventHandlers[index].begin(); it != mProgressBarEventHandlers[index].end(); ++it)
+			{
+				if((*it)->getClass() == obj)
+					listToCleanup.push_back((*it));
+				else
+					updatedList.push_back((*it));
+			}
+
+			mProgressBarEventHandlers[index].clear();
+			for(std::vector<EventHandlerSlot*>::iterator it = updatedList.begin(); it != updatedList.end(); ++it)
+				mProgressBarEventHandlers[index].push_back((*it));
+
+			for(std::vector<EventHandlerSlot*>::iterator it = listToCleanup.begin(); it != listToCleanup.end(); ++it)
+				OGRE_DELETE_T((*it),EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
+		}
+	}
+
 	ProgressBarLayout ProgressBar::setLayout()
 	{
 		return mDesc->progressbar_layout;
@@ -208,11 +271,6 @@ namespace QuickGUI
 	float ProgressBar::getProgress()
 	{
 		return mDesc->progressbar_progress;
-	}
-
-	VerticalTextAlignment ProgressBar::getVerticalTextAlignment()
-	{
-		return mDesc->progressbar_verticalTextAlignment;
 	}
 
 	void ProgressBar::onDraw()
@@ -234,24 +292,6 @@ namespace QuickGUI
 		if(mText->empty())
 			return;
 
-		// Center Text Vertically
-
-		float textHeight = mText->getTextHeight();
-		float yPos = 0;
-
-		switch(mDesc->progressbar_verticalTextAlignment)
-		{
-		case TEXT_ALIGNMENT_VERTICAL_BOTTOM:
-			yPos = mDesc->widget_dimensions.size.height - mSkinElement->getBorderThickness(BORDER_BOTTOM) - textHeight;
-			break;
-		case TEXT_ALIGNMENT_VERTICAL_CENTER:
-			yPos = (mDesc->widget_dimensions.size.height / 2.0) - (textHeight / 2.0);
-			break;
-		case TEXT_ALIGNMENT_VERTICAL_TOP:
-			yPos = mSkinElement->getBorderThickness(BORDER_TOP);
-			break;
-		}
-
 		// Clip to client dimensions
 		Rect clipRegion(mClientDimensions);
 		clipRegion.translate(mTexturePosition);
@@ -260,7 +300,6 @@ namespace QuickGUI
 
 		// Adjust Rect to Text drawing region
 		clipRegion = mClientDimensions;
-		clipRegion.position.y = yPos;
 		clipRegion.translate(mTexturePosition);		
 
 		mText->draw(clipRegion.position);
@@ -430,8 +469,8 @@ namespace QuickGUI
 
 			// Blit the area of the Bar texture to the output texture. (Grab pixels from Src in Bar texture, and add to Dest in Output Texture)
 
-			Ogre::PixelBox srcBox = mBarImage.getPixelBox().getSubVolume(Ogre::Box(sourceArea.position.x * barWidth,sourceArea.position.y * barHeight,(sourceArea.position.x * barWidth) + (sourceArea.size.width * barWidth),(sourceArea.position.y * barHeight) + (sourceArea.size.height * barHeight)));
-			Ogre::Image::Box dstBox = Ogre::Image::Box(destArea.position.x * barWidth,destArea.position.y * barHeight,(destArea.position.x * barWidth) + (destArea.size.width * barWidth),(destArea.position.y * barHeight) + (destArea.size.height * barHeight));
+			Ogre::PixelBox srcBox = mBarImage.getPixelBox().getSubVolume(Ogre::Box(static_cast<size_t>(sourceArea.position.x * barWidth),static_cast<size_t>(sourceArea.position.y * barHeight),static_cast<size_t>((sourceArea.position.x * barWidth) + (sourceArea.size.width * barWidth)),static_cast<size_t>((sourceArea.position.y * barHeight) + (sourceArea.size.height * barHeight))));
+			Ogre::Image::Box dstBox = Ogre::Image::Box(static_cast<size_t>(destArea.position.x * barWidth),static_cast<size_t>(destArea.position.y * barHeight),static_cast<size_t>((destArea.position.x * barWidth) + (destArea.size.width * barWidth)),static_cast<size_t>((destArea.position.y * barHeight) + (destArea.size.height * barHeight)));
 
 			buf->blitFromMemory(srcBox,dstBox);
 
@@ -465,37 +504,34 @@ namespace QuickGUI
 		_processClipMap();
 
 		// Create Output Bar texture - If it already exists, destroy previous one
-		if(!mOutputBarTexture.isNull())
+		if(mOutputBarTexture != NULL)
 		{
 			Ogre::String textureName = mOutputBarTexture->getName();
-			mOutputBarTexture.setNull();
+			mOutputBarTexture = NULL;
 			Ogre::TextureManager::getSingletonPtr()->remove(textureName);
 		}
 
-		mOutputBarTexture = Ogre::TextureManager::getSingletonPtr()->createManual(getName() + ".bar.output", 
+		Ogre::String texName = getName() + ".bar.output";
+		while(Ogre::TextureManager::getSingleton().resourceExists(texName))
+			texName += "_";
+
+		mOutputBarTexture = Ogre::TextureManager::getSingletonPtr()->createManual(texName, 
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 			Ogre::TEX_TYPE_2D,
 			static_cast<Ogre::uint>(mBarImage.getWidth()),
 			static_cast<Ogre::uint>(mBarImage.getHeight()),
 			0, 
 			Ogre::PF_B8G8R8A8,
-			Ogre::TU_STATIC);
+			Ogre::TU_STATIC).getPointer();
 
 		setProgress(mDesc->progressbar_progress);
-	}
-
-	void ProgressBar::setVerticalTextAlignment(VerticalTextAlignment a)
-	{
-		mDesc->progressbar_verticalTextAlignment = a;
-
-		redraw();
 	}
 
 	void ProgressBar::updateClientDimensions()
 	{
 		Widget::updateClientDimensions();
 		if(mText != NULL)
-			mText->setAllottedWidth(mClientDimensions.size.width);
+			mText->setAllottedSize(mClientDimensions.size);
 
 		redraw();
 	}

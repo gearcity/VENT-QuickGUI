@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUITreeViewCheckBoxNode.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUIFactoryManager.h"
@@ -16,7 +45,7 @@ namespace QuickGUI
 		d->defineSkinElement(BACKGROUND);
 		d->defineSkinElement(ICON);
 		d->defineSkinElement(SELECTED);
-		d->defineComponent(CHECKBOX);
+		d->defineSkinReference(CHECKBOX,"CheckBox");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("TreeViewCheckBoxNode",d);
@@ -41,21 +70,29 @@ namespace QuickGUI
 	{
 		TreeViewNodeDesc::serialize(b);
 
-		b->IO("Checked",&treeviewcheckboxnode_checked);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		TreeViewCheckBoxNodeDesc* defaultValues = DescManager::getSingleton().createDesc<TreeViewCheckBoxNodeDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("Checked", &treeviewcheckboxnode_checked, defaultValues->treeviewcheckboxnode_checked);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		if(b->begin("UserDefinedHandlers","TreeViewCheckBoxNodeEvents"))
 		{
 			if(b->isSerialReader())
 			{
 				for(int index = 0; index < TREEVIEWCHECKBOXNODE_EVENT_COUNT; ++index)
-					b->IO(StringConverter::toString(static_cast<TreeViewCheckBoxNodeEvent>(index)),&(treeviewcheckboxnode_userHandlers[index]));
+					b->IO(StringConverter::toString(static_cast<TreeViewCheckBoxNodeEvent>(index)),&(treeviewcheckboxnode_userHandlers[index]),"");
 			}
 			else
 			{
 				for(int index = 0; index < TREEVIEWCHECKBOXNODE_EVENT_COUNT; ++index)
 				{
 					if(treeviewcheckboxnode_userHandlers[index] != "")
-						b->IO(StringConverter::toString(static_cast<TreeViewCheckBoxNodeEvent>(index)),&(treeviewcheckboxnode_userHandlers[index]));
+						b->IO(StringConverter::toString(static_cast<TreeViewCheckBoxNodeEvent>(index)),&(treeviewcheckboxnode_userHandlers[index]),"");
 				}
 			}
 			b->end();
@@ -178,11 +215,6 @@ namespace QuickGUI
 		Point iconPosition(mTexturePosition.x + (mWidgetDesc->widget_dimensions.size.height * 2),mTexturePosition.y);
 		brush->drawSkinElement(Rect(iconPosition,Size(mWidgetDesc->widget_dimensions.size.height)),mSkinType->getSkinElement(ICON));
 
-		// Center Text Vertically
-
-		float textHeight = mText->getTextHeight();
-		float yPos = (mDesc->widget_dimensions.size.height / 2.0) - (textHeight / 2.0);
-
 		// Clip to client dimensions
 		Rect clipRegion(mTexturePosition,Size(mWidgetDesc->widget_dimensions.size.width - mWidgetDesc->widget_dimensions.size.height,mWidgetDesc->widget_dimensions.size.height));
 		clipRegion.translate(Point(mWidgetDesc->widget_dimensions.size.height * 3,0));
@@ -191,13 +223,38 @@ namespace QuickGUI
 
 		// Adjust Rect to Text drawing region
 		Point textPosition = clipRegion.position;
-		textPosition.y += yPos;		
 
 		mText->draw(textPosition);
 
 		// Restore Clipping
 		brush->setClipRegion(prevClipRegion);
 		brush->setColor(prevColor);
+	}
+
+	void TreeViewCheckBoxNode::removeEventHandlers(void* obj)
+	{
+		ComponentWidget::removeEventHandlers(obj);
+
+		for(int index = 0; index < TREEVIEWCHECKBOXNODE_EVENT_COUNT; ++index)
+		{
+			std::vector<EventHandlerSlot*> updatedList;
+			std::vector<EventHandlerSlot*> listToCleanup;
+
+			for(std::vector<EventHandlerSlot*>::iterator it = mTreeViewCheckBoxNodeEventHandlers[index].begin(); it != mTreeViewCheckBoxNodeEventHandlers[index].end(); ++it)
+			{
+				if((*it)->getClass() == obj)
+					listToCleanup.push_back((*it));
+				else
+					updatedList.push_back((*it));
+			}
+
+			mTreeViewCheckBoxNodeEventHandlers[index].clear();
+			for(std::vector<EventHandlerSlot*>::iterator it = updatedList.begin(); it != updatedList.end(); ++it)
+				mTreeViewCheckBoxNodeEventHandlers[index].push_back((*it));
+
+			for(std::vector<EventHandlerSlot*>::iterator it = listToCleanup.begin(); it != listToCleanup.end(); ++it)
+				OGRE_DELETE_T((*it),EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
+		}
 	}
 
 	void TreeViewCheckBoxNode::setChecked(bool checked)

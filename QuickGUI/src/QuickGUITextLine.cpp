@@ -1,11 +1,42 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUITextLine.h"
 #include "QuickGUIText.h"
+
+#include "OgreFont.h"
 
 namespace QuickGUI
 {
 	TextLine::TextLine()
 	{
-		mLargestFont.setNull();
+		mLargestFont = NULL;
 		mMaskText = false;
 	}
 
@@ -15,12 +46,12 @@ namespace QuickGUI
 
 	void TextLine::_verticallyAlignCharacters()
 	{
-		Ogre::TexturePtr largestFontTexture = Text::getFontTexture(mLargestFont);
+		Ogre::Texture* largestFontTexture = Text::getFontTexture(mLargestFont);
 		float maxBaseLine = (mLargestFont->getTrueTypeMaxBearingY() >> 6);
 
 		for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 		{
-			Ogre::TexturePtr tp = Text::getFontTexture((*it)->fontPtr);
+			Ogre::Texture* tp = Text::getFontTexture((*it)->fontPtr);
 			float baseLine = ((*it)->fontPtr->getTrueTypeMaxBearingY() >> 6);
 
 			(*it)->dimensions.position.y = maxBaseLine - baseLine;
@@ -44,14 +75,14 @@ namespace QuickGUI
 		c->dimensions.position.x += xCoord;
 
 		// Adjust Y position to match largest baseline
-		if(mLargestFont.isNull() || Text::getFontHeight(c->fontPtr) > Text::getFontHeight(mLargestFont))
+		if((mLargestFont == NULL) || Text::getFontHeight(c->fontPtr) > Text::getFontHeight(mLargestFont))
 		{
 			mLargestFont = c->fontPtr;
 			_verticallyAlignCharacters();
 		}
 		else
 		{
-			Ogre::TexturePtr largestFontTexture = Text::getFontTexture(mLargestFont);
+			Ogre::Texture* largestFontTexture = Text::getFontTexture(mLargestFont);
 			float maxBaseLine = (mLargestFont->getTrueTypeMaxBearingY() >> 6);
 			float baseLine = (c->fontPtr->getTrueTypeMaxBearingY() >> 6);
 
@@ -98,7 +129,7 @@ namespace QuickGUI
 			brush->endRectQueue();
 
 			// Set texture to largest font's texture
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
+			Ogre::Texture* texturePtr = Text::getFontTexture(mLargestFont);
 			brush->setTexture(texturePtr);
 			brush->setColor(mCharacters.front()->colorValue);
 
@@ -169,7 +200,7 @@ namespace QuickGUI
 
 		if(mMaskText)
 		{
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
+			Ogre::Texture* texturePtr = Text::getFontTexture(mLargestFont);
 
 			// Get the glyph's UV Coords
 			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
@@ -222,7 +253,7 @@ namespace QuickGUI
 
 	float TextLine::getHeight()
 	{
-		if(mLargestFont.isNull())
+		if((mLargestFont == NULL))
 			return 0;
 
 		return Text::getFontHeight(mLargestFont);
@@ -243,7 +274,7 @@ namespace QuickGUI
 
 		if(mMaskText)
 		{
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
+			Ogre::Texture* texturePtr = Text::getFontTexture(mLargestFont);
 
 			// Get the glyph's UV Coords
 			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
@@ -269,7 +300,7 @@ namespace QuickGUI
 
 		if(mMaskText)
 		{
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
+			Ogre::Texture* texturePtr = Text::getFontTexture(mLargestFont);
 		
 			// Get the glyph's UV Coords
 			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);

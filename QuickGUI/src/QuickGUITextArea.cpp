@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUITextArea.h"
 #include "QuickGUIWindow.h"
 #include "QuickGUIManager.h"
@@ -9,6 +38,9 @@
 #include "QuickGUITextLine.h"
 #include "QuickGUIVScrollBar.h"
 #include "QuickGUIHScrollBar.h"
+#include "QuickGUIDescManager.h"
+
+#include "OgreFont.h"
 
 namespace QuickGUI
 {
@@ -20,8 +52,8 @@ namespace QuickGUI
 		SkinDefinition* d = OGRE_NEW_T(SkinDefinition,Ogre::MEMCATEGORY_GENERAL)("TextArea");
 		d->defineSkinElement(BACKGROUND);
 		d->defineSkinElement(TEXTOVERLAY);
-		d->defineComponent(HSCROLLBAR);
-		d->defineComponent(VSCROLLBAR);
+		d->defineSkinReference(HSCROLLBAR,"HScrollBar");
+		d->defineSkinReference(VSCROLLBAR,"VScrollBar");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("TextArea",d);
@@ -43,8 +75,6 @@ namespace QuickGUI
 		textarea_defaultColor = Root::getSingleton().getDefaultColor();
 		textarea_defaultFontName = Root::getSingleton().getDefaultFontName();
 		textarea_horizontalPadding = 2;
-		textarea_keyDownTime = 0.6;
-		textarea_keyRepeatTime = 0.04;
 		textarea_maxCharacters = 255;
 		textarea_readOnly = false;
 		textarea_textCursorDefaultSkinTypeName = "default";
@@ -56,14 +86,20 @@ namespace QuickGUI
 	{
 		WidgetDesc::serialize(b);
 
-		b->IO("CursorBlinkTime",&textarea_cursorBlinkTime);
-		b->IO("DefaultColor",&textarea_defaultColor);
-		b->IO("DefaultFontName",&textarea_defaultFontName);
-		b->IO("KeyDownTime",&textarea_keyDownTime);
-		b->IO("KeyRepeatTime",&textarea_keyRepeatTime);
-		b->IO("MaxCharacters",&textarea_maxCharacters);
-		b->IO("TextCursorDefaultSkinTypeName",&textarea_textCursorDefaultSkinTypeName);
-		b->IO("TBHorizontalPadding",&textarea_horizontalPadding);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		TextAreaDesc* defaultValues = DescManager::getSingleton().createDesc<TextAreaDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("CursorBlinkTime",				&textarea_cursorBlinkTime,					defaultValues->textarea_cursorBlinkTime);
+		b->IO("DefaultColor",					&textarea_defaultColor,						defaultValues->textarea_defaultColor);
+		b->IO("DefaultFontName",				&textarea_defaultFontName,					defaultValues->textarea_defaultFontName);
+		b->IO("MaxCharacters",					&textarea_maxCharacters,					defaultValues->textarea_maxCharacters);
+		b->IO("TextCursorDefaultSkinTypeName",	&textarea_textCursorDefaultSkinTypeName,	defaultValues->textarea_textCursorDefaultSkinTypeName);
+		b->IO("TBHorizontalPadding",			&textarea_horizontalPadding,				defaultValues->textarea_horizontalPadding);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		textDesc.serialize(b);
 	}
@@ -78,7 +114,6 @@ namespace QuickGUI
 	{
 		addWidgetEventHandler(WIDGET_EVENT_CHARACTER_KEY,&TextArea::onCharEntered,this);
 		addWidgetEventHandler(WIDGET_EVENT_KEY_DOWN,&TextArea::onKeyDown,this);
-		addWidgetEventHandler(WIDGET_EVENT_KEY_UP,&TextArea::onKeyUp,this);
 		addWidgetEventHandler(WIDGET_EVENT_KEYBOARD_INPUT_GAIN,&TextArea::onKeyboardInputGain,this);
 		addWidgetEventHandler(WIDGET_EVENT_KEYBOARD_INPUT_LOSE,&TextArea::onKeyboardInputLose,this);
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&TextArea::onMouseButtonDown,this);
@@ -94,8 +129,6 @@ namespace QuickGUI
 			mWindow->removeWindowEventHandler(WINDOW_EVENT_DRAWN,this);
 
 		TimerManager::getSingleton().destroyTimer(mBlinkTimer);
-		TimerManager::getSingleton().destroyTimer(mKeyRepeatTimer);
-		TimerManager::getSingleton().destroyTimer(mKeyDownTimer);
 
 		OGRE_DELETE_T(mTextCursor,TextCursor,Ogre::MEMCATEGORY_GENERAL);
 		OGRE_DELETE_T(mText,Text,Ogre::MEMCATEGORY_GENERAL);
@@ -105,8 +138,8 @@ namespace QuickGUI
 	{
 		// Convert position to coordinates relative to TextBox position
 		Point relativePosition;
-		relativePosition.x = p.x - mTexturePosition.x;
-		relativePosition.y = p.y - mTexturePosition.y;
+		relativePosition.x = p.x - (mTexturePosition.x + mWindow->getPosition().x);
+		relativePosition.y = p.y - (mTexturePosition.y + mWindow->getPosition().y);
 
 		// Convert relative TextBox position to coordinates relative to client area
 		relativePosition -= mClientDimensions.position;
@@ -130,15 +163,6 @@ namespace QuickGUI
 		mBlinkTimer = TimerManager::getSingleton().createTimer(timerDesc);
 		mBlinkTimer->setCallback(&TextArea::blinkTimerCallback,this);
 
-		timerDesc.timePeriod = td->textarea_keyRepeatTime;
-		mKeyRepeatTimer = TimerManager::getSingleton().createTimer(timerDesc);
-		mKeyRepeatTimer->setCallback(&TextArea::keyRepeatTimerCallback,this);
-
-		timerDesc.repeat = false;
-		timerDesc.timePeriod = td->textarea_keyDownTime;
-		mKeyDownTimer = TimerManager::getSingleton().createTimer(timerDesc);
-		mKeyDownTimer->setCallback(&TextArea::keyDownTimerCallback,this);
-
 		ContainerWidget::_initialize(d);
 
 		mDesc = dynamic_cast<TextAreaDesc*>(mWidgetDesc);
@@ -149,27 +173,26 @@ namespace QuickGUI
 		mDesc->widget_consumeKeyboardEvents = true;
 		mCursorIndex = -1;
 
-		mFunctionKeyDownLast = false;
-
 		// Make a copy of the Text Desc.  The Text object will
 		// modify it directly, which is used for serialization.
 		mDesc->textDesc = td->textDesc;
-		mDesc->textDesc.allottedWidth = td->widget_dimensions.size.width;
 
 		setDefaultFont(td->textarea_defaultFontName);
 		setDefaultColor(td->textarea_defaultColor);
 		mDesc->textarea_maxCharacters = td->textarea_maxCharacters;
 
 		mDesc->textarea_cursorBlinkTime = td->textarea_cursorBlinkTime;
-		mDesc->textarea_keyDownTime = td->textarea_keyDownTime;
-		mDesc->textarea_keyRepeatTime = td->textarea_keyRepeatTime;
 		mDesc->textarea_readOnly = td->textarea_readOnly;
 		mDesc->textarea_horizontalPadding = td->textarea_horizontalPadding;
 
 		setSkinType(d->widget_skinTypeName);
 
-		mDesc->textDesc.allottedWidth = td->widget_dimensions.size.width - (mSkinElement->getBorderThickness(BORDER_LEFT) + mSkinElement->getBorderThickness(BORDER_RIGHT));
+		mDesc->textDesc.allottedSize.width = td->widget_dimensions.size.width - (mSkinElement->getBorderThickness(BORDER_LEFT) + mSkinElement->getBorderThickness(BORDER_RIGHT));
 		mText = OGRE_NEW_T(Text,Ogre::MEMCATEGORY_GENERAL)(mDesc->textDesc);
+
+		setHorizontalAlignment(mDesc->textDesc.horizontalTextAlignment);
+		// Make sure the text cursor is not visible, as setting the alignment will reposition the text cursor and make it visible.
+		mTextCursor->setVisible(false);
 	}
 
 	void TextArea::_setScrollY(float percentage)
@@ -191,7 +214,7 @@ namespace QuickGUI
 		// Offset vertical view according to percentage:
 		//   At 0.0, vertical view is not offset at all.
 		//   At 1.0, vertical view is offset to maximum.
-		mDesc->containerwidget_yScrollOffset = (percentage * maxViewDisplacement);
+		mDesc->containerwidget_yScrollOffset = static_cast<unsigned int>(percentage * maxViewDisplacement);
 		// In the TextArea widget we're offsetting the Text position to achieve the effect of offsetting the view.
 		mTextPosition.y = -(percentage * maxViewDisplacement);
 		mTextPosition.roundUp();
@@ -208,8 +231,8 @@ namespace QuickGUI
 			mTextCursor->setPosition(p);
 		}
 
-		for(std::vector<Widget*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
-			(*it)->setScrollY(mDesc->containerwidget_yScrollOffset);
+		for(std::list<Widget*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
+			(*it)->setScrollY(static_cast<unsigned int>(mDesc->containerwidget_yScrollOffset));
 	}
 
 	void TextArea::addCharacter(Ogre::UTFString::code_point cp)
@@ -221,7 +244,7 @@ namespace QuickGUI
 		setCursorIndex(mCursorIndex+1);
 	}
 
-	void TextArea::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextArea::addText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mText->addText(s,fp,cv);
 
@@ -253,7 +276,7 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::addTextLine(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextArea::addTextLine(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mText->addTextLine(s,fp,cv);
 
@@ -397,6 +420,7 @@ namespace QuickGUI
 		// Get characters position within text
 		float charYPos = mText->getCharacterYPosition(index);
 		charYPos += mTextPosition.y;
+		//charYPos -= mClientDimensions.position.y;
 		// Make sure to include bottom of character when querying if cursor is within view
 		Character* c = mText->getCharacter(index);
 		charYPos += c->dimensions.size.height;
@@ -417,19 +441,6 @@ namespace QuickGUI
 			return false;
 		else
 			return true;
-	}
-
-	void TextArea::keyDownTimerCallback()
-	{
-		mKeyRepeatTimer->start();
-	}
-
-	void TextArea::keyRepeatTimerCallback()
-	{
-		if(mFunctionKeyDownLast)
-			onKeyDown(mLastKnownInput);
-		else
-			onCharEntered(mLastKnownInput);
 	}
 
 	void TextArea::moveCursorDown()
@@ -468,11 +479,8 @@ namespace QuickGUI
 			return;
 
 		const KeyEventArgs kea = dynamic_cast<const KeyEventArgs&>(args);
-		mLastKnownInput.codepoint = kea.codepoint;
-		mLastKnownInput.keyMask = kea.keyMask;
-		mLastKnownInput.keyModifiers = kea.keyModifiers;
 
-		addCharacter(mLastKnownInput.codepoint);
+		addCharacter(kea.codepoint);
 	}
 
 	void TextArea::onDraw()
@@ -520,12 +528,6 @@ namespace QuickGUI
 			return;
 
 		const KeyEventArgs kea = dynamic_cast<const KeyEventArgs&>(args);
-		mLastKnownInput.keyMask = kea.keyMask;
-		mLastKnownInput.keyModifiers = kea.keyModifiers;
-		mLastKnownInput.scancode = kea.scancode;
-
-		mFunctionKeyDownLast = true;
-		mKeyDownTimer->start();
 
 		switch(kea.scancode)
 		{
@@ -574,18 +576,8 @@ namespace QuickGUI
 		case KC_RCONTROL:
 			break;
 		default:
-			mFunctionKeyDownLast = false;
 			break;
 		}
-	}
-
-	void TextArea::onKeyUp(const EventArgs& args)
-	{
-		if(mDesc->textarea_readOnly)
-			return;
-
-		mKeyDownTimer->stop();
-		mKeyRepeatTimer->stop();
 	}
 
 	void TextArea::onKeyboardInputGain(const EventArgs& args)
@@ -638,6 +630,14 @@ namespace QuickGUI
 		{
 			mBlinkTimer->stop();
 			mTextCursor->setVisible(false);
+		}
+		else
+		{
+			if((mWidgetDesc->sheet != NULL) && (mWidgetDesc->sheet->getKeyboardListener() == this))
+			{
+				mBlinkTimer->start();
+				mTextCursor->setVisible(true);
+			}
 		}
 	}
 
@@ -707,7 +707,7 @@ namespace QuickGUI
 			{
 				TextLine* tl = mText->getTextLineFromIndex(mCursorIndex);
 				// I throw in a buffer of 2 pixels, so floating point rounding won't be so bad
-				mVScrollBar->setPercentage((mText->getCharacterYPosition(mCursorIndex) + tl->getHeight() + 2 - mClientDimensions.size.height) / mVirtualSize.height);
+				mVScrollBar->setPercentage((mText->getCharacterYPosition(mCursorIndex) + tl->getHeight()) / mVirtualSize.height);
 			}
 		}
 
@@ -815,6 +815,10 @@ namespace QuickGUI
 			mWidgetDesc->guiManager = mParentWidget->getGUIManager();
 			mWidgetDesc->sheet = mParentWidget->getSheet();
 
+			// Check if widget should be centered in Parent's client area.
+			setHorizontalAnchor(mWidgetDesc->widget_horizontalAnchor);
+			setVerticalAnchor(mWidgetDesc->widget_verticalAnchor);
+
 			// Add event handler to new window
 			if(mWindow != NULL)
 				mWindow->addWindowEventHandler(WINDOW_EVENT_DRAWN,&TextArea::onWindowDrawn,this);
@@ -831,7 +835,7 @@ namespace QuickGUI
 		}
 
 		// Update children's window reference via setParent
-		for(std::vector<Widget*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
+		for(std::list<Widget*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
 		{
 			(*it)->setParent(this);
 		}
@@ -855,7 +859,7 @@ namespace QuickGUI
 		mTextCursor->setSkinType(skinTypeName);
 	}
 
-	void TextArea::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextArea::setText(Ogre::UTFString s, Ogre::Font* fp, const ColourValue& cv)
 	{
 		mText->setText(s,fp,cv);
 
@@ -985,7 +989,11 @@ namespace QuickGUI
 
 			if(textHeight > mVirtualSize.height)
 				mVirtualSize.height = textHeight;
+
+			mAmountToScrollOnWheel = (mText->getAverageTextLineHeight() / (mVirtualSize.height - mClientDimensions.size.height));
 		}
+		else
+			mAmountToScrollOnWheel = 0;
 
 		// Set Slider width/height.
 		mHScrollBar->setSliderWidth((mClientDimensions.size.width / mVirtualSize.width) * mHScrollBar->getSliderBounds().size.width);

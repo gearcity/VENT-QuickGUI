@@ -1,8 +1,61 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIStringConverter.h"
+
+#include "OgreCommon.h"
+#include "OgreStringConverter.h"
+
+#if OGRE_VERSION_MINOR < 7
+#include <OgreMemorySTLAllocator.h>
+#include <OgreMemoryAllocatorConfig.h>
+template <typename T, typename A = Ogre::STLAllocator<T, Ogre::GeneralAllocPolicy> > 
+	struct vector 
+	{ 
+#if OGRE_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
+		typedef typename std::vector<T, A> type;    
+#else
+		typedef typename std::vector<T> type;    
+#endif // OGRE_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
+	}; 
+#else // OGRE_VERSION_MINOR < 7
+using Ogre::vector;
+#endif // OGRE_VERSION_MINOR < 7
 
 namespace QuickGUI
 {
-	Ogre::String StringConverter::toString(BrushFilterMode m)
+	std::string StringConverter::toString(int i)
+	{
+		return Ogre::StringConverter::toString(i);
+	}
+
+	std::string StringConverter::toString(BrushFilterMode m)
 	{
 		switch(m)
 		{
@@ -14,7 +67,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(CheckBoxEvent e)
+	std::string StringConverter::toString(CheckBoxEvent e)
 	{
 		switch(e)
 		{
@@ -24,7 +77,16 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ComboBoxEvent e)
+	std::string StringConverter::toString(ColourValue c)
+	{
+		return (Ogre::StringConverter::toString(c.a) + " " + 
+			Ogre::StringConverter::toString(c.b) + " " +
+			Ogre::StringConverter::toString(c.g) + " " +
+			Ogre::StringConverter::toString(c.r)
+			);
+	}
+
+	std::string StringConverter::toString(ComboBoxEvent e)
 	{
 		switch(e)
 		{
@@ -34,7 +96,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ConsoleLayout l)
+	std::string StringConverter::toString(ConsoleLayout l)
 	{
 		switch(l)
 		{
@@ -45,7 +107,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(HorizontalAnchor a)
+	std::string StringConverter::toString(HorizontalAnchor a)
 	{
 		switch(a)
 		{
@@ -60,7 +122,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(HorizontalTextAlignment a)
+	std::string StringConverter::toString(HorizontalTextAlignment a)
 	{
 		switch(a)
 		{
@@ -72,7 +134,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ListEvent e)
+	std::string StringConverter::toString(ListEvent e)
 	{
 		switch(e)
 		{
@@ -82,19 +144,28 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(MouseCursorEvent e)
+	std::string StringConverter::toString(MouseEvent e)
 	{
 		switch(e)
 		{
-		case MOUSE_CUSSOR_EVENT_ENABLED_CHANGED:					return "MOUSE_CUSSOR_EVENT_ENABLED_CHANGED";
-		case MOUSE_CURSOR_EVENT_BORDER_ENTER:						return "MOUSE_CURSOR_EVENT_BORDER_ENTER";
-		case MOUSE_CURSOR_EVENT_BORDER_LEAVE:						return "MOUSE_CURSOR_EVENT_BORDER_LEAVE";
+		case MOUSE_EVENT_BUTTON_CLICK:								return "MOUSE_EVENT_BUTTON_CLICK";
+		case MOUSE_EVENT_BUTTON_DOUBLE_CLICK:						return "MOUSE_EVENT_BUTTON_DOUBLE_CLICK";
+		case MOUSE_EVENT_BUTTON_DOWN:								return "MOUSE_EVENT_BUTTON_DOWN";
+		case MOUSE_EVENT_BUTTON_TRIPLE_CLICK:						return "MOUSE_EVENT_BUTTON_TRIPLE_CLICK";
+		case MOUSE_EVENT_BUTTON_UP:									return "MOUSE_EVENT_BUTTON_UP";
+		case MOUSE_EVENT_MOVE:										return "MOUSE_EVENT_MOVE";
+		case MOUSE_EVENT_SCROLL:									return "MOUSE_EVENT_SCROLL";
 		default:
-			throw Exception(Exception::ERR_SERIALIZATION,"MouseCursorEvent type does not have a string equivalent! Chick if update is needed!","StringConverter::toString");
+			throw Exception(Exception::ERR_SERIALIZATION,"MouseEvent type does not have a string equivalent! Chick if update is needed!","StringConverter::toString");
 		}
 	}
 
-	Ogre::String StringConverter::toString(ProgressBarEvent e)
+	std::string StringConverter::toString(Point p)
+	{
+		return (Ogre::StringConverter::toString(p.x) + " " + Ogre::StringConverter::toString(p.y));
+	}
+
+	std::string StringConverter::toString(ProgressBarEvent e)
 	{
 		switch(e)
 		{
@@ -104,7 +175,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(VScrollBarButtonLayout l)
+	std::string StringConverter::toString(VScrollBarButtonLayout l)
 	{
 		switch(l)
 		{
@@ -120,7 +191,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(HScrollBarButtonLayout l)
+	std::string StringConverter::toString(HScrollBarButtonLayout l)
 	{
 		switch(l)
 		{
@@ -136,7 +207,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ProgressBarFillDirection d)
+	std::string StringConverter::toString(ProgressBarFillDirection d)
 	{
 		switch(d)
 		{
@@ -147,7 +218,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ProgressBarLayout l)
+	std::string StringConverter::toString(ProgressBarLayout l)
 	{
 		switch(l)
 		{
@@ -158,7 +229,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ProgressBarClippingEdge e)
+	std::string StringConverter::toString(ProgressBarClippingEdge e)
 	{
 		switch(e)
 		{
@@ -169,7 +240,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(PropertyGridEvent e)
+	std::string StringConverter::toString(PropertyGridEvent e)
 	{
 		switch(e)
 		{
@@ -179,7 +250,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(RadioButtonEvent e)
+	std::string StringConverter::toString(RadioButtonEvent e)
 	{
 		switch(e)
 		{
@@ -189,17 +260,45 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ScrollBarEvent e)
+	std::string StringConverter::toString(Rect r)
+	{
+		return (Ogre::StringConverter::toString(r.position.x) + " " + 
+			Ogre::StringConverter::toString(r.position.y) + " " +
+			Ogre::StringConverter::toString(r.size.width) + " " +
+			Ogre::StringConverter::toString(r.size.height)
+			);
+	}
+
+	std::string StringConverter::toString(ScrollBarEvent e)
 	{
 		switch(e)
 		{
 		case SCROLLBAR_EVENT_ON_SCROLLED:							return "SCROLLBAR_EVENT_ON_SCROLLED";
+		case SCROLLBAR_EVENT_SLIDER_DRAGGED:						return "SCROLLBAR_EVENT_SLIDER_DRAGGED";
 		default:
 			throw Exception(Exception::ERR_SERIALIZATION,"ScrollBarEvent type does not have a string equivalent! Chick if update is needed!","StringConverter::toString");
 		}
 	}
 
-	Ogre::String StringConverter::toString(TabControlEvent e)
+	std::string StringConverter::toString(SheetEvent e)
+	{
+		switch(e)
+		{
+		case SHEET_EVENT_MOUSE_CURSOR_ENTER_SHEET_BORDER:			return "SHEET_EVENT_MOUSE_CURSOR_ENTER_SHEET_BORDER";
+		case SHEET_EVENT_MOUSE_CURSOR_LEAVE_SHEET_BORDER:			return "SHEET_EVENT_MOUSE_CURSOR_LEAVE_SHEET_BORDER";
+		case SHEET_EVENT_MOUSE_CURSOR_SKIN_CHANGED:					return "SHEET_EVENT_MOUSE_CURSOR_SKIN_CHANGED";
+		case SHEET_EVENT_MOUSE_CURSOR_VISIBILE_CHANGED:				return "SHEET_EVENT_MOUSE_CURSOR_VISIBILE_CHANGED";
+		default:
+			throw Exception(Exception::ERR_SERIALIZATION,"SheetEvent type does not have a string equivalent! Chick if update is needed!","StringConverter::toString");
+		}
+	}
+
+	std::string StringConverter::toString(Size s)
+	{
+		return (Ogre::StringConverter::toString(s.width) + " " + Ogre::StringConverter::toString(s.height));
+	}
+
+	std::string StringConverter::toString(TabControlEvent e)
 	{
 		switch(e)
 		{
@@ -209,7 +308,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(ToolBarItemLayout l)
+	std::string StringConverter::toString(ToolBarItemLayout l)
 	{
 		switch(l)
 		{
@@ -220,7 +319,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(TreeViewEvent e)
+	std::string StringConverter::toString(TreeViewEvent e)
 	{
 		switch(e)
 		{
@@ -230,7 +329,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(TreeViewCheckBoxNodeEvent e)
+	std::string StringConverter::toString(TreeViewCheckBoxNodeEvent e)
 	{
 		switch(e)
 		{
@@ -240,7 +339,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(TreeViewRadioButtonNodeEvent e)
+	std::string StringConverter::toString(TreeViewRadioButtonNodeEvent e)
 	{
 		switch(e)
 		{
@@ -250,7 +349,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(VerticalAnchor a)
+	std::string StringConverter::toString(VerticalAnchor a)
 	{
 		switch(a)
 		{
@@ -265,7 +364,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(VerticalTextAlignment a)
+	std::string StringConverter::toString(VerticalTextAlignment a)
 	{
 		switch(a)
 		{
@@ -277,7 +376,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(WidgetEvent e)
+	std::string StringConverter::toString(WidgetEvent e)
 	{
 		switch(e)
 		{
@@ -310,7 +409,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String StringConverter::toString(WindowEvent e)
+	std::string StringConverter::toString(WindowEvent e)
 	{
 		switch(e)
 		{
@@ -322,7 +421,7 @@ namespace QuickGUI
 		}
 	}
 
-	BrushFilterMode StringConverter::parseBrushFilterMode(const Ogre::String& s)
+	BrushFilterMode StringConverter::parseBrushFilterMode(const std::string& s)
 	{
 		if(s == "BRUSHFILTER_NONE")									return BRUSHFILTER_NONE;
 		else if(s == "BRUSHFILTER_NEAREST")							return BRUSHFILTER_NEAREST;
@@ -331,21 +430,42 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized BrushFilterMode type! (Possible need to update?)","StringConverter::parseBrushFilterMode");
 	}
 
-	CheckBoxEvent StringConverter::parseCheckBoxEvent(const Ogre::String& s)
+	CheckBoxEvent StringConverter::parseCheckBoxEvent(const std::string& s)
 	{
 		if(s == "CHECKBOX_EVENT_CHECK_CHANGED")						return CHECKBOX_EVENT_CHECK_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized CheckBoxEvent type! (Possible need to update?)","StringConverter::parseCheckBoxEvent");
 	}
 
-	ComboBoxEvent StringConverter::parseComboBoxEvent(const Ogre::String& s)
+	ColourValue StringConverter::parseColourValue(const std::string& s)
+	{
+		Ogre::String ogreString(s);
+		vector<Ogre::String>::type vs = Ogre::StringUtil::split(ogreString," ");
+
+		ColourValue cv;
+
+		int vsSize = static_cast<int>(vs.size());
+		
+		if(vsSize > 0)
+			cv.a = Ogre::StringConverter::parseReal(vs[0]);
+		if(vsSize > 1)
+			cv.b = Ogre::StringConverter::parseReal(vs[1]);
+		if(vsSize > 2)
+			cv.g = Ogre::StringConverter::parseReal(vs[2]);
+		if(vsSize > 3)
+			cv.r = Ogre::StringConverter::parseReal(vs[3]);
+
+		return cv;
+	}
+
+	ComboBoxEvent StringConverter::parseComboBoxEvent(const std::string& s)
 	{
 		if(s == "COMBOBOX_EVENT_SELECTION_CHANGED")					return COMBOBOX_EVENT_SELECTION_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ComboBoxEvent type! (Possible need to update?)","StringConverter::parseComboBoxEvent");
 	}
 
-	ConsoleLayout StringConverter::parseConsoleLayout(const Ogre::String& s)
+	ConsoleLayout StringConverter::parseConsoleLayout(const std::string& s)
 	{
 		if(s == "CONSOLE_LAYOUT_TEXT_INPUT_BOTTOM")					return CONSOLE_LAYOUT_TEXT_INPUT_BOTTOM;
 		else if(s == "CONSOLE_LAYOUT_TEXT_INPUT_TOP")				return CONSOLE_LAYOUT_TEXT_INPUT_TOP;
@@ -353,7 +473,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ConsoleLayout type! (Possible need to update?)","StringConverter::parseConsoleLayout");
 	}
 
-	HorizontalAnchor StringConverter::parseHorizontalAnchor(const Ogre::String& s)
+	HorizontalAnchor StringConverter::parseHorizontalAnchor(const std::string& s)
 	{
 		if(s == "ANCHOR_HORIZONTAL_CENTER")							return ANCHOR_HORIZONTAL_CENTER;
 		else if(s == "ANCHOR_HORIZONTAL_CENTER_DYNAMIC")			return ANCHOR_HORIZONTAL_CENTER_DYNAMIC;
@@ -365,7 +485,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized HorizontalAnchor type! (Possible need to update?)","StringConverter::parseHorizontalAnchor");
 	}
 
-	HorizontalTextAlignment StringConverter::parseHorizontalTextAlignment(const Ogre::String& s)
+	HorizontalTextAlignment StringConverter::parseHorizontalTextAlignment(const std::string& s)
 	{
 		if(s == "TEXT_ALIGNMENT_HORIZONTAL_LEFT")					return TEXT_ALIGNMENT_HORIZONTAL_LEFT;
 		else if(s == "TEXT_ALIGNMENT_HORIZONTAL_RIGHT")				return TEXT_ALIGNMENT_HORIZONTAL_RIGHT;
@@ -374,7 +494,12 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized HorizontalTextAlignment type! (Possible need to update?)","StringConverter::parseHorizontalTextAlignment");
 	}
 
-	VScrollBarButtonLayout StringConverter::parseVScrollBarButtonLayout(const Ogre::String& s)
+	int StringConverter::parseInt(const std::string& s)
+	{
+		return Ogre::StringConverter::parseInt(s);
+	}
+
+	VScrollBarButtonLayout StringConverter::parseVScrollBarButtonLayout(const std::string& s)
 	{
 		if(s == "VSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_UP")			return VSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_UP;
 		else if(s == "VSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_DOWN")		return VSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_DOWN;
@@ -387,7 +512,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized parseVScrollBarButtonLayout type! (Possible need to update?)","StringConverter::parseVScrollBarButtonLayout");
 	}
 
-	HScrollBarButtonLayout StringConverter::parseHScrollBarButtonLayout(const Ogre::String& s)
+	HScrollBarButtonLayout StringConverter::parseHScrollBarButtonLayout(const std::string& s)
 	{
 		if(s == "HSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_LEFT")			return HSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_LEFT;
 		else if(s == "HSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_RIGHT")	return HSCROLL_BAR_BUTTON_LAYOUT_ADJACENT_RIGHT;
@@ -400,30 +525,51 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized parseHScrollBarButtonLayout type! (Possible need to update?)","StringConverter::parseHScrollBarButtonLayout");
 	}
 
-	ListEvent StringConverter::parseListEvent(const Ogre::String& s)
+	ListEvent StringConverter::parseListEvent(const std::string& s)
 	{
 		if(s == "LIST_EVENT_SELECTION_CHANGED")						return LIST_EVENT_SELECTION_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ListEvent type! (Possible need to update?)","StringConverter::parseListEvent");
 	}
 
-	MouseCursorEvent StringConverter::parseMouseCursorEvent(const Ogre::String& s)
+	MouseEvent StringConverter::parseMouseEvent(const std::string& s)
 	{
-		if(s == "MOUSE_CUSSOR_EVENT_ENABLED_CHANGED")				return MOUSE_CUSSOR_EVENT_ENABLED_CHANGED;
-		else if(s == "MOUSE_CURSOR_EVENT_BORDER_ENTER")				return MOUSE_CURSOR_EVENT_BORDER_ENTER;
-		else if(s == "MOUSE_CURSOR_EVENT_BORDER_LEAVE")				return MOUSE_CURSOR_EVENT_BORDER_LEAVE;
+		if(s == "MOUSE_EVENT_BUTTON_CLICK")							return MOUSE_EVENT_BUTTON_CLICK;
+		else if(s == "MOUSE_EVENT_BUTTON_DOUBLE_CLICK")				return MOUSE_EVENT_BUTTON_DOUBLE_CLICK;
+		else if(s == "MOUSE_EVENT_BUTTON_DOWN")						return MOUSE_EVENT_BUTTON_DOWN;
+		else if(s == "MOUSE_EVENT_BUTTON_TRIPLE_CLICK")				return MOUSE_EVENT_BUTTON_TRIPLE_CLICK;
+		else if(s == "MOUSE_EVENT_BUTTON_UP")						return MOUSE_EVENT_BUTTON_UP;
+		else if(s == "MOUSE_EVENT_MOVE")							return MOUSE_EVENT_MOVE;
+		else if(s == "MOUSE_EVENT_SCROLL")							return MOUSE_EVENT_SCROLL;
 		else
-			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized MouseCursorEvent type! (Possible need to update?)","StringConverter::parseMouseCursorEvent");
+			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized MouseEvent type! (Possible need to update?)","StringConverter::parseMouseEvent");
 	}
 
-	ProgressBarEvent StringConverter::parseProgressBarEvent(const Ogre::String& s)
+	Point StringConverter::parsePoint(const std::string& s)
+	{
+		Ogre::String ogreString(s);
+		vector<Ogre::String>::type vs = Ogre::StringUtil::split(ogreString," ");
+
+		Point p;
+
+		int vsSize = static_cast<int>(vs.size());
+
+		if(vsSize > 0)
+			p.x = Ogre::StringConverter::parseReal(vs[0]);
+		if(vsSize > 1)
+			p.y = Ogre::StringConverter::parseReal(vs[1]);
+
+		return p;
+	}
+
+	ProgressBarEvent StringConverter::parseProgressBarEvent(const std::string& s)
 	{
 		if(s == "PROGRESSBAR_EVENT_PROGRESS_CHANGED")				return PROGRESSBAR_EVENT_PROGRESS_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ProgressBarEvent type! (Possible need to update?)","StringConverter::parseProgressBarEvent");
 	}
 
-	ProgressBarFillDirection StringConverter::parseProgressBarFillDirection(const Ogre::String& s)
+	ProgressBarFillDirection StringConverter::parseProgressBarFillDirection(const std::string& s)
 	{
 		if(s == "PROGRESSBAR_FILLS_NEGATIVE_TO_POSITIVE")			return PROGRESSBAR_FILLS_NEGATIVE_TO_POSITIVE;
 		else if(s == "PROGRESSBAR_FILLS_POSITIVE_TO_NEGATIVE")		return PROGRESSBAR_FILLS_POSITIVE_TO_NEGATIVE;
@@ -431,7 +577,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ProgressBarFillDirection type! (Possible need to update?)","StringConverter::parseProgressBarFillDirection");
 	}
 	
-	ProgressBarLayout StringConverter::parseProgressBarLayout(const Ogre::String& s)
+	ProgressBarLayout StringConverter::parseProgressBarLayout(const std::string& s)
 	{
 		if(s == "PROGRESSBAR_LAYOUT_HORIZONTAL")					return PROGRESSBAR_LAYOUT_HORIZONTAL;
 		else if(s == "PROGRESSBAR_LAYOUT_VERTICAL")					return PROGRESSBAR_LAYOUT_VERTICAL;
@@ -439,7 +585,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ProgressBarLayout type! (Possible need to update?)","StringConverter::parseProgressBarLayout");
 	}
 
-	ProgressBarClippingEdge StringConverter::parseProgressBarClippingEdge(const Ogre::String& s)
+	ProgressBarClippingEdge StringConverter::parseProgressBarClippingEdge(const std::string& s)
 	{
 		if(s == "PROGRESSBAR_CLIP_LEFT_BOTTOM")						return PROGRESSBAR_CLIP_LEFT_BOTTOM;
 		else if(s == "PROGRESSBAR_CLIP_RIGHT_TOP")					return PROGRESSBAR_CLIP_RIGHT_TOP;
@@ -447,35 +593,84 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ProgressBarClippingEdge type! (Possible need to update?)","StringConverter::parseProgressBarClippingEdge");
 	}
 
-	PropertyGridEvent StringConverter::parsePropertyGridEvent(const Ogre::String& s)
+	PropertyGridEvent StringConverter::parsePropertyGridEvent(const std::string& s)
 	{
 		if(s == "PROPERTYGRID_EVENT_SELECTION_CHANGED")				return PROPERTYGRID_EVENT_SELECTION_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized PropertyGridEvent type! (Possible need to update?)","StringConverter::parsePropertyGridEvent");
 	}
 
-	RadioButtonEvent StringConverter::parseRadioButtonEvent(const Ogre::String& s)
+	RadioButtonEvent StringConverter::parseRadioButtonEvent(const std::string& s)
 	{
 		if(s == "RADIOBUTTON_EVENT_SELECTED")						return RADIOBUTTON_EVENT_SELECTED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized RadioButtonEvent type! (Possible need to update?)","StringConverter::parseRadioButtonEvent");
 	}
 
-	ScrollBarEvent StringConverter::parseScrollBarEvent(const Ogre::String& s)
+	Rect StringConverter::parseRect(const std::string& s)
+	{
+		Ogre::String ogreString(s);
+		vector<Ogre::String>::type vs = Ogre::StringUtil::split(ogreString," ");
+
+		Rect r;
+
+		int vsSize = static_cast<int>(vs.size());
+		
+		if(vsSize > 0)
+			r.position.x = Ogre::StringConverter::parseReal(vs[0]);
+		if(vsSize > 1)
+			r.position.y = Ogre::StringConverter::parseReal(vs[1]);
+		if(vsSize > 2)
+			r.size.width = Ogre::StringConverter::parseReal(vs[2]);
+		if(vsSize > 3)
+			r.size.height = Ogre::StringConverter::parseReal(vs[3]);
+
+		return r;
+	}
+
+	ScrollBarEvent StringConverter::parseScrollBarEvent(const std::string& s)
 	{
 		if(s == "SCROLLBAR_EVENT_ON_SCROLLED")						return SCROLLBAR_EVENT_ON_SCROLLED;
+		else if(s == "SCROLLBAR_EVENT_SLIDER_DRAGGED")				return SCROLLBAR_EVENT_SLIDER_DRAGGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ScrollBarEvent type! (Possible need to update?)","StringConverter::parseScrollBarEvent");
 	}
 
-	TabControlEvent StringConverter::parseTabControlEvent(const Ogre::String& s)
+	SheetEvent StringConverter::parseSheetEvent(const std::string& s)
+	{
+		if(s == "SHEET_EVENT_MOUSE_CURSOR_ENTER_SHEET_BORDER")		return SHEET_EVENT_MOUSE_CURSOR_ENTER_SHEET_BORDER;
+		else if(s == "SHEET_EVENT_MOUSE_CURSOR_LEAVE_SHEET_BORDER")	return SHEET_EVENT_MOUSE_CURSOR_LEAVE_SHEET_BORDER;
+		else if(s == "SHEET_EVENT_MOUSE_CURSOR_SKIN_CHANGED")		return SHEET_EVENT_MOUSE_CURSOR_SKIN_CHANGED;
+		else if(s == "SHEET_EVENT_MOUSE_CURSOR_VISIBILE_CHANGED")	return SHEET_EVENT_MOUSE_CURSOR_VISIBILE_CHANGED;
+		else
+			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized SheetEvent type! (Possible need to update?)","StringConverter::parseSheetEvent");
+	}
+
+	Size StringConverter::parseSize(const std::string& s)
+	{
+		Ogre::String ogreString(s);
+		vector<Ogre::String>::type vs = Ogre::StringUtil::split(ogreString," ");
+
+		Size size;
+
+		int vsSize = static_cast<int>(vs.size());
+
+		if(vsSize > 0)
+			size.width = Ogre::StringConverter::parseReal(vs[0]);
+		if(vsSize > 1)
+			size.height = Ogre::StringConverter::parseReal(vs[1]);
+
+		return size;
+	}
+
+	TabControlEvent StringConverter::parseTabControlEvent(const std::string& s)
 	{
 		if(s == "TABCONTROL_EVENT_SELECTION_CHANGED")				return TABCONTROL_EVENT_SELECTION_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized TabControlEvent type! (Possible need to update?)","StringConverter::parseTabControlEvent");
 	}
 
-	ToolBarItemLayout StringConverter::parseToolBarItemLayout(const Ogre::String& s)
+	ToolBarItemLayout StringConverter::parseToolBarItemLayout(const std::string& s)
 	{
 		if(s == "TOOLBAR_ITEM_LAYOUT_NEGATIVE_TO_POSITIVE")			return TOOLBAR_ITEM_LAYOUT_NEGATIVE_TO_POSITIVE;
 		else if(s == "TOOLBAR_ITEM_LAYOUT_POSITIVE_TO_NEGATIVE")	return TOOLBAR_ITEM_LAYOUT_POSITIVE_TO_NEGATIVE;
@@ -483,28 +678,28 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized ToolBarItemLayout type! (Possible need to update?)","StringConverter::parseToolBarItemLayout");
 	}
 
-	TreeViewEvent StringConverter::parseTreeViewEvent(const Ogre::String& s)
+	TreeViewEvent StringConverter::parseTreeViewEvent(const std::string& s)
 	{
 		if(s == "TREEVIEW_EVENT_SELECTION_CHANGED")					return TREEVIEW_EVENT_SELECTION_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized TreeViewEvent type! (Possible need to update?)","StringConverter::parseTreeViewEvent");
 	}
 
-	TreeViewCheckBoxNodeEvent StringConverter::parseTreeViewCheckBoxNodeEvent(const Ogre::String& s)
+	TreeViewCheckBoxNodeEvent StringConverter::parseTreeViewCheckBoxNodeEvent(const std::string& s)
 	{
 		if(s == "TREEVIEWCHECKBOXNODE_EVENT_CHECK_CHANGED")			return TREEVIEWCHECKBOXNODE_EVENT_CHECK_CHANGED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized TreeViewCheckBoxNodeEvent type! (Possible need to update?)","StringConverter::parseTreeViewCheckBoxNodeEvent");
 	}
 
-	TreeViewRadioButtonNodeEvent StringConverter::parseTreeViewRadioButtonNodeEvent(const Ogre::String& s)
+	TreeViewRadioButtonNodeEvent StringConverter::parseTreeViewRadioButtonNodeEvent(const std::string& s)
 	{
 		if(s == "TREEVIEWRADIOBUTTONNODE_EVENT_RADIOBUTTON_SELECTED") return TREEVIEWRADIOBUTTONNODE_EVENT_RADIOBUTTON_SELECTED;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized TreeViewRadioButtonNodeEvent type! (Possible need to update?)","StringConverter::parseTreeViewRadioButtonNodeEvent");
 	}
 
-	VerticalAnchor StringConverter::parseVerticalAnchor(const Ogre::String& s)
+	VerticalAnchor StringConverter::parseVerticalAnchor(const std::string& s)
 	{
 		if(s == "ANCHOR_VERTICAL_BOTTOM")							return ANCHOR_VERTICAL_BOTTOM;
 		else if(s == "ANCHOR_VERTICAL_CENTER")						return ANCHOR_VERTICAL_CENTER;
@@ -516,7 +711,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized VerticalAnchor type! (Possible need to update?)","StringConverter::parseVerticalAnchor");
 	}
 
-	VerticalTextAlignment StringConverter::parseVerticalTextAlignment(const Ogre::String& s)
+	VerticalTextAlignment StringConverter::parseVerticalTextAlignment(const std::string& s)
 	{
 		if(s == "TEXT_ALIGNMENT_VERTICAL_BOTTOM")					return TEXT_ALIGNMENT_VERTICAL_BOTTOM;
 		else if(s == "TEXT_ALIGNMENT_VERTICAL_CENTER")				return TEXT_ALIGNMENT_VERTICAL_CENTER;
@@ -525,7 +720,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized VerticalTextAlignment type! (Possible need to update?)","StringConverter::parseVerticalTextAlignment");
 	}
 
-	WidgetEvent StringConverter::parseWidgetEvent(const Ogre::String& s)
+	WidgetEvent StringConverter::parseWidgetEvent(const std::string& s)
 	{
 		if(s == "WIDGET_EVENT_CLIENTSIZE_CHANGED")					return WIDGET_EVENT_CLIENTSIZE_CHANGED;
 		else if(s == "WIDGET_EVENT_ENABLED_CHANGED")				return WIDGET_EVENT_ENABLED_CHANGED;
@@ -555,7 +750,7 @@ namespace QuickGUI
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized Widget Event! (Possible need to update?)","StringConverter::parseWidgetEvent");
 	}
 
-	WindowEvent StringConverter::parseWindowEvent(const Ogre::String& s)
+	WindowEvent StringConverter::parseWindowEvent(const std::string& s)
 	{
 		if(s == "WINDOW_EVENT_DRAWN")								return WINDOW_EVENT_DRAWN;
 		else if(s == "WINDOW_EVENT_FOCUS_GAINED")					return WINDOW_EVENT_FOCUS_GAINED;

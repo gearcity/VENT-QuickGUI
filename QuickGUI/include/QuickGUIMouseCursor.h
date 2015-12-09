@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #ifndef QUICKGUIMOUSECURSOR_H
 #define QUICKGUIMOUSECURSOR_H
 
@@ -27,10 +56,10 @@ namespace QuickGUI
 		bool clipOnEdges;
 		bool enabled;
 		float opacity;
+		unsigned int queryFilter;
 		Ogre::String skin;
 		// This will be set by the GUIManager creating the MouseCursor.
 		GUIManager* guiManager;
-		Ogre::String userHandlers[MOUSE_CURSOR_EVENT_COUNT];
 		bool visible;
 	};
 
@@ -44,42 +73,6 @@ namespace QuickGUI
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
-
-		/**
-		* Adds a user-defined event handler to this widget.  The difference between this function and the addWidgetEventHandler
-		* is that the handlerName gets serialized with the Widget. This means you can defined handlers outside the creation of the
-		* GUI Layout, and when the sheet is loaded from disk, all of the handlers will work properly.
-		* NOTE: Only 1 user defined Event Handler can be assigned to an Event. Old values will be overwritten.
-		* NOTE: A handler of "" essentially removes the handler.
-		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
-		*/
-		void addUserDefinedMouseCursorEventHandler(MouseCursorEvent EVENT, const Ogre::String& handlerName);
-		/** Adds an event handler
-			@param
-				EVENT Defined events, for example: MOUSE_CUSSOR_EVENT_ENABLED_CHANGED, MOUSE_CURSOR_EVENT_BORDER_LEAVE, etc.
-            @param
-                function member function assigned to handle the event.  Given in the form of myClass::myFunction.
-				Function must return bool, and take QuickGUI::EventArgs as its parameters.
-            @param
-                obj particular class instance that defines the handler for this event.  Here is an example:
-				addWidgetEventHandler(QuickGUI::MOUSE_CUSSOR_EVENT_ENABLED_CHANGED,myClass::myFunction,this);
-			@note
-				Multiple user defined event handlers can be defined for an event.  All added event handlers will be called
-				whenever the event is fired.
-			@note
-				You may see Visual Studio give an error warning such as "error C2660: 'QuickGUI::Widget::addWidgetEventHandler' : function does not take 3 arguments".
-				This is an incorrect error message.  Make sure your function pointer points to a function which returns void, and takes parameter "const EventArgs&".
-        */
-		template<typename T> void addCursorEventHandler(MouseCursorEvent EVENT, void (T::*function)(const EventArgs&), T* obj)
-		{
-			addCursorEventHandler(EVENT, OGRE_NEW_T(EventHandlerPointer<T>,Ogre::MEMCATEGORY_GENERAL)(function,obj));
-		}
-		void addCursorEventHandler(MouseCursorEvent EVENT, EventHandlerSlot* function);
-
-		/**
-		* Clears the user defined handler associated with the EVENT given. (sets the handlerName to "")
-		*/
-		void clearUserDefinedMouseCursorEventHandler(MouseCursorEvent EVENT);
 
 		void draw();
 
@@ -105,6 +98,12 @@ namespace QuickGUI
 		*/
 		Point getPosition();
 		/**
+		* Returns the query filter of the mouse.  The query filter is used in combination with widget queryFlags to
+		* determine widget detection.  If the filter and flags are ANDed together and result in a non-zero value,
+		* the widget is detected.
+		*/
+		unsigned int getQueryFilter();
+		/**
 		* Returns the name of the skin type used by the cursor.
 		*/
 		Ogre::String getSkinTypeName();
@@ -129,6 +128,12 @@ namespace QuickGUI
 		* Sets the amount of transparency of the cursor. 0.0 means fully transparent, 1.0 means fully opaque.
 		*/
 		void setOpacity(float opacity);
+		/**
+		* Sets the query filter of the mouse.  The query filter is used in combination with widget queryFlags to
+		* determine widget detection.  If the filter and flags are ANDed together and result in a non-zero value,
+		* the widget is detected.
+		*/
+		void setQueryFilter(unsigned int filter);
 		/**
 		* Sets the "type" of mouse cursor.  For example you
 		* can change between several types: "default", "hresize", "diag1resize", etc.
@@ -162,8 +167,6 @@ namespace QuickGUI
 
 		// Left/Top/Right/Bottom
 		bool mEnteredBorders[4];
-		// Event handlers! One List per event
-		std::vector<EventHandlerSlot*> mEventHandlers[MOUSE_CURSOR_EVENT_COUNT];
 
 		/**
 		* Sets the "type" of mouse cursor.  For example you

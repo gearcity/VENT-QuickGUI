@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUITreeViewNode.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUIFactoryManager.h"
@@ -48,8 +77,16 @@ namespace QuickGUI
 
 	void TreeViewNodeDesc::serialize(SerialBase* b)
 	{
-		b->IO("Index",&treeviewnode_index);
-		b->IO("Selected",&treeviewnode_selected);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		TreeViewNodeDesc* defaultValues = DescManager::getSingleton().createDesc<TreeViewNodeDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("Index",		&treeviewnode_index,	defaultValues->treeviewnode_index);
+		b->IO("Selected",	&treeviewnode_selected, defaultValues->treeviewnode_selected);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		TextUserDesc::serialize(b);
 	}
@@ -359,18 +396,18 @@ namespace QuickGUI
 			mDesc->treeView->updateNodes();
 	}
 
-	Widget* TreeViewNode::findWidgetAtPoint(const Point& p, bool ignoreDisabled)
+	Widget* TreeViewNode::findWidgetAtPoint(const Point& p, unsigned int queryFilter, bool ignoreDisabled)
 	{
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 		{
-			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
+			Widget* w = (*it).second->findWidgetAtPoint(p,queryFilter,ignoreDisabled);
 			if(w != NULL)
 				return w;
 		}
 
-		for(std::vector<Widget*>::reverse_iterator it = mChildren.rbegin(); it != mChildren.rend(); ++it)
+		for(std::list<Widget*>::reverse_iterator it = mChildren.rbegin(); it != mChildren.rend(); ++it)
 		{
-			Widget* w = (*it)->findWidgetAtPoint(p,ignoreDisabled);
+			Widget* w = (*it)->findWidgetAtPoint(p,queryFilter,ignoreDisabled);
 			if(w != NULL)
 				return w;
 		}
@@ -587,11 +624,6 @@ namespace QuickGUI
 		Point iconPosition(mTexturePosition.x + mWidgetDesc->widget_dimensions.size.height,mTexturePosition.y);
 		brush->drawSkinElement(Rect(iconPosition,Size(mWidgetDesc->widget_dimensions.size.height)),mSkinType->getSkinElement(ICON));
 
-		// Center Text Vertically
-
-		float textHeight = mText->getTextHeight();
-		float yPos = (mDesc->widget_dimensions.size.height / 2.0) - (textHeight / 2.0);
-
 		// Clip to client dimensions
 		Rect clipRegion(mTexturePosition,Size(mWidgetDesc->widget_dimensions.size.width - mWidgetDesc->widget_dimensions.size.height,mWidgetDesc->widget_dimensions.size.height));
 		clipRegion.translate(Point(mWidgetDesc->widget_dimensions.size.height * 2,0));
@@ -600,7 +632,6 @@ namespace QuickGUI
 
 		// Adjust Rect to Text drawing region
 		Point textPosition = clipRegion.position;
-		textPosition.y += yPos;		
 
 		mText->draw(textPosition);
 
@@ -711,7 +742,7 @@ namespace QuickGUI
 	{
 		const MouseEventArgs& mea = dynamic_cast<const MouseEventArgs&>(args);
 
-		if(mea.button == MB_Left)
+		if((mea.button == MB_Left) && !(mea.autoRepeat))
 			toggle();
 	}
 
@@ -756,6 +787,9 @@ namespace QuickGUI
 			mStateButton->setWidth(mDesc->widget_dimensions.size.height);
 			mStateButton->setHeight(mDesc->widget_dimensions.size.height);
 		}
+
+		if(mText != NULL)
+			mText->setAllottedHeight(mClientDimensions.size.height);
 	}
 
 	void TreeViewNode::updateNodes()

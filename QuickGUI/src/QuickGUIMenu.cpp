@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUIMenu.h"
 #include "QuickGUISheet.h"
 #include "QuickGUIManager.h"
@@ -26,7 +55,7 @@ namespace QuickGUI
 		d->defineSkinElement(DEFAULT);
 		d->defineSkinElement(OVER);
 		d->defineSkinElement(DOWN);
-		d->defineComponent(MENUPANEL);
+		d->defineSkinReference(MENUPANEL,"MenuPanel");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("Menu",d);
@@ -43,6 +72,7 @@ namespace QuickGUI
 		MenuTextItemDesc::resetToDefault();
 
 		menu = NULL;
+		menu_autoWidenMenuPanel = true;
 		menu_itemHeight = 25;
 		menu_maxMenuPanelHeight = 0;
 		menu_menuPanelWidth = 100;
@@ -53,16 +83,26 @@ namespace QuickGUI
 	{
 		MenuTextItemDesc::serialize(b);
 
-		b->IO("ItemHeight",&menu_itemHeight);
-		b->IO("MaxMenuHeight",&menu_maxMenuPanelHeight);
-		b->IO("MenuWidth",&menu_menuPanelWidth);
-		b->IO("SubMenuOverlap",&menu_subMenuOverlap);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		MenuDesc* defaultValues = DescManager::getSingleton().createDesc<MenuDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("AutoWidenMenuPanel", &menu_autoWidenMenuPanel,	defaultValues->menu_autoWidenMenuPanel);
+		b->IO("ItemHeight",			&menu_itemHeight,			defaultValues->menu_itemHeight);
+		b->IO("MaxMenuHeight",		&menu_maxMenuPanelHeight,	defaultValues->menu_maxMenuPanelHeight);
+		b->IO("MenuWidth",			&menu_menuPanelWidth,		defaultValues->menu_menuPanelWidth);
+		b->IO("SubMenuOverlap",		&menu_subMenuOverlap,		defaultValues->menu_subMenuOverlap);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 	}
 
 	Menu::Menu(const Ogre::String& name) :
 		MenuTextItem(name),
 		mMenuPanel(NULL),
-		mAutoNameCounter(0)
+		mAutoNameCounter(0),
+		mMaxTextItemWidth(0)
 	{
 	}
 
@@ -80,6 +120,24 @@ namespace QuickGUI
 		}
 	}
 
+	void Menu::_determineLargestTextItemWidth()
+	{
+		mMaxTextItemWidth = 0;
+		float textWidth = 0;
+		MenuTextItem* mti = NULL;
+		for( std::list<MenuItem*>::iterator it = mItems.begin(); it != mItems.end(); ++it )
+		{
+			mti = dynamic_cast<MenuTextItem*>((*it));
+			if(mti != NULL)
+			{
+				textWidth = mti->getTextWidth();
+
+				if(textWidth > mMaxTextItemWidth)
+					mMaxTextItemWidth = textWidth;
+			}
+		}
+	}
+
 	void Menu::_initialize(WidgetDesc* d)
 	{
 		MenuTextItem::_initialize(d);
@@ -89,6 +147,7 @@ namespace QuickGUI
 		MenuDesc* md = dynamic_cast<MenuDesc*>(d);
 
 		// Copy over all properties from desc param
+		mDesc->menu_autoWidenMenuPanel = md->menu_autoWidenMenuPanel;
 		mDesc->menu_maxMenuPanelHeight = md->menu_maxMenuPanelHeight;
 		mDesc->menu_menuPanelWidth = md->menu_menuPanelWidth;
 		mDesc->menu_subMenuOverlap = md->menu_subMenuOverlap;
@@ -137,7 +196,7 @@ namespace QuickGUI
 
 	void Menu::_updateItemPositions()
 	{
-		int y = 0;
+		float y = 0;
 		for(std::list<MenuItem*>::iterator it = mItems.begin(); it != mItems.end(); ++it)
 		{
 			(*it)->setPosition(Point(0,y));
@@ -149,6 +208,11 @@ namespace QuickGUI
 
 		if(mMenuPanel != NULL)
 			mMenuPanel->_adjustHeight();
+	}
+
+	bool Menu::getAutoWidenMenuPanel()
+	{
+		return mDesc->menu_autoWidenMenuPanel;
 	}
 
 	Ogre::String Menu::getClass()
@@ -280,6 +344,22 @@ namespace QuickGUI
 		MenuItem* newMenuItem = dynamic_cast<MenuItem*>(_createWidget(d));
 		addChild(newMenuItem);
 
+		if(mDesc->menu_autoWidenMenuPanel)
+		{
+			MenuTextItem* mti = dynamic_cast<MenuTextItem*>(newMenuItem);
+			if(mti != NULL)
+			{
+				float textWidth = mti->getTextWidth();
+				if(textWidth > mMaxTextItemWidth)
+				{
+					mMaxTextItemWidth = textWidth;
+
+					if(mMenuPanel != NULL)
+						mMenuPanel->setWidth(mMenuPanel->getLeftRightBorderWidth() + mMaxTextItemWidth + 5);
+				}
+			}
+		}
+
 		return newMenuItem;
 	}
 
@@ -375,7 +455,7 @@ namespace QuickGUI
 		WidgetFactory* f = FactoryManager::getSingleton().getWidgetFactory();
 
 		bool itemRemovedFromList = false;
-		int count = 0;
+		unsigned int count = 0;
 		for(std::list<MenuItem*>::iterator it = mItems.begin(); it != mItems.end(); ++it)
 		{
 			if(count == index)
@@ -418,6 +498,11 @@ namespace QuickGUI
 		}
 
 		mMenuPanel->_adjustHeight();
+
+		_determineLargestTextItemWidth();
+
+		if(mDesc->menu_autoWidenMenuPanel && (mMenuPanel != NULL))
+			mMenuPanel->setWidth(mMenuPanel->getLeftRightBorderWidth() + mMaxTextItemWidth + 5);
 
 		redraw();
 	}
@@ -694,6 +779,19 @@ namespace QuickGUI
 		b->end();
 	}
 
+	void Menu::setAutoWidenMenuPanel(bool autoWiden)
+	{
+		mDesc->menu_autoWidenMenuPanel = autoWiden;
+
+		if(autoWiden)
+		{
+			_determineLargestTextItemWidth();
+
+			if(mMenuPanel != NULL)
+				mMenuPanel->setWidth(mMenuPanel->getLeftRightBorderWidth() + mMaxTextItemWidth + 5);
+		}
+	}
+
 	void Menu::setItemHeight(float height)
 	{
 		mDesc->menu_itemHeight = height;
@@ -711,6 +809,8 @@ namespace QuickGUI
 
 	void Menu::setMenuPanelWidth(float width)
 	{
+		mDesc->menu_autoWidenMenuPanel = false;
+
 		mDesc->menu_menuPanelWidth = Ogre::Math::Floor(width + 0.5);
 
 		if(mMenuPanel != NULL)

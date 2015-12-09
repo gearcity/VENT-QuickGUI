@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of QuickGUI
+For the latest info, see http://www.ogre3d.org/addonforums/viewforum.php?f=13
+
+Copyright (c) 2009 Stormsong Entertainment
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+(http://opensource.org/licenses/mit-license.php)
+-----------------------------------------------------------------------------
+*/
+
 #include "QuickGUITreeView.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUISheet.h"
@@ -23,10 +52,10 @@ namespace QuickGUI
 	{
 		SkinDefinition* d = OGRE_NEW_T(SkinDefinition,Ogre::MEMCATEGORY_GENERAL)("TreeView");
 		d->defineSkinElement(BACKGROUND);
-		d->defineComponent(EXPAND);
-		d->defineComponent(MINIMIZE);
-		d->defineComponent(HSCROLLBAR);
-		d->defineComponent(VSCROLLBAR);
+		d->defineSkinReference(EXPAND,"Button");
+		d->defineSkinReference(MINIMIZE,"Button");
+		d->defineSkinReference(HSCROLLBAR,"HScrollBar");
+		d->defineSkinReference(VSCROLLBAR,"VScrollBar");
 		d->definitionComplete();
 
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("TreeView",d);
@@ -56,23 +85,31 @@ namespace QuickGUI
 	{
 		ContainerWidgetDesc::serialize(b);
 
-		b->IO("DoubleClickToToggle",&treeview_doubleClickToToggle);
-		b->IO("KeyNavigation",&treeview_keyNavigation);
-		b->IO("NodeHeight",&treeview_nodeHeight);
+		// Retrieve default values to supply to the serial reader/writer.
+		// The reader uses the default value if the given property does not exist.
+		// The writer does not write out the given property if it has the same value as the default value.
+		TreeViewDesc* defaultValues = DescManager::getSingleton().createDesc<TreeViewDesc>(getClass(),"temp");
+		defaultValues->resetToDefault();
+
+		b->IO("DoubleClickToToggle",	&treeview_doubleClickToToggle,	defaultValues->treeview_doubleClickToToggle);
+		b->IO("KeyNavigation",			&treeview_keyNavigation,		defaultValues->treeview_keyNavigation);
+		b->IO("NodeHeight",				&treeview_nodeHeight,			defaultValues->treeview_nodeHeight);
+
+		DescManager::getSingleton().destroyDesc(defaultValues);
 
 		if(b->begin("UserDefinedHandlers","TreeViewEvent"))
 		{
 			if(b->isSerialReader())
 			{
 				for(int index = 0; index < TREEVIEW_EVENT_COUNT; ++index)
-					b->IO(StringConverter::toString(static_cast<TreeViewEvent>(index)),&(treeview_userHandlers[index]));
+					b->IO(StringConverter::toString(static_cast<TreeViewEvent>(index)),&(treeview_userHandlers[index]),"");
 			}
 			else
 			{
 				for(int index = 0; index < TREEVIEW_EVENT_COUNT; ++index)
 				{
 					if(treeview_userHandlers[index] != "")
-						b->IO(StringConverter::toString(static_cast<TreeViewEvent>(index)),&(treeview_userHandlers[index]));
+						b->IO(StringConverter::toString(static_cast<TreeViewEvent>(index)),&(treeview_userHandlers[index]),"");
 				}
 			}
 			b->end();
@@ -371,6 +408,32 @@ namespace QuickGUI
 
 		if(mea.button == MB_Left)
 			selectNode(NULL);
+	}
+
+	void TreeView::removeEventHandlers(void* obj)
+	{
+		ContainerWidget::removeEventHandlers(obj);
+
+		for(int index = 0; index < TREEVIEW_EVENT_COUNT; ++index)
+		{
+			std::vector<EventHandlerSlot*> updatedList;
+			std::vector<EventHandlerSlot*> listToCleanup;
+
+			for(std::vector<EventHandlerSlot*>::iterator it = mTreeViewEventHandlers[index].begin(); it != mTreeViewEventHandlers[index].end(); ++it)
+			{
+				if((*it)->getClass() == obj)
+					listToCleanup.push_back((*it));
+				else
+					updatedList.push_back((*it));
+			}
+
+			mTreeViewEventHandlers[index].clear();
+			for(std::vector<EventHandlerSlot*>::iterator it = updatedList.begin(); it != updatedList.end(); ++it)
+				mTreeViewEventHandlers[index].push_back((*it));
+
+			for(std::vector<EventHandlerSlot*>::iterator it = listToCleanup.begin(); it != listToCleanup.end(); ++it)
+				OGRE_DELETE_T((*it),EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
+		}
 	}
 
 	void TreeView::setDoubleClickToToggle(bool enable)

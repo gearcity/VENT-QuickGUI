@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuickGUI.2k5", "QuickGUI\QuickGUI.2k5.vcproj", "{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlayPen.2k5", "PlayPen\PlayPen.2k5.vcproj", "{24E44D9E-2DA7-4EFE-9C74-17F338053DD4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80} = {C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuickGUIEditor.2k5", "QuickGUIEditor\QuickGUIEditor.2k5.vcproj", "{433DAB81-ED33-41DC-A06A-4336697C3262}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80} = {C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnimationViewer.2k5", "AnimationViewer\AnimationViewer.2k5.vcproj", "{BAB57488-3ECB-4726-99F4-F97B45AF9240}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80} = {C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}.Debug|Win32.Build.0 = Debug|Win32
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}.Release|Win32.ActiveCfg = Release|Win32
+		{C10AED49-CDC5-4BF5-9E5E-D0EBB3020C80}.Release|Win32.Build.0 = Release|Win32
+		{24E44D9E-2DA7-4EFE-9C74-17F338053DD4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{24E44D9E-2DA7-4EFE-9C74-17F338053DD4}.Debug|Win32.Build.0 = Debug|Win32
+		{24E44D9E-2DA7-4EFE-9C74-17F338053DD4}.Release|Win32.ActiveCfg = Release|Win32
+		{24E44D9E-2DA7-4EFE-9C74-17F338053DD4}.Release|Win32.Build.0 = Release|Win32
+		{433DAB81-ED33-41DC-A06A-4336697C3262}.Debug|Win32.ActiveCfg = Debug|Win32
+		{433DAB81-ED33-41DC-A06A-4336697C3262}.Debug|Win32.Build.0 = Debug|Win32
+		{433DAB81-ED33-41DC-A06A-4336697C3262}.Release|Win32.ActiveCfg = Release|Win32
+		{433DAB81-ED33-41DC-A06A-4336697C3262}.Release|Win32.Build.0 = Release|Win32
+		{BAB57488-3ECB-4726-99F4-F97B45AF9240}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BAB57488-3ECB-4726-99F4-F97B45AF9240}.Debug|Win32.Build.0 = Debug|Win32
+		{BAB57488-3ECB-4726-99F4-F97B45AF9240}.Release|Win32.ActiveCfg = Release|Win32
+		{BAB57488-3ECB-4726-99F4-F97B45AF9240}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
