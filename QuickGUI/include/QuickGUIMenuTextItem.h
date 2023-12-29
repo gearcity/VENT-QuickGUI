@@ -51,6 +51,7 @@ namespace QuickGUI
 		static const Ogre::String OVER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
+
 	public:
 		friend class WidgetFactory;
 	public:

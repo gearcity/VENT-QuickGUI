@@ -124,6 +124,9 @@ namespace QuickGUI
 				tbd->widget_dimensions.size.height = Text::getFontHeight(Root::getSingleton().getDefaultFontName()) + 6;
 			else
 				tbd->widget_dimensions.size.height = mDesc->textDesc.getTextHeight() + 6;
+
+			tbd->widget_dimensions.size.height /= Root::getSingletonPtr()->getGUIScale();
+
 			tbd->widget_dragable = mDesc->window_titleBarDragable;
 			tbd->widget_moveBaseWidgetOnDrag = true;
 			tbd->widget_horizontalAnchor = ANCHOR_HORIZONTAL_LEFT_RIGHT;
@@ -711,7 +714,11 @@ namespace QuickGUI
 		Size difference = mClientDimensions.size - previousSize;
 
 		// Handle anchoring for Components
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#endif		
 		{
 			if((*it).second == mHScrollBar)
 				continue;
@@ -751,7 +758,11 @@ namespace QuickGUI
 		mTexturePosition = Point::ZERO;
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#else
+	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#endif		
 		{
 			(*it).second->updateTexturePosition();
 		}

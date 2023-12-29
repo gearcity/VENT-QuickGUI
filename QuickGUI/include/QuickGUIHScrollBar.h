@@ -65,6 +65,8 @@ namespace QuickGUI
 		static const Ogre::String SLIDER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
+
+		
 	public:
 		friend class WidgetFactory;
 	public:
@@ -73,6 +75,8 @@ namespace QuickGUI
 		* Internal function, do not use.
 		*/
 		virtual void _initialize(WidgetDesc* d);
+
+		Ogre::list<QuickGUI::Widget*>::type getScrollbarWidgets();
 
 		/**
 		* Adds a user-defined event handler to this widget.  The difference between this function and the addWidgetEventHandler
@@ -185,6 +189,14 @@ namespace QuickGUI
 		* Recalculate Client widget_dimensions, relative to Widget's actual widget_dimensions.
 		*/
 		virtual void updateClientDimensions();
+		
+		virtual void setHiddenID(int ID);
+		virtual int getHiddenID();
+
+		virtual void setHiddenString(Ogre::String str);
+		virtual Ogre::String getHiddenString();
+
+		
 
 	public:
 		// Here we have to call out any protected Widget set accesors we want to expose
@@ -213,6 +225,8 @@ namespace QuickGUI
 		using ComponentWidget::setHeight;
 		using ComponentWidget::setSize;
 		using ComponentWidget::setWidth;
+
+		
 
 	protected:
 		HScrollBar(const Ogre::String& name);
@@ -254,6 +268,8 @@ namespace QuickGUI
 		void onBarClicked(const EventArgs& args);
 
 	private:
+		int hiddenInt;
+		Ogre::String hiddenString;
 	};
 }
 

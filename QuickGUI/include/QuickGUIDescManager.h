@@ -137,7 +137,11 @@ namespace QuickGUI
 		DescManager();
 		virtual ~DescManager();
 
+#if USEHASHMAPS
+		stdext::hash_map<Ogre::String,Desc*> mUserCreatedDescs;
+#else
 		std::map<Ogre::String,Desc*> mUserCreatedDescs;
+#endif
 
 		ButtonDesc* mDefaultButtonDesc;
 		CheckBoxDesc* mDefaultCheckBoxDesc;

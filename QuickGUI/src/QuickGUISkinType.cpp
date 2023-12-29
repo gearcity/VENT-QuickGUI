@@ -11,11 +11,20 @@ namespace QuickGUI
 
 	SkinType::~SkinType()
 	{
-		for(std::map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+			OGRE_DELETE_T((*it).second,SkinElement,Ogre::MEMCATEGORY_GENERAL);
+
+		for(stdext::hash_map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+			OGRE_DELETE_T((*it).second,SkinReference,Ogre::MEMCATEGORY_GENERAL);
+#else
+	for(std::map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinElement,Ogre::MEMCATEGORY_GENERAL);
 
 		for(std::map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinReference,Ogre::MEMCATEGORY_GENERAL);
+#endif
+		
 	}
 
 	void SkinType::addSkinReference(const Ogre::String& componentAlias, SkinReference* t)
@@ -97,12 +106,22 @@ namespace QuickGUI
 		{
 			b->begin(mClassName,mName);
 
-			for(std::map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+				(*it).second->serialize(b);
+
+			for(stdext::hash_map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+				(*it).second->serialize(b);
+
+#else
+	for(std::map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
 				(*it).second->serialize(b);
 
 			for(std::map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
 				(*it).second->serialize(b);
 
+#endif
+			
 			b->end();
 		}
 	}

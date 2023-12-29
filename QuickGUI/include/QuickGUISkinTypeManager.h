@@ -36,8 +36,12 @@ namespace QuickGUI
 		SkinTypeManager();
 		virtual ~SkinTypeManager();
 
-		std::map<Ogre::String, std::map<Ogre::String,SkinType*> > mSkinTypes;
-
+#if USEHASHMAPS
+	stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,SkinType*> > mSkinTypes;
+#else
+	std::map<Ogre::String, std::map<Ogre::String,SkinType*> > mSkinTypes;
+#endif
+		
 	private:
 	};
 }

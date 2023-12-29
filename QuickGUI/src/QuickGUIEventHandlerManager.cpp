@@ -14,19 +14,23 @@ namespace QuickGUI
 
 	EventHandlerManager* EventHandlerManager::getSingletonPtr(void) 
 	{ 
-		return msSingleton; 
+		return msSingleton;
 	}
 
 	EventHandlerManager& EventHandlerManager::getSingleton(void) 
 	{ 
-		assert( msSingleton );  
+		assert( msSingleton );
 		return ( *msSingleton ); 
 	}
 
 	void EventHandlerManager::executEventHandler(const Ogre::String& handlerName, EventArgs& args)
 	{
-		std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
-
+#if USEHASHMAPS
+	stdext::hash_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+#else
+	std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+#endif
+		
 		if(it != mUserDefinedEventHandlers.end())
 			mUserDefinedEventHandlers[handlerName]->execute(args);
 	}
@@ -38,8 +42,12 @@ namespace QuickGUI
 
 	void EventHandlerManager::registerEventHandler(const Ogre::String& handlerName, EventHandlerSlot* function)
 	{
-		std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
-
+#if USEHASHMAPS
+			stdext::hash_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+#else
+			std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+#endif
+		
 		if(it != mUserDefinedEventHandlers.end())
 			OGRE_DELETE_T(it->second,EventHandlerSlot,Ogre::MEMCATEGORY_GENERAL);
 
@@ -48,8 +56,12 @@ namespace QuickGUI
 
 	void EventHandlerManager::unregisterEventHandler(const Ogre::String& handlerName)
 	{
-		std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
-
+#if USEHASHMAPS
+			stdext::hash_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+#else
+			std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+#endif
+		
 		if(it != mUserDefinedEventHandlers.end())
 		{
 			EventHandlerSlot* s = it->second;

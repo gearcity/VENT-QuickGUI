@@ -7,7 +7,7 @@
 #include "QuickGUIOgreEquivalents.h"
 
 #include "OgreColourValue.h"
-#include "OgreFont.h"
+#include "Overlay/OgreFont.h"
 #include "OgreUTFString.h"
 
 namespace QuickGUI

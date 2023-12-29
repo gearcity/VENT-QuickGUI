@@ -47,7 +47,7 @@ namespace QuickGUI
 		static const Ogre::String OVER;
 		static const Ogre::String SELECTED;
 
-		using Widget::setScrollable;
+		using Widget::setScrollable;		
 
 	public:
 		// List has to set positions to manage ListItems
@@ -99,6 +99,12 @@ namespace QuickGUI
 		*/
 		virtual void setEnabled(bool enabled);
 
+		virtual void setHiddenID(int ID);
+		virtual int getHiddenID();
+
+		virtual void setHiddenString(Ogre::String str);
+		virtual Ogre::String getHiddenString();
+
 	protected:
 		ListItem(const Ogre::String& name);
 		virtual ~ListItem();
@@ -123,6 +129,8 @@ namespace QuickGUI
 		virtual void updateSkinElement();
 
 	private:
+		int hiddenInt;
+		Ogre::String hiddenString;
 	};
 }
 

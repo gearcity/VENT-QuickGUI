@@ -8,6 +8,7 @@
 #include "QuickGUIEventHandlerManager.h"
 
 #include "OgreImage.h"
+#include "OgreViewport.h"
 
 namespace QuickGUI
 {

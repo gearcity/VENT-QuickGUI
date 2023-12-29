@@ -6,6 +6,7 @@
 #include "QuickGUISkinDefinition.h"
 #include "QuickGUIButton.h"
 #include "QuickGUIDescManager.h"
+#include "QuickGUIRoot.h"
 
 namespace QuickGUI
 {
@@ -77,8 +78,8 @@ namespace QuickGUI
 			if((td->titlebar_closeButtonPadding * 2.0) >= mClientDimensions.size.height)
 				throw Exception(Exception::ERR_INVALIDPARAMS,"CloseButtonPadding exceeds height of TitleBar, cannot create Close Button!","TitleBar::_initialize");
 
-			bd->widget_dimensions.size.width = mClientDimensions.size.height - (td->titlebar_closeButtonPadding * 2.0);
-			bd->widget_dimensions.size.height = bd->widget_dimensions.size.width;
+			bd->widget_dimensions.size.width = (mClientDimensions.size.height - (td->titlebar_closeButtonPadding * 2.0))/ Root::getSingletonPtr()->getGUIScale()  ;
+			bd->widget_dimensions.size.height = (bd->widget_dimensions.size.width);
 			bd->widget_dimensions.position.x = mDesc->widget_dimensions.size.width - mSkinElement->getBorderThickness(BORDER_RIGHT) - td->titlebar_closeButtonPadding - bd->widget_dimensions.size.width;
 			bd->widget_dimensions.position.y = td->titlebar_closeButtonPadding;
 			bd->widget_skinTypeName = td->titlebar_closeButtonSkinType;
@@ -99,7 +100,8 @@ namespace QuickGUI
 		// Make a copy of the Text Desc.  The Text object will
 		// modify it directly, which is used for serialization.
 		mDesc->textDesc = td->textDesc;
-
+		mDesc->textDesc.horizontalTextAlignment = TEXT_ALIGNMENT_HORIZONTAL_CENTER;
+		mDesc->textDesc.allottedWidth = d->widget_dimensions.size.width;
 		TextUser::_initialize(this,mDesc);
 	}
 

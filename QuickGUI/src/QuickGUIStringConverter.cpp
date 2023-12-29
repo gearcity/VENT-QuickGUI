@@ -55,6 +55,9 @@ namespace QuickGUI
 		case ANCHOR_HORIZONTAL_RIGHT:								return "ANCHOR_HORIZONTAL_RIGHT";
 		case ANCHOR_HORIZONTAL_LEFT_RIGHT:							return "ANCHOR_HORIZONTAL_LEFT_RIGHT";
 		case ANCHOR_HORIZONTAL_NONE:								return "ANCHOR_HORIZONTAL_NONE";
+		case ANCHOR_HORIZONTAL_RIGHT_GROW_TO_CENTER:		return "ANCHOR_HORIZONTAL_RIGHT_GROW_TO_CENTER";
+		case ANCHOR_HORIZONTAL_LEFT_GROW_TO_CENTER:		return "ANCHOR_HORIZONTAL_LEFT_GROW_TO_CENTER";
+
 		default:
 			throw Exception(Exception::ERR_SERIALIZATION,"HorizontalAnchor type does not have a string equivalent! Chick if update is needed!","StringConverter::toString");
 		}
@@ -361,6 +364,8 @@ namespace QuickGUI
 		else if(s == "ANCHOR_HORIZONTAL_RIGHT")						return ANCHOR_HORIZONTAL_RIGHT;
 		else if(s == "ANCHOR_HORIZONTAL_LEFT_RIGHT")				return ANCHOR_HORIZONTAL_LEFT_RIGHT;
 		else if(s == "ANCHOR_HORIZONTAL_NONE")						return ANCHOR_HORIZONTAL_NONE;
+		else if(s == "ANCHOR_HORIZONTAL_RIGHT_GROW_TO_CENTER")		return ANCHOR_HORIZONTAL_RIGHT_GROW_TO_CENTER;
+		else if(s == "ANCHOR_HORIZONTAL_LEFT_GROW_TO_CENTER"	)		return ANCHOR_HORIZONTAL_LEFT_GROW_TO_CENTER;
 		else
 			throw Exception(Exception::ERR_SERIALIZATION,"\"" + s + "\" is not a recognized HorizontalAnchor type! (Possible need to update?)","StringConverter::parseHorizontalAnchor");
 	}

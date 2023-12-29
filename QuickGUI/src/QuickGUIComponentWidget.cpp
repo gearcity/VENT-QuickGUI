@@ -36,8 +36,12 @@ namespace QuickGUI
 	ComponentWidget::~ComponentWidget()
 	{
 		WidgetFactory* f = FactoryManager::getSingleton().getWidgetFactory();
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
-			f->destroyInstance((*it).second);
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
+		f->destroyInstance((*it).second);
 	}
 
 	void ComponentWidget::_initialize(WidgetDesc* d)
@@ -52,15 +56,23 @@ namespace QuickGUI
 	{
 		Widget::_setGUIManager(gm);
 
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
-			(*it).second->_setGUIManager(gm);
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
+		(*it).second->_setGUIManager(gm);
 	}
 
 	void ComponentWidget::_setSheet(Sheet* sheet)
 	{
 		Widget::_setSheet(sheet);
 
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 			(*it).second->_setSheet(sheet);
 	}
 
@@ -87,12 +99,27 @@ namespace QuickGUI
 	{
 		switch(child->getHorizontalAnchor())
 		{
+		case ANCHOR_HORIZONTAL_RIGHT_GROW_TO_CENTER:
+		{
+			child->setWidth(child->getWidth() + changeInSize.width/2.0);
+			break;
+		}
+		case ANCHOR_HORIZONTAL_LEFT_GROW_TO_CENTER:
+		{
+			Point p = child->getPosition();
+			p.x += changeInSize.width/2.0;
+			child->setPosition(p);		
+			child->setWidth(child->getWidth() + changeInSize.width/2.0);
+
+			break;
+		}
 		case ANCHOR_HORIZONTAL_CENTER:
 			{
 				// Center vertically
 				Point p = child->getPosition();
 				p.x = (mWidgetDesc->widget_dimensions.size.width / 2.0) - (child->getWidth() / 2.0);
-				child->setPosition(p);
+				child->setPosition(p);		
+
 			}
 			break;
 		case ANCHOR_HORIZONTAL_CENTER_DYNAMIC:
@@ -187,7 +214,11 @@ namespace QuickGUI
 			brush->setClipRegion(prevClipRegion);
 
 		// draw components
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 			(*it).second->draw();
 
 		// restore clip region
@@ -205,7 +236,11 @@ namespace QuickGUI
 			return NULL;
 
 		// Check components before verifying point is within bounds. (Components can lie outside widget dimensions)
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
 			if(w != NULL)
@@ -262,7 +297,11 @@ namespace QuickGUI
 		Widget::setParent(parent);
 
 		// Update components window reference via setParent
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			(*it).second->setParent(this);
 		}
@@ -272,7 +311,11 @@ namespace QuickGUI
 	{
 		Widget::setMoveBaseWidgetOnDrag(moveBaseWidget);
 
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 			(*it).second->setMoveBaseWidgetOnDrag(moveBaseWidget);
 	}
 
@@ -280,7 +323,11 @@ namespace QuickGUI
 	{
 		Widget::setSkinType(type);
 
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			if(mSkinType->hasSkinReference((*it).first))
 				(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
@@ -306,7 +353,11 @@ namespace QuickGUI
 		Size difference = mClientDimensions.size - previousSize;
 
 		// Handle anchoring for Components
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			applyAnchor((*it).second,difference);
 		}
@@ -322,7 +373,11 @@ namespace QuickGUI
 		Widget::updateTexturePosition();
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			(*it).second->updateTexturePosition();
 		}

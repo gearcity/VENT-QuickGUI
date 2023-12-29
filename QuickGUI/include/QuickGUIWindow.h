@@ -291,20 +291,23 @@ namespace QuickGUI
 		using Widget::setVerticalAnchor;
 		using Widget::setVisible;
 		using Widget::setWidth;
+		
 
 		TitleBar* mTitleBar;
 
+		
 	protected:
 		Window(const Ogre::String& name);
 		virtual ~Window();
 
 		WindowDesc* mDesc;
 
-		
-
-		// Toggled true if the window's texture needs to be updated (redrawn).
+			// Toggled true if the window's texture needs to be updated (redrawn).
 		bool mDirty;
 
+
+
+	
 		Ogre::TexturePtr mTexture;
 
 		// Event handlers! One List per event per widget

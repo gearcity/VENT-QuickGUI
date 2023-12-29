@@ -3,7 +3,12 @@
 #include "QuickGUIVertex.h"
 
 #include <OgreMaterialManager.h>
-#include <OgreGpuProgramManager.h> 
+#include <OgreGpuProgramManager.h>
+
+#include "OgreTechnique.h"
+#include "OgreViewport.h"
+#include "OgreRenderTarget.h"
+#include "OgreRenderTexture.h"
 
 template<> QuickGUI::Brush* Ogre::Singleton<QuickGUI::Brush>::msSingleton = 0;
 

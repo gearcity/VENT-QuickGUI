@@ -102,10 +102,13 @@ namespace QuickGUI
 		// Read in Text Segments or Write out Text Segments
 		if(b->isSerialReader())
 		{
+			allottedWidth *= Root::getSingletonPtr()->getGUIScale();
 			std::list<DefinitionProperty*> propList = b->getCurrentDefinition()->getProperties();
 			for(std::list<DefinitionProperty*>::iterator it = propList.begin(); it != propList.end(); ++it)
 			{
 				Ogre::StringVector sv = (*it)->getValues();
+
+				
 
 				TextSegment s;
 				s.fontName = sv[0];
@@ -116,7 +119,10 @@ namespace QuickGUI
 
 				// Its possible the Text is just " ", in which case the parsing won't catch it.
 				if(static_cast<int>(sv.size()) < 6)
+				{	
+					continue;
 					s.text = " ";
+				}
 				else
 				{
 					s.text.append(sv[5]);
@@ -251,8 +257,9 @@ namespace QuickGUI
 
 	Ogre::FontPtr Text::getFirstAvailableFont()
 	{
-		Ogre::ResourceManager::ResourceMapIterator rmi = Ogre::FontManager::getSingleton().getResourceIterator();
-		return static_cast<Ogre::FontPtr>(rmi.getNext());
+		/*Ogre::ResourceManager::ResourceMapIterator rmi = Ogre::FontManager::getSingleton().getResourceIterator();
+		return static_cast<Ogre::FontPtr>(rmi.getNext());*/
+        return Ogre::FontManager::getSingleton().getResourceIterator().getNext().staticCast<Ogre::Font>();
 	}
 
 	Ogre::FontPtr Text::getFont(const Ogre::String& fontName)
@@ -477,7 +484,7 @@ namespace QuickGUI
 				if(Text::isNullCharacter((*cItr)->codePoint))
 					break;
 
-				if(isWhiteSpace((*cItr)->codePoint))
+                if(isWhiteSpace((*cItr)->codePoint) || Ogre::StringUtil::startsWith((*cItr)->fontPtr->getName(),"Ja",false) || Ogre::StringUtil::startsWith((*cItr)->fontPtr->getName(),"Chinese",false))
 				{
 					// If its a newline we can add it to the TextLine, since they have a width of 0.
 					// We also want to create a New TextLine object.
@@ -1335,7 +1342,7 @@ namespace QuickGUI
 		{
 			if(counter == index)
 			{
-				OGRE_DELETE_T((*it),Character,Ogre::MEMCATEGORY_GENERAL)
+				OGRE_DELETE_T((*it), Character, Ogre::MEMCATEGORY_GENERAL);
 				mCharacters.erase(it);
 				break;
 			}

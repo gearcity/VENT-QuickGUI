@@ -94,6 +94,8 @@ namespace QuickGUI
 			}
 			b->end();
 		}
+
+		combobox_itemHeight *= Root::getSingletonPtr()->getGUIScale();
 	}
 
 	ComboBox::ComboBox(const Ogre::String& name) :
@@ -566,7 +568,12 @@ namespace QuickGUI
 				yPos = mDesc->widget_dimensions.size.height - mSkinElement->getBorderThickness(BORDER_BOTTOM) - textHeight;
 				break;
 			case TEXT_ALIGNMENT_VERTICAL_CENTER:
-				yPos = (mDesc->widget_dimensions.size.height / 2.0) - (textHeight / 2.0);
+//Ogre::LogManager::getSingletonPtr()->getDefaultLog()->logMessage("Widget Diamensions: " + Ogre::StringConverter::toString(mDesc->widget_dimensions.size.height));
+//Ogre::LogManager::getSingletonPtr()->getDefaultLog()->logMessage("Text Height: " + Ogre::StringConverter::toString(textHeight));
+				yPos = (mDesc->widget_dimensions.size.height/2.0) - (textHeight / 2.0);
+//					yPos -=  textHeight*0.1;
+//Ogre::LogManager::getSingletonPtr()->getDefaultLog()->logMessage("yPos: " + Ogre::StringConverter::toString(yPos));
+
 				break;
 			case TEXT_ALIGNMENT_VERTICAL_TOP:
 				yPos = mSkinElement->getBorderThickness(BORDER_TOP);
@@ -675,8 +682,11 @@ namespace QuickGUI
 		{
 			mSelectedItem = i;
 
+
 			if(mSelectedItem->getClass() == "ListTextItem")
-				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments());
+				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].text,
+				static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].fontName)),
+ 				dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].color);
 
 			if(mSelectedItem->getClass() == "ListImageItem")
 			{
@@ -693,7 +703,7 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void ComboBox::selectItem(int index)
+	void ComboBox::selectItem(int index, bool autoFireEvent)
 	{
 		mSelectedItem = getItem(index);
 
@@ -703,7 +713,11 @@ namespace QuickGUI
 		if(mSelectedItem != NULL)
 		{
 			if(mSelectedItem->getClass() == "ListTextItem")
-				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->mText->getTextSegments());
+//				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->mText->getTextSegments());
+				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].text,
+                                static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].fontName)),
+                                dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].color);
+
 
 			if(mSelectedItem->getClass() == "ListImageItem")
 			{
@@ -712,9 +726,12 @@ namespace QuickGUI
 			}
 		}
 
-		WidgetEventArgs args(this);
-		fireComboBoxEvent(COMBOBOX_EVENT_SELECTION_CHANGED,args);
-
+		if(autoFireEvent)
+		{
+		  WidgetEventArgs args(this);
+		  fireComboBoxEvent(COMBOBOX_EVENT_SELECTION_CHANGED,args);
+		}
+		
 		redraw();
 	}
 
@@ -800,10 +817,13 @@ namespace QuickGUI
 	void ComboBox::setSkinType(const Ogre::String type)
 	{
 		Widget::setSkinType(type);
-
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
-
+#else
+	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
+#endif
 		if(mMenuPanel != NULL)
 			mMenuPanel->setSkinType(mSkinType->getSkinReference(DROPDOWNMENUPANEL)->typeName);
 

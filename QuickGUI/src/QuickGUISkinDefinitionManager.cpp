@@ -12,21 +12,27 @@ namespace QuickGUI
 
 	SkinDefinitionManager::~SkinDefinitionManager()
 	{
-		for(std::map<Ogre::String,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<Ogre::String,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinDefinition,Ogre::MEMCATEGORY_GENERAL);
+#else
+	for(std::map<Ogre::String,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
+			OGRE_DELETE_T((*it).second,SkinDefinition,Ogre::MEMCATEGORY_GENERAL);
+#endif
+		
 
 		OGRE_DELETE SkinTypeManager::getSingletonPtr();
 	}
 
 	SkinDefinitionManager* SkinDefinitionManager::getSingletonPtr(void) 
 	{ 
-		return msSingleton; 
+		return msSingleton;
 	}
 
 	SkinDefinitionManager& SkinDefinitionManager::getSingleton(void) 
 	{ 
-		assert( msSingleton );  
-		return ( *msSingleton ); 
+		assert( msSingleton );
+		return ( *msSingleton );
 	}
 
 	SkinDefinition* SkinDefinitionManager::getSkinDefinition(const Ogre::String& className)

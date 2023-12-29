@@ -5,7 +5,7 @@
 #include "QuickGUIExportDLL.h"
 #include "QuickGUIManager.h"
 
-#include "OgreFontManager.h"
+#include "Overlay/OgreFontManager.h"
 #include "OgrePrerequisites.h"
 #include "OgreSingleton.h"
 
@@ -74,14 +74,29 @@ namespace QuickGUI
 		*/
 		void setDefaultHoverTime(float seconds);
 
+		/**
+		* Set GUI size for those silly HiDPI monitors 
+		*/
+		void setGUIScale(float scale);
+
+		/**
+		* Get GUI size for those silly HiDPI monitors 
+		*/
+		float getGUIScale();
+
 	protected:
 		ColourValue mDefaultColor;
 		Ogre::FontPtr mDefaultFont;
 
 		int mGUIManagerCounter;
 
-		std::map<std::string,GUIManager*> mGUIManagers;
+		float dpiScale;
 
+#if USEHASHMAPS
+		stdext::hash_map<std::string,GUIManager*> mGUIManagers;
+#else
+		std::map<std::string,GUIManager*> mGUIManagers;
+#endif
 		void notifyWidgetDestroyed(Widget* w);
 		void notifySheetDestroyed(Sheet* sheet);
 

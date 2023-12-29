@@ -60,13 +60,15 @@ namespace QuickGUI
 		mDefaultHoverTime(3)
 	{
 		// Get the default font
-		Ogre::ResourceManager::ResourceMapIterator it = Ogre::FontManager::getSingleton().getResourceIterator();
-		if(it.hasMoreElements())
-			mDefaultFont = static_cast<Ogre::FontPtr>(it.getNext());
-		else
-			throw Exception(Exception::ERR_INVALID_STATE,"No fonts have been found! At least one font must exist for QuickGUI use!","Root::Root");
+        Ogre::ResourceManager::ResourceMapIterator it = Ogre::FontManager::getSingleton().getResourceIterator();
+        if(it.hasMoreElements())
+            mDefaultFont = it.getNext().staticCast<Ogre::Font>(); // static_cast<Ogre::FontPtr>(it.getNext());
+        else
+            throw Exception(Exception::ERR_INVALID_STATE,"No fonts have been found! At least one font must exist for QuickGUI use!","Root::Root");
 
 		mDefaultColor = ColourValue::White;
+
+		dpiScale = 1;
 
 		// Initialize all Singleton Manager classes
 		OGRE_NEW Brush();
@@ -217,8 +219,14 @@ namespace QuickGUI
 	{
 		OGRE_DELETE SheetManager::getSingletonPtr();
 
-		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
 			OGRE_DELETE_T((*it).second,GUIManager,Ogre::MEMCATEGORY_GENERAL);
+#else
+	for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
+			OGRE_DELETE_T((*it).second,GUIManager,Ogre::MEMCATEGORY_GENERAL);
+#endif
+		
 		mGUIManagers.clear();
 
 		OGRE_DELETE ScriptReader::getSingletonPtr();
@@ -238,13 +246,13 @@ namespace QuickGUI
 
 	Root* Root::getSingletonPtr(void) 
 	{ 
-		return msSingleton; 
+        return msSingleton;
 	}
 
 	Root& Root::getSingleton(void) 
 	{ 
-		assert( msSingleton );  
-		return ( *msSingleton ); 
+        assert( msSingleton );
+        return ( *msSingleton );
 	}
 
 	GUIManager* Root::createGUIManager(GUIManagerDesc& d)
@@ -271,6 +279,17 @@ namespace QuickGUI
 
 		return newGUIManager;
 	}
+
+	void Root::setGUIScale(float scale)
+	{
+		dpiScale = scale;
+	}
+
+	float Root::getGUIScale()
+	{
+		return dpiScale;
+	}
+
 
 	void Root::destroyGUIManager(GUIManager* gm)
 	{
@@ -318,7 +337,11 @@ namespace QuickGUI
 	{
 		notifyWidgetDestroyed(sheet);
 
-		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
+#else
+		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
+#endif
 		{
 			if((*it).second->getActiveSheet() == sheet)
 				(*it).second->setActiveSheet(NULL);
@@ -327,7 +350,11 @@ namespace QuickGUI
 
 	void Root::notifyWidgetDestroyed(Widget* w)
 	{
-		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
+#else
+		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
+#endif
 		{
 			if(((*it).second->getWidgetUnderMouseCursor() != NULL) && (w->findWidget((*it).second->getWidgetUnderMouseCursor()->getName()) != NULL))
 				(*it).second->clearWidgetUnderMouseCursorReference();

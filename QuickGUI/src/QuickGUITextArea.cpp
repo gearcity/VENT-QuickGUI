@@ -467,6 +467,12 @@ namespace QuickGUI
 		if(mDesc->textarea_readOnly)
 			return;
 
+		if(mText->getHighlight())
+		{
+			mText->clearText();
+			setCursorIndex(0);
+		}
+
 		const KeyEventArgs kea = dynamic_cast<const KeyEventArgs&>(args);
 		mLastKnownInput.codepoint = kea.codepoint;
 		mLastKnownInput.keyMask = kea.keyMask;
@@ -825,7 +831,11 @@ namespace QuickGUI
 		updateTexturePosition();
 
 		// Update components window reference via setParent
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#else
+	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#endif		
 		{
 			(*it).second->setParent(this);
 		}

@@ -9,7 +9,7 @@
 #include "QuickGUIUVRect.h"
 
 #include "OgreColourValue.h"
-#include "OgreFontManager.h"
+#include "Overlay/OgreFontManager.h"
 #include "OgrePrerequisites.h"
 #include "OgreTextureManager.h"
 #include "OgreUTFString.h"

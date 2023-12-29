@@ -169,6 +169,9 @@ namespace QuickGUI
 		HScrollBar* mHScrollBar;
 		VScrollBar* mVScrollBar;
 
+		bool manualHScrollBarVisibility; 
+		
+
 	protected:
 		// The following functions are protected because all inheritted classes should not allow
 		// public access to them.  For example, a MenuItem is a Widget, but should not allow users

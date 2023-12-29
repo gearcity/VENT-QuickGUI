@@ -32,7 +32,12 @@ namespace QuickGUI
 		SkinDefinitionManager();
 		virtual ~SkinDefinitionManager();
 
-		std::map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
+#if USEHASHMAPS
+	stdext::hash_map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
+#else
+	std::map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
+#endif
+		
 	};
 }
 

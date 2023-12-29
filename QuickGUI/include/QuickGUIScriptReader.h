@@ -78,7 +78,13 @@ namespace QuickGUI
 		std::vector<Token> mTokens;
 
 		bool mBegin;
+
+#if USEHASHMAPS
+		stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
+#else
 		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
+#endif
+		
 
 		/**
 		* Reads through a string and converts it to tokens.
@@ -87,17 +93,31 @@ namespace QuickGUI
 		void _convertToTokens(Ogre::String s, std::vector<Token>& tokenList);
 
 		// Organized by script definition type, then name
-		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mDefinitions;
-
+#if USEHASHMAPS
+	stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > mDefinitions;
+#else
+	std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mDefinitions;
+#endif
+		
 		/**
 		* Iterates through tokens and creates Definitions and Properties.
 		*/
-		void _createDefinitions(std::vector<Token>& tokenList, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
+#if USEHASHMAPS
+		void _createDefinitions(std::vector<Token>& tokenList, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
+		ScriptDefinition* _findDefinition(const Ogre::String& type, const Ogre::String& id, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
+		ScriptDefinition* _getDefinition(const Ogre::String& type, const Ogre::String& id, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
 
+		
+#else
+		void _createDefinitions(std::vector<Token>& tokenList, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
 		ScriptDefinition* _findDefinition(const Ogre::String& type, const Ogre::String& id, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
 		ScriptDefinition* _getDefinition(const Ogre::String& type, const Ogre::String& id, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
 		std::list<ScriptDefinition*> _getDefinitions(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);		
+#endif
+		
 	};
 }
 

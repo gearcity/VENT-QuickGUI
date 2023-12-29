@@ -149,7 +149,7 @@ namespace QuickGUI
 		mDesc->textbox_maxCharacters = td->textbox_maxCharacters;
 
 		// Set a really high width, we want everything on 1 line.
-		mDesc->textDesc.allottedWidth = mDesc->textbox_maxCharacters * Text::getGlyphWidth(mDesc->textbox_defaultFontName,'0');
+		mDesc->textDesc.allottedWidth = mDesc->textbox_maxCharacters * Text::getGlyphWidth(mDesc->textbox_defaultFontName,'0')*Root::getSingletonPtr()->getGUIScale();
 			
 		mText = OGRE_NEW_T(Text,Ogre::MEMCATEGORY_GENERAL)(mDesc->textDesc);
 
@@ -307,6 +307,12 @@ namespace QuickGUI
 
 	void TextBox::onCharEntered(const EventArgs& args)
 	{
+		if(mText->getHighlight())
+		{
+			mText->clearText();
+			setCursorIndex(0);
+		}
+
 		const KeyEventArgs kea = dynamic_cast<const KeyEventArgs&>(args);
 		mLastKnownInput.codepoint = kea.codepoint;
 		mLastKnownInput.keyMask = kea.keyMask;
@@ -374,12 +380,6 @@ namespace QuickGUI
 
 	void TextBox::onKeyDown(const EventArgs& args)
 	{
-		if(mText->getHighlight())
-		{
-			mText->clearText();
-			setCursorIndex(0);
-		}
-
 		const KeyEventArgs kea = dynamic_cast<const KeyEventArgs&>(args);
 		mLastKnownInput.keyMask = kea.keyMask;
 		mLastKnownInput.keyModifiers = kea.keyModifiers;

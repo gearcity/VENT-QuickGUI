@@ -82,6 +82,7 @@ namespace QuickGUI
 		mPrevSelectedIndex(0),
 		mAutoNameCounter(0)
 	{
+		onlySelectable = false;
 	}
 
 	List::~List()
@@ -128,7 +129,7 @@ namespace QuickGUI
 		for(int index = 0; index < LIST_EVENT_COUNT; ++index)
 			ld->list_userHandlers[index] = ld->list_userHandlers[index];
 
-		setItemHeight(ld->list_itemHeight);
+		setItemHeight(ld->list_itemHeight*Root::getSingletonPtr()->getGUIScale());
 		setMultiSelect(ld->list_supportMultiSelect);
 
 		setSkinType(ld->widget_skinTypeName);
@@ -225,12 +226,15 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void List::clearSelection()
+	void List::clearSelection(bool autoFireEvent)
 	{
 		_clearSelection();
 
-		WidgetEventArgs args(this);
-		fireListEvent(LIST_EVENT_SELECTION_CHANGED,args);
+		if(autoFireEvent)
+		{
+		  WidgetEventArgs args(this);
+		  fireListEvent(LIST_EVENT_SELECTION_CHANGED,args);
+		}
 	}
 
 	std::list<ListItem*> List::getItemList()
@@ -481,6 +485,9 @@ namespace QuickGUI
 		{
 			bool selected = li->getSelected();
 
+			if(onlySelectable)
+				selected = false;
+
 			_clearSelection();
 
 			li->setSelected(!selected);
@@ -493,7 +500,7 @@ namespace QuickGUI
 		// Multi Selection
 		else
 		{
-			bool ctrlDown = (mea.keyModifiers & CTRL) > 0;
+			/*bool ctrlDown = (mea.keyModifiers & CTRL) > 0;
 			bool shiftDown = (mea.keyModifiers & SHIFT) > 0;
 
 			if(ctrlDown)
@@ -619,8 +626,32 @@ namespace QuickGUI
 					else
 						li->mSkinElement = li->mSkinType->getSkinElement(ListItem::OVER);
 				}
+			}*/
+			
+				
+		      // toggle selection
+			li->setSelected(!li->getSelected());
+
+			// if selected, add to list
+			if(li->getSelected())
+				mSelectedItems.push_back(li);
+			// otherwise remove from selected list
+			else
+			{
+				for(std::list<ListItem*>::iterator it = mSelectedItems.begin(); it != mSelectedItems.end(); ++it)
+				{
+					if(li == (*it))
+					{
+						mSelectedItems.erase(it);
+						break;
+					}
+				}
+
+				li->mSkinElement = li->mSkinType->getSkinElement(ListItem::OVER);
 			}
+			
 		}
+		
 
 		mPrevSelectedIndex = _getItemIndex(li);
 
@@ -630,8 +661,9 @@ namespace QuickGUI
 		fireListEvent(LIST_EVENT_SELECTION_CHANGED,args);
 	}
 
-	void List::selectItem(unsigned int index)
+	void List::selectItem(unsigned int index, bool autoFireEvent, bool multiSelecting)
 	{
+	  if(!multiSelecting)
 		_clearSelection();
 
 		if(index >= mItems.size())
@@ -645,9 +677,12 @@ namespace QuickGUI
 				(*it)->setSelected(true);
 				mSelectedItems.push_back(*it);
 
-				WidgetEventArgs args(this);
-				fireListEvent(LIST_EVENT_SELECTION_CHANGED,args);
-
+				if(autoFireEvent)
+				{
+				  WidgetEventArgs args(this);
+				  fireListEvent(LIST_EVENT_SELECTION_CHANGED,args);
+				}
+				
 				return;
 			}
 
@@ -658,6 +693,11 @@ namespace QuickGUI
 	void List::setMultiSelect(bool MultiSelect)
 	{
 		mDesc->list_supportMultiSelect = MultiSelect;
+	}
+
+	void List::setUnselectable(bool onlySelect)
+	{
+		onlySelectable = onlySelect;
 	}
 
 	void List::setItemHeight(float height)

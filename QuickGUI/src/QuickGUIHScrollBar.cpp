@@ -523,10 +523,13 @@ namespace QuickGUI
 		updateSkinElement();
 
 		mWidgetDesc->widget_skinTypeName = type;
-
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
+#else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
-
+#endif
 		// Update client dimensions
 		{
 			mClientDimensions.position = Point::ZERO;
@@ -615,4 +618,45 @@ namespace QuickGUI
 		if(mSkinType != NULL)
 			mSkinElement = mSkinType->getSkinElement(BAR);
 	}
+
+	Ogre::list<QuickGUI::Widget*>::type HScrollBar::getScrollbarWidgets()
+	{
+		Ogre::list<QuickGUI::Widget*>::type sc;
+		if(mButton_Left1 != NULL)
+			sc.push_back(static_cast<QuickGUI::Widget*>(mButton_Left1));
+		if(mButton_Left2 != NULL)
+				sc.push_back(static_cast<QuickGUI::Widget*>(mButton_Left2));
+		if(mButton_Right1 != NULL)
+				sc.push_back(static_cast<QuickGUI::Widget*>(mButton_Right1));
+		if(mButton_Right2 != NULL)
+				sc.push_back(static_cast<QuickGUI::Widget*>(mButton_Right2));
+		if(mButton_Slider != NULL)
+				sc.push_back(static_cast<QuickGUI::Widget*>(mButton_Slider));
+
+
+		return sc;
+	}
+	
+	
+	void HScrollBar::setHiddenID(int ID)
+	{
+		hiddenInt = ID;
+	}
+
+	int HScrollBar::getHiddenID()
+	{
+		return hiddenInt;
+	}
+
+	void HScrollBar::setHiddenString(Ogre::String str)
+	{
+		hiddenString = str;
+	}
+
+	Ogre::String HScrollBar::getHiddenString()
+	{
+		return hiddenString;
+	}
+
 }
+

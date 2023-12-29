@@ -70,10 +70,18 @@ namespace QuickGUI
 		Ogre::String mName;
 		Ogre::String mClassName;
 
-		// Element Alias/SkinElement pair
+#if USEHASHMAPS
+	// Element Alias/SkinElement pair
+		stdext::hash_map<Ogre::String,SkinElement*> mSkinElements;
+		// ComponentName/SkinReference pair
+		stdext::hash_map<Ogre::String,SkinReference*> mSkinReferences;
+#else
+	// Element Alias/SkinElement pair
 		std::map<Ogre::String,SkinElement*> mSkinElements;
 		// ComponentName/SkinReference pair
 		std::map<Ogre::String,SkinReference*> mSkinReferences;
+#endif
+		
 	};
 }
 

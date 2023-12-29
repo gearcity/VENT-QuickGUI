@@ -149,7 +149,11 @@ namespace QuickGUI
 		brush->setClipRegion(clientClipRegion);
 
 		// draw components
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+	for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#else
+	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#endif		
 			(*it).second->draw();
 
 		// restore clip region

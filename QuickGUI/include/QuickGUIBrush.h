@@ -20,6 +20,9 @@
 #include "OgreTextureManager.h"
 #include "OgreTextureUnitState.h"
 
+
+
+
 #include <vector>
 
 namespace QuickGUI

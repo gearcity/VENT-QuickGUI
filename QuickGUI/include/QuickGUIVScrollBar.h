@@ -186,6 +186,8 @@ namespace QuickGUI
 		*/
 		virtual void updateClientDimensions();
 
+		Ogre::list<QuickGUI::Widget*>::type getScrollbarWidgets();
+
 	public:
 		// Here we have to call out any protected Widget set accesors we want to expose
 

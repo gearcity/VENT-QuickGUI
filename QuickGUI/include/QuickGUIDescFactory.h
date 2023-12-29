@@ -46,7 +46,12 @@ namespace QuickGUI
 		template<typename ClassType>
 		ClassType* createInstance(const Ogre::String& className)
 		{
+
+#if USEHASHMAPS
+		typename stdext::hash_map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
+#else
 			typename std::map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
+#endif
 
 			if (iter == mFunctorMap.end())
 				throw Exception(Exception::ERR_FACTORY,"\"" + className + "\" is not a registered class!","DescFactory::createInstance");
@@ -65,8 +70,11 @@ namespace QuickGUI
 		DescFactory() {}
 		virtual ~DescFactory() {}
 
+#if USEHASHMAPS
+		stdext::hash_map<Ogre::String, createDescFunction> mFunctorMap;
+#else
 		std::map<Ogre::String, createDescFunction> mFunctorMap;
-		
+#endif
 		template<typename ClassType>
 		Desc* createDesc()
 		{

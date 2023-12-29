@@ -22,21 +22,30 @@ namespace QuickGUI
 
 	SkinTypeManager::~SkinTypeManager()
 	{
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		{
+			for(stdext::hash_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+				OGRE_DELETE_T((*it2).second,SkinType,Ogre::MEMCATEGORY_GENERAL);
+		}
+#else
 		for(std::map<Ogre::String, std::map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
 			for(std::map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 				OGRE_DELETE_T((*it2).second,SkinType,Ogre::MEMCATEGORY_GENERAL);
 		}
+#endif
+		
 	}
 
 	SkinTypeManager* SkinTypeManager::getSingletonPtr(void) 
 	{ 
-		return msSingleton; 
+		return msSingleton;
 	}
 
 	SkinTypeManager& SkinTypeManager::getSingleton(void) 
 	{ 
-		assert( msSingleton );  
+		assert( msSingleton );
 		return ( *msSingleton ); 
 	}
 
@@ -107,7 +116,19 @@ namespace QuickGUI
 		ScriptWriter::getSingletonPtr()->begin(fileName);
 
 		SerialWriter* sw = SerialWriter::getSingletonPtr();
-		for(std::map<Ogre::String, std::map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		{
+			sw->begin("SkinClass",(*it1).first);
+			for(stdext::hash_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			{
+				(*it2).second->serialize(sw);
+			}
+			sw->end();
+		}
+#else
+			for(std::map<Ogre::String, std::map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
 			sw->begin("SkinClass",(*it1).first);
 			for(std::map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
@@ -116,6 +137,8 @@ namespace QuickGUI
 			}
 			sw->end();
 		}
+#endif
+	
 
 		ScriptWriter::getSingletonPtr()->end();
 	}

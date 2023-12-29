@@ -109,8 +109,11 @@ namespace QuickGUI
 		ComponentWidget(const Ogre::String& name);
 		virtual ~ComponentWidget();
 
+#if USEHASHMAPS
+		stdext::hash_map<Ogre::String,Widget*> mComponents;
+#else
 		std::map<Ogre::String,Widget*> mComponents;
-
+#endif
 		/**
 		* Adds a component to this widget.
 		*/

@@ -11,6 +11,8 @@
 #include "OgreSceneManager.h"
 #include "OgreViewport.h"
 #include "OgreRenderQueue.h"
+#include "OgreCamera.h"
+#include "OgreTimer.h"
 
 namespace QuickGUI
 {
@@ -22,9 +24,9 @@ namespace QuickGUI
 		scrollLastClicked = false;
 		queueID = Ogre::RENDER_QUEUE_OVERLAY;
 		determineClickEvents = true;
-		clickTime = 200;
-		doubleClickTime = 400;
-		tripleClickTime = 400;
+		clickTime = 400;
+		doubleClickTime = 800;
+		tripleClickTime = 800;
 		supportAutoRepeat = true;
 		timeToAutoRepeat = 0.6;
 		autoRepeatInterval = 0.17;
@@ -79,7 +81,7 @@ namespace QuickGUI
 			{
 				Ogre::SceneManager::CameraIterator it = mGUIManagerDesc.sceneManager->getCameraIterator();
 				if(it.hasMoreElements())
-					setViewport(it.getNext()->getViewport());
+                    setViewport(it.getNext()->getViewport());
 			}
 		}
 		else
@@ -304,8 +306,8 @@ namespace QuickGUI
 	}
 
 	Widget* GUIManager::getLastClickedWidget()
-	{
-		return mLastClickedWidget;
+	{			
+			return mLastClickedWidget;
 	}
 
 	MouseCursor* GUIManager::getMouseCursor()
@@ -518,9 +520,10 @@ namespace QuickGUI
 		// Modify the button mask
 		mButtonMask |= (1 << button);
 
-		// Record that the mouse button went down on this widget
-		mMouseButtonDown[button] = mWidgetUnderMouseCursor;
-		mLastClickedWidget = mWidgetUnderMouseCursor;
+		// Record that the mouse button went down on this widget		
+			mMouseButtonDown[button] = mWidgetUnderMouseCursor;
+			mLastClickedWidget = mWidgetUnderMouseCursor;
+	
 
 		// Check if Sheet's keyboard listener (widget receiving keyboard events) needs to be updated.
 		if((mLastClickedWidget != NULL) && (mLastClickedWidget->getConsumeKeyboardEvents()))
@@ -560,8 +563,9 @@ namespace QuickGUI
 			// Fire EVENT_MOUSE_BUTTON_DOWN event to the widget in focus
 			mWidgetUnderMouseCursor->fireWidgetEvent(WIDGET_EVENT_MOUSE_BUTTON_DOWN,mLastMouseButtonInjection);
 
-			// Enable Auto Repeat, which will begin after some time
-			if((mAutoRepeatEnableTimer != NULL) && (mAutoRepeatInjectionTimer != NULL) && (!mAutoRepeatInjectionTimer->isUpdating()))
+			// If Widget isn't draggable, enable Auto Repeat, which will begin after some time
+			if( (!mWidgetUnderMouseCursor->getDragable()) && (mAutoRepeatEnableTimer != NULL) &&
+				(mAutoRepeatInjectionTimer != NULL) && (!mAutoRepeatInjectionTimer->isUpdating()))
 			{
 				mAutoRepeatEnableTimer->reset();
 				mAutoRepeatEnableTimer->start();
@@ -705,6 +709,8 @@ namespace QuickGUI
 		if( !mMouseCursor->getEnabled() ) 
 			return false;
 
+			mLastClickedWidget = mWidgetUnderMouseCursor;
+
 		if(mWidgetUnderMouseCursor->hasAnyEventHandlersForThisType(WIDGET_EVENT_MOUSE_CLICK) || mWidgetUnderMouseCursor->hasAnyEventHandlersForThisType(WIDGET_EVENT_MOUSE_CLICK_DOUBLE) || mWidgetUnderMouseCursor->hasAnyEventHandlersForThisType(WIDGET_EVENT_MOUSE_CLICK_TRIPLE) )
 		{
 		}
@@ -724,7 +730,7 @@ namespace QuickGUI
 		if( mMouseButtonDown[button] != mWidgetUnderMouseCursor )
 			return (mWidgetUnderMouseCursor != NULL);
 
-		mLastClickedWidget = mWidgetUnderMouseCursor;
+	
 
 		// Create MouseEventArgs, for use with any fired events
 		MouseEventArgs args(mWidgetUnderMouseCursor);
@@ -751,6 +757,8 @@ namespace QuickGUI
 		if( !mMouseCursor->getEnabled() ) 
 			return false;
 
+		mLastClickedWidget = mWidgetUnderMouseCursor;
+
 		// Modify the button mask
 		mButtonMask &= !(1 << button);
 
@@ -762,7 +770,7 @@ namespace QuickGUI
 		if( mMouseButtonDown[button] != mWidgetUnderMouseCursor )
 			return (mWidgetUnderMouseCursor != NULL);
 
-		mLastClickedWidget = mWidgetUnderMouseCursor;
+		
 
 		// Create MouseEventArgs, for use with any fired events
 		MouseEventArgs args(mWidgetUnderMouseCursor);
@@ -789,6 +797,8 @@ namespace QuickGUI
 		if( !mMouseCursor->getEnabled() ) 
 			return false;
 
+		mLastClickedWidget = mWidgetUnderMouseCursor;
+
 		// Modify the button mask
 		mButtonMask &= !(1 << button);
 
@@ -797,7 +807,7 @@ namespace QuickGUI
 		if( mMouseButtonDown[button] != mWidgetUnderMouseCursor )
 			return (mWidgetUnderMouseCursor != NULL);
 
-		mLastClickedWidget = mWidgetUnderMouseCursor;
+		
 
 		// Create MouseEventArgs, for use with any fired events
 		MouseEventArgs args(mWidgetUnderMouseCursor);
@@ -949,7 +959,7 @@ namespace QuickGUI
 				if(w != NULL)
 				{
 					w->fireWidgetEvent(WIDGET_EVENT_MOUSE_WHEEL,args);
-					injectMouseMove(0,0);
+					//injectMouseMove(0,0);
 					return true;
 				}
 			}

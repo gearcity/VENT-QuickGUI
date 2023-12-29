@@ -170,14 +170,45 @@ namespace QuickGUI
 		setBaseColor(d->widget_baseColor);
 		setConsumeKeyboardEvents(d->widget_consumeKeyboardEvents);
 		setContextMenuName(d->widget_contextMenuName);
-		setEnabled(d->widget_enabled);
-		setDimensions(d->widget_dimensions);
+		setEnabled(d->widget_enabled);	
+		if(d->getClass() != "TitleBar")
+		{
+			if(d->widget_dimensions.position.x < 0 || d->widget_dimensions.position.y < 0)
+			{
+				int xPos = d->widget_dimensions.position.x;
+				int yPos = d->widget_dimensions.position.y;
+
+				if( xPos > 0 )
+					xPos *= Root::getSingletonPtr()->getGUIScale();
+
+				if( yPos > 0 )
+					yPos *= Root::getSingletonPtr()->getGUIScale();
+
+				setDimensions(Rect(xPos, yPos,
+					d->widget_dimensions.size.width*Root::getSingletonPtr()->getGUIScale(),
+					d->widget_dimensions.size.height*Root::getSingletonPtr()->getGUIScale()));
+			}
+			else
+			{
+				setDimensions(Rect(d->widget_dimensions.position.x*Root::getSingletonPtr()->getGUIScale(),
+					d->widget_dimensions.position.y*Root::getSingletonPtr()->getGUIScale(),
+					d->widget_dimensions.size.width*Root::getSingletonPtr()->getGUIScale(),
+					d->widget_dimensions.size.height*Root::getSingletonPtr()->getGUIScale()));
+			}
+		}
+		else
+		{
+			setDimensions(d->widget_dimensions);
+		}
+
 		setDragable(d->widget_dragable);
 		setHorizontalAnchor(d->widget_horizontalAnchor);
 		setHoverTime(d->widget_hoverTime);
 		setInheritOpacity(d->widget_inheritOpacity);
-		setMaxSize(d->widget_maxSize);
-		setMinSize(d->widget_minSize);
+		setMaxSize(QuickGUI::Size(d->widget_maxSize.width *Root::getSingletonPtr()->getGUIScale(),
+			d->widget_maxSize.height *Root::getSingletonPtr()->getGUIScale()));
+		setMinSize(QuickGUI::Size(d->widget_minSize.width *Root::getSingletonPtr()->getGUIScale(),
+			d->widget_minSize.height *Root::getSingletonPtr()->getGUIScale()));
 		setMoveBaseWidgetOnDrag(d->widget_moveBaseWidgetOnDrag);
 		setPositionRelativeToParentClientDimensions(d->widget_positionRelativeToParentClientDimensions);
 		setRelativeOpacity(d->widget_relativeOpacity);

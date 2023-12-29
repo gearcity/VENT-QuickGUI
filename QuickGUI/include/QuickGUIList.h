@@ -109,7 +109,7 @@ namespace QuickGUI
 		/**
 		* De-selects any selected ListItems in the list.
 		*/
-		void clearSelection();
+		void clearSelection(bool autoFireEvent = true);
 		/**
 		* Clears the user defined handler associated with the EVENT given. (sets the handlerName to "")
 		*/
@@ -186,7 +186,7 @@ namespace QuickGUI
 		* Selects the item at index given.  If index is not valid,
 		* all items will be de-selected.
 		*/
-		void selectItem(unsigned int index);
+		void selectItem(unsigned int index, bool autoFireEvent = true, bool multiSelecting = false);
 		/**
 		* Sets the height of each ListItem within the List.
 		*/
@@ -207,6 +207,11 @@ namespace QuickGUI
 		* Recalculate Client widget_dimensions, relative to Widget's actual widget_dimensions.
 		*/
 		virtual void updateClientDimensions();
+
+		/**
+		* Set unselectable item status
+		*/
+		void setUnselectable(bool onlySelect);
 
 
 	public:
@@ -243,6 +248,8 @@ namespace QuickGUI
 		ListDesc* mDesc;
 
 		int mAutoNameCounter;
+
+		bool onlySelectable;
 
 		std::list<ListItem*> mItems;
 		std::list<ListItem*> mSelectedItems;

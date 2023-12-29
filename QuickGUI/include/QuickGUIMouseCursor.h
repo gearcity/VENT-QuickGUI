@@ -11,6 +11,8 @@
 
 #include "OgrePrerequisites.h"
 
+
+
 namespace QuickGUI
 {
 	// forward declaration

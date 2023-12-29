@@ -58,7 +58,8 @@ namespace QuickGUI
 		mDesc(NULL),
 		mHScrollBar(NULL),
 		mVScrollBar(NULL),
-		mUpdatingClientDimensions(false)
+		mUpdatingClientDimensions(false),
+		manualHScrollBarVisibility(false)
 	{
 	}
 
@@ -77,6 +78,8 @@ namespace QuickGUI
 		if(!mDesc->containerwidget_supportScrollBars)
 			return;
 
+		
+
 		bool clientDimensionsNeedToBeUpdated = false;
 
 		if(static_cast<int>(mVirtualSize.width) == static_cast<int>(mClientDimensions.size.width))
@@ -89,7 +92,7 @@ namespace QuickGUI
 		}
 		else
 		{
-			if(!mHScrollBar->getVisible())
+			if(!mHScrollBar->getVisible() && !manualHScrollBarVisibility)
 			{
 				mHScrollBar->setVisible(true);
 				clientDimensionsNeedToBeUpdated = true;
@@ -145,6 +148,8 @@ namespace QuickGUI
 
 			mHScrollBar = dynamic_cast<HScrollBar*>(_createWidget(hd));
 			mHScrollBar->addScrollBarEventHandler(QuickGUI::SCROLLBAR_EVENT_ON_SCROLLED,&ContainerWidget::onHorizontalScroll,this);
+		
+
 			addComponent(HSCROLLBAR,mHScrollBar);
 
 			VScrollBarDesc* vd = DescManager::getSingletonPtr()->getDefaultVScrollBarDesc();
@@ -157,7 +162,7 @@ namespace QuickGUI
 			vd->widget_visible = false;
 
 			mVScrollBar = dynamic_cast<VScrollBar*>(_createWidget(vd));
-			mVScrollBar->addScrollBarEventHandler(QuickGUI::SCROLLBAR_EVENT_ON_SCROLLED,&ContainerWidget::onVerticalScroll,this);
+			mVScrollBar->addScrollBarEventHandler(QuickGUI::SCROLLBAR_EVENT_ON_SCROLLED,&ContainerWidget::onVerticalScroll,this);			
 			addComponent(VSCROLLBAR,mVScrollBar);
 
 			addWidgetEventHandler(WIDGET_EVENT_MOUSE_WHEEL,&ContainerWidget::onMouseWheel,this);
@@ -347,7 +352,11 @@ namespace QuickGUI
 		brush->setClipRegion(derivedClipRegion);
 
 		// draw components
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 			(*it).second->draw();
 
 		// restore clip region
@@ -391,7 +400,11 @@ namespace QuickGUI
 			return NULL;
 
 		// Check components before verifying point is within bounds. (Components can lie outside widget dimensions)
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
 			if(w != NULL)
@@ -680,7 +693,11 @@ namespace QuickGUI
 
 		_setSkinType(type);
 
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			if(mSkinType->hasSkinReference((*it).first))
 				(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
@@ -751,11 +768,10 @@ namespace QuickGUI
 				mClientDimensions.size.width -= mVScrollBar->getWidth();
 
 			// Now that client dimensions are fully updated, we can adjust ScrollBars position and size
-
 			if(mHScrollBar)
 			{
 				mHScrollBar->setWidth(mClientDimensions.size.width);
-				mHScrollBar->setPosition(Point(mSkinElement->getBorderThickness(BORDER_LEFT),mWidgetDesc->widget_dimensions.size.height - mSkinElement->getBorderThickness(BORDER_BOTTOM) - mDesc->containerwidget_scrollBarThickness));
+				mHScrollBar->setPosition(Point(mSkinElement->getBorderThickness(BORDER_LEFT),mWidgetDesc->widget_dimensions.size.height - (mSkinElement->getBorderThickness(BORDER_BOTTOM)  * Root::getSingletonPtr()->getGUIScale()) - mDesc->containerwidget_scrollBarThickness));
 			}
 
 			if(mVScrollBar)
@@ -769,7 +785,11 @@ namespace QuickGUI
 		Size difference = mClientDimensions.size - previousSize;
 
 		// Handle anchoring for Components
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			if((*it).second == mHScrollBar)
 				continue;
@@ -805,7 +825,11 @@ namespace QuickGUI
 		Widget::updateTexturePosition();
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#else
+		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+#endif
 		{
 			(*it).second->updateTexturePosition();
 		}

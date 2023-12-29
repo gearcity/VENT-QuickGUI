@@ -73,8 +73,11 @@ namespace QuickGUI
 		template<typename ClassType>
 		ClassType* createInstance(const Ogre::String& className, const Ogre::String& name)
 		{
+#if USEHASHMAPS
+			typename stdext::hash_map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
+#else
 			typename std::map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
-
+#endif
 			if (iter == mFunctorMap.end())
 				throw Exception(Exception::ERR_FACTORY,"\"" + className + "\" is not a registered class!","WidgetFactory::createInstance");
 
@@ -92,7 +95,11 @@ namespace QuickGUI
 		WidgetFactory() : mNamingPrefix("") {}
 		virtual ~WidgetFactory() {}
 
+#if USEHASHMAPS
+		stdext::hash_map<Ogre::String, createWidgetFunction> mFunctorMap;
+#else
 		std::map<Ogre::String, createWidgetFunction> mFunctorMap;
+#endif
 
 		Ogre::String mNamingPrefix;
 		

@@ -94,7 +94,11 @@ namespace QuickGUI
 
 	Widget* PropertyGridItem::findWidgetAtPoint(const Point& p, bool ignoreDisabled)
 	{
+#if USEHASHMAPS
+		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+#endif
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
 			if(w != NULL)
