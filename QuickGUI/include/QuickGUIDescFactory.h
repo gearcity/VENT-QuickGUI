@@ -4,6 +4,7 @@
 #include "QuickGUIDesc.h"
 #include "QuickGUIException.h"
 #include "QuickGUIExportDLL.h"
+#include <unordered_map>
 
 #include "OgrePrerequisites.h"
 
@@ -48,7 +49,7 @@ namespace QuickGUI
 		{
 
 #if USEHASHMAPS
-		typename stdext::hash_map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
+		typename std::unordered_map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
 #else
 			typename std::map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
 #endif
@@ -71,7 +72,7 @@ namespace QuickGUI
 		virtual ~DescFactory() {}
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, createDescFunction> mFunctorMap;
+		std::unordered_map<Ogre::String, createDescFunction> mFunctorMap;
 #else
 		std::map<Ogre::String, createDescFunction> mFunctorMap;
 #endif

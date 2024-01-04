@@ -16,6 +16,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <unordered_map>
 
 namespace QuickGUI
 {
@@ -80,7 +81,7 @@ namespace QuickGUI
 		bool mBegin;
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
+		std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
 #else
 		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
 #endif
@@ -94,7 +95,7 @@ namespace QuickGUI
 
 		// Organized by script definition type, then name
 #if USEHASHMAPS
-	stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > mDefinitions;
+	std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > mDefinitions;
 #else
 	std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mDefinitions;
 #endif
@@ -103,11 +104,11 @@ namespace QuickGUI
 		* Iterates through tokens and creates Definitions and Properties.
 		*/
 #if USEHASHMAPS
-		void _createDefinitions(std::vector<Token>& tokenList, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
-		ScriptDefinition* _findDefinition(const Ogre::String& type, const Ogre::String& id, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
-		ScriptDefinition* _getDefinition(const Ogre::String& type, const Ogre::String& id, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList);
+		void _createDefinitions(std::vector<Token>& tokenList, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
+		ScriptDefinition* _findDefinition(const Ogre::String& type, const Ogre::String& id, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
+		ScriptDefinition* _getDefinition(const Ogre::String& type, const Ogre::String& id, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
 
 		
 #else

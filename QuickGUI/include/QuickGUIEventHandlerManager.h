@@ -3,6 +3,7 @@
 
 #include "QuickGUIExportDLL.h"
 #include "QuickGUIEventHandlerPointer.h"
+#include <unordered_map>
 
 #include "OgreSingleton.h"
 
@@ -66,7 +67,7 @@ namespace QuickGUI
 		EventHandlerManager();
 		virtual ~EventHandlerManager();
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String,EventHandlerSlot*> mUserDefinedEventHandlers;
+		std::unordered_map<Ogre::String,EventHandlerSlot*> mUserDefinedEventHandlers;
 #else
 		std::map<Ogre::String,EventHandlerSlot*> mUserDefinedEventHandlers;
 #endif

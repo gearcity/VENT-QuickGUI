@@ -216,20 +216,20 @@ namespace QuickGUI
 	}
 
 #if USEHASHMAPS
-	ScriptDefinition* ScriptReader::_findDefinition(const Ogre::String& type, const Ogre::String& id, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList)
+	ScriptDefinition* ScriptReader::_findDefinition(const Ogre::String& type, const Ogre::String& id, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList)
 #else
 	ScriptDefinition* ScriptReader::_findDefinition(const Ogre::String& type, const Ogre::String& id, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList)
 #endif	
 	{
 		ScriptDefinition* d = NULL;
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defList.begin(); it1 != defList.end(); ++it1)
+	for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defList.begin(); it1 != defList.end(); ++it1)
 #else
 	for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = defList.begin(); it1 != defList.end(); ++it1)
 #endif	
 		{
 #if USEHASHMAPS
-			for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif				
@@ -243,7 +243,7 @@ namespace QuickGUI
 		return NULL;
 	}
 #if USEHASHMAPS
-	ScriptDefinition* ScriptReader::_getDefinition(const Ogre::String& type, const Ogre::String& id, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList)
+	ScriptDefinition* ScriptReader::_getDefinition(const Ogre::String& type, const Ogre::String& id, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList)
 #else
 	ScriptDefinition* ScriptReader::_getDefinition(const Ogre::String& type, const Ogre::String& id, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList)
 #endif
@@ -258,20 +258,20 @@ namespace QuickGUI
 	}
 
 #if USEHASHMAPS
-	std::list<ScriptDefinition*> ScriptReader::_getDefinitions(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList)
+	std::list<ScriptDefinition*> ScriptReader::_getDefinitions(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList)
 #else
 	std::list<ScriptDefinition*> ScriptReader::_getDefinitions(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList)
 #endif
 	{
 		std::list<ScriptDefinition*> dList;
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defList.begin(); it1 != defList.end(); ++it1)
+	for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defList.begin(); it1 != defList.end(); ++it1)
 #else
 	for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = defList.begin(); it1 != defList.end(); ++it1)
 #endif
 		{
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+	for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 	for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif			
@@ -284,7 +284,7 @@ namespace QuickGUI
 	}
 
 #if USEHASHMAPS
-	std::list<ScriptDefinition*> ScriptReader::_getDefinitions(const Ogre::String& type, stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >& defList)
+	std::list<ScriptDefinition*> ScriptReader::_getDefinitions(const Ogre::String& type, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList)
 #else
 	std::list<ScriptDefinition*> ScriptReader::_getDefinitions(const Ogre::String& type, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList)
 #endif	
@@ -294,7 +294,7 @@ namespace QuickGUI
 
 		std::list<ScriptDefinition*> dList;
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it = defList[type].begin(); it != defList[type].end(); ++it)
+	for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it = defList[type].begin(); it != defList[type].end(); ++it)
 #else
 	for(std::map<Ogre::String,ScriptDefinition*>::iterator it = defList[type].begin(); it != defList[type].end(); ++it)
 #endif			
@@ -319,13 +319,13 @@ namespace QuickGUI
 		mBegin = false;
 		
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mTempDefinitions.begin(); it1 != mTempDefinitions.end(); ++it1)
+		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mTempDefinitions.begin(); it1 != mTempDefinitions.end(); ++it1)
 #else
 		for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = mTempDefinitions.begin(); it1 != mTempDefinitions.end(); ++it1)
 #endif			
 		{
 #if USEHASHMAPS
-			for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif			
@@ -383,7 +383,7 @@ namespace QuickGUI
 		tokens.push_back(Token(QuickGUI::Token::TYPE_EOF,""));
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > defs;
+		std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > defs;
 #else
 		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > defs;
 #endif
@@ -398,13 +398,13 @@ namespace QuickGUI
 
 		std::list<ScriptDefinition*> defList;
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defs.begin(); it1 != defs.end(); ++it1)		
+		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defs.begin(); it1 != defs.end(); ++it1)		
 #else
 		for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = defs.begin(); it1 != defs.end(); ++it1)		
 #endif
 		{
 #if USEHASHMAPS
-			for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif			
@@ -424,7 +424,7 @@ namespace QuickGUI
 		mTokens.push_back(Token(QuickGUI::Token::TYPE_EOF,""));
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > defs;
+		std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > defs;
 #else
 		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > defs;
 #endif
@@ -440,13 +440,13 @@ namespace QuickGUI
 		std::list<ScriptDefinition*> defList;
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defs.begin(); it1 != defs.end(); ++it1)
+		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = defs.begin(); it1 != defs.end(); ++it1)
 #else
 		for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = defs.begin(); it1 != defs.end(); ++it1)
 #endif
 		{
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+		for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 		for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif			

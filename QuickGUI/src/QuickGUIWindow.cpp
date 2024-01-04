@@ -151,7 +151,7 @@ namespace QuickGUI
 		// Suppress logging detail
 
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
-		Ogre::LoggingLevel level = log->getLogDetail();
+                Ogre::LogMessageLevel level = log->getMinLogLevel();
 
 		log->setLogDetail(Ogre::LL_LOW);
 
@@ -178,7 +178,7 @@ namespace QuickGUI
 
 		// Restore logging detail
 
-		log->setLogDetail(level);
+                log->setMinLogLevel(level);
 	}
 
 	void Window::addWindowEventHandler(WindowEvent EVENT, EventHandlerSlot* function)
@@ -402,7 +402,7 @@ namespace QuickGUI
 		// Suppress logging detail
 
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
-		Ogre::LoggingLevel level = log->getLogDetail();
+                Ogre::LogMessageLevel level = log->getMinLogLevel();
 
 		log->setLogDetail(Ogre::LL_LOW);
 
@@ -433,7 +433,7 @@ namespace QuickGUI
 
 		// Restore logging detail
 
-		log->setLogDetail(level);
+                log->setMinLogLevel(level);
 	}
 
 	void Window::saveTextureToFile(const Ogre::String& filename)
@@ -715,7 +715,7 @@ namespace QuickGUI
 
 		// Handle anchoring for Components
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
@@ -759,7 +759,7 @@ namespace QuickGUI
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
 	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		

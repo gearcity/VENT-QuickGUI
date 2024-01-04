@@ -10,6 +10,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <unordered_map>
 
 namespace QuickGUI
 {
@@ -55,14 +56,14 @@ namespace QuickGUI
 		ScriptDefinition* mParentDefinition;
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> > mSubDefinitions;
+		std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > mSubDefinitions;
 #else
 		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mSubDefinitions;
 #endif
 		std::list<ScriptDefinition*> mSubDefinitionsInOrder;
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, DefinitionProperty*> mProperties;
+		std::unordered_map<Ogre::String, DefinitionProperty*> mProperties;
 #else
 		std::map<Ogre::String, DefinitionProperty*> mProperties;
 #endif

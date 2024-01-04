@@ -636,7 +636,7 @@ namespace QuickGUI
 		// and setup some basic state settings for rendering 2D elements.
 
 		if(mSceneManager != NULL)
-			mSceneManager->_setPass(mGUIPass,true,false);
+                        mSceneManager->_setPass(mGUIPass,false);
 
 		// Set default settings
 
@@ -763,18 +763,23 @@ namespace QuickGUI
 	{
 		mFilterMode = m;
 
+               Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr();
+
+
 		switch (mFilterMode)
 		{
-		case BRUSHFILTER_NONE:
-			mRenderSystem->_setTextureUnitFiltering( 0, Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE );
+		case BRUSHFILTER_NONE:                        
+                        tm->getDefaultSampler()->setFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE );
 			break;
 		case BRUSHFILTER_NEAREST:
-			mRenderSystem->_setTextureUnitFiltering( 0, Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT );
+                        tm->getDefaultSampler()->setFiltering( Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT );
 			break;
 		case BRUSHFILTER_LINEAR:
-			mRenderSystem->_setTextureUnitFiltering( 0, Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT );
+                        tm->getDefaultSampler()->setFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT );
 			break;
 		}
+
+                mRenderSystem->_setSampler( 0, *tm->getDefaultSampler());
 	}
 
 	void Brush::setOpacity(float opacity)

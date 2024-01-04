@@ -7,6 +7,7 @@
 
 #include "OgreSingleton.h"
 #include "OgrePrerequisites.h"
+#include <unordered_map>
 
 #include <map>
 
@@ -138,7 +139,7 @@ namespace QuickGUI
 		virtual ~DescManager();
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String,Desc*> mUserCreatedDescs;
+		std::unordered_map<Ogre::String,Desc*> mUserCreatedDescs;
 #else
 		std::map<Ogre::String,Desc*> mUserCreatedDescs;
 #endif

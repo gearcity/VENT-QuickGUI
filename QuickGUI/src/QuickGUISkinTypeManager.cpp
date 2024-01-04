@@ -23,9 +23,9 @@ namespace QuickGUI
 	SkinTypeManager::~SkinTypeManager()
 	{
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
-			for(stdext::hash_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 				OGRE_DELETE_T((*it2).second,SkinType,Ogre::MEMCATEGORY_GENERAL);
 		}
 #else
@@ -118,10 +118,10 @@ namespace QuickGUI
 		SerialWriter* sw = SerialWriter::getSingletonPtr();
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
 			sw->begin("SkinClass",(*it1).first);
-			for(stdext::hash_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 			{
 				(*it2).second->serialize(sw);
 			}

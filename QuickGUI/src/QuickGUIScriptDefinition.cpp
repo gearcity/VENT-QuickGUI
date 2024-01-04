@@ -12,13 +12,13 @@ namespace QuickGUI
 	ScriptDefinition::~ScriptDefinition()
 	{
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
+	for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #else
 	for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #endif
 		{
 #if USEHASHMAPS
-			for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif
@@ -28,7 +28,7 @@ namespace QuickGUI
 		}
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
+		for(std::unordered_map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
 #else
 		for(std::map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
 #endif
@@ -42,13 +42,13 @@ namespace QuickGUI
 
 		ScriptDefinition* d = NULL;
 #if USEHASHMAPS
-	for(stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
+	for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #else
 	for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #endif
 		{
 			#if USEHASHMAPS
-			for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
 			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif
@@ -79,7 +79,7 @@ namespace QuickGUI
 
 		std::list<ScriptDefinition*> defList;
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
+		for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
 			defList.push_back((*it).second);
 #else
 		for(std::map<Ogre::String,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
@@ -127,9 +127,13 @@ namespace QuickGUI
 	{
 		std::list<DefinitionProperty*> propList;
 
+#if USEHASHMAPS
+        for(std::unordered_map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
+            propList.push_back((*it).second);
+#else
 		for(std::map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
 			propList.push_back((*it).second);
-
+#endif
 	
 		return propList;
 	}

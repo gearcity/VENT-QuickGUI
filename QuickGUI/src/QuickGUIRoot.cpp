@@ -220,7 +220,7 @@ namespace QuickGUI
 		OGRE_DELETE SheetManager::getSingletonPtr();
 
 #if USEHASHMAPS
-	for(stdext::hash_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
+	for(std::unordered_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
 			OGRE_DELETE_T((*it).second,GUIManager,Ogre::MEMCATEGORY_GENERAL);
 #else
 	for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)
@@ -338,7 +338,7 @@ namespace QuickGUI
 		notifyWidgetDestroyed(sheet);
 
 #if USEHASHMAPS
-		for(stdext::hash_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
+		for(std::unordered_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
 #else
 		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
 #endif
@@ -351,7 +351,7 @@ namespace QuickGUI
 	void Root::notifyWidgetDestroyed(Widget* w)
 	{
 #if USEHASHMAPS
-		for(stdext::hash_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
+		for(std::unordered_map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
 #else
 		for(std::map<std::string,GUIManager*>::iterator it = mGUIManagers.begin(); it != mGUIManagers.end(); ++it)		
 #endif

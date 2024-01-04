@@ -67,9 +67,9 @@ namespace QuickGUI
 		// If the scenemanager argument is NULL, try to use the first available scene manager
 		if(d.sceneManager == NULL)
 		{
-			Ogre::SceneManagerEnumerator::SceneManagerIterator it = Ogre::Root::getSingleton().getSceneManagerIterator();
-			if(it.hasMoreElements())
-				setSceneManager(it.getNext());
+                        auto it = Ogre::Root::getSingleton().getSceneManagers();
+                        if(!it.empty())
+                                setSceneManager((*it.begin()).second);
 		}
 		else
 			setSceneManager(d.sceneManager);

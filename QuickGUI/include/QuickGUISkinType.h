@@ -6,6 +6,7 @@
 #include "QuickGUIExportDLL.h"
 #include "QuickGUISerializable.h"
 #include "QuickGUISkinElement.h"
+#include <unordered_map>
 
 #include "OgrePrerequisites.h"
 
@@ -72,9 +73,9 @@ namespace QuickGUI
 
 #if USEHASHMAPS
 	// Element Alias/SkinElement pair
-		stdext::hash_map<Ogre::String,SkinElement*> mSkinElements;
+		std::unordered_map<Ogre::String,SkinElement*> mSkinElements;
 		// ComponentName/SkinReference pair
-		stdext::hash_map<Ogre::String,SkinReference*> mSkinReferences;
+		std::unordered_map<Ogre::String,SkinReference*> mSkinReferences;
 #else
 	// Element Alias/SkinElement pair
 		std::map<Ogre::String,SkinElement*> mSkinElements;

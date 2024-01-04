@@ -37,7 +37,7 @@ namespace QuickGUI
 	{
 		WidgetFactory* f = FactoryManager::getSingleton().getWidgetFactory();
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -57,7 +57,7 @@ namespace QuickGUI
 		Widget::_setGUIManager(gm);
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -69,7 +69,7 @@ namespace QuickGUI
 		Widget::_setSheet(sheet);
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -215,7 +215,7 @@ namespace QuickGUI
 
 		// draw components
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -237,7 +237,7 @@ namespace QuickGUI
 
 		// Check components before verifying point is within bounds. (Components can lie outside widget dimensions)
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -298,7 +298,7 @@ namespace QuickGUI
 
 		// Update components window reference via setParent
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -312,7 +312,7 @@ namespace QuickGUI
 		Widget::setMoveBaseWidgetOnDrag(moveBaseWidget);
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -324,7 +324,7 @@ namespace QuickGUI
 		Widget::setSkinType(type);
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -354,7 +354,7 @@ namespace QuickGUI
 
 		// Handle anchoring for Components
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
@@ -374,7 +374,7 @@ namespace QuickGUI
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif

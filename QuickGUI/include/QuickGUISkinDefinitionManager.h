@@ -5,6 +5,7 @@
 #include "QuickGUISkinTypeManager.h"
 
 #include "OgreSingleton.h"
+#include <unordered_map>
 
 namespace QuickGUI
 {
@@ -33,7 +34,7 @@ namespace QuickGUI
 		virtual ~SkinDefinitionManager();
 
 #if USEHASHMAPS
-	stdext::hash_map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
+	std::unordered_map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
 #else
 	std::map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
 #endif

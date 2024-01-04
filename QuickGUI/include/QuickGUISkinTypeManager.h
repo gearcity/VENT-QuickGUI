@@ -4,6 +4,7 @@
 #include "QuickGUIException.h"
 #include "QuickGUIExportDLL.h"
 #include "QuickGUISkinType.h"
+#include <unordered_map>
 
 #include "OgreSingleton.h"
 
@@ -37,7 +38,7 @@ namespace QuickGUI
 		virtual ~SkinTypeManager();
 
 #if USEHASHMAPS
-	stdext::hash_map<Ogre::String, stdext::hash_map<Ogre::String,SkinType*> > mSkinTypes;
+	std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,SkinType*> > mSkinTypes;
 #else
 	std::map<Ogre::String, std::map<Ogre::String,SkinType*> > mSkinTypes;
 #endif

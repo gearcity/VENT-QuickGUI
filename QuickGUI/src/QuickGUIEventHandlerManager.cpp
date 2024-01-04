@@ -26,7 +26,7 @@ namespace QuickGUI
 	void EventHandlerManager::executEventHandler(const Ogre::String& handlerName, EventArgs& args)
 	{
 #if USEHASHMAPS
-	stdext::hash_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+	std::unordered_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #else
 	std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #endif
@@ -43,7 +43,7 @@ namespace QuickGUI
 	void EventHandlerManager::registerEventHandler(const Ogre::String& handlerName, EventHandlerSlot* function)
 	{
 #if USEHASHMAPS
-			stdext::hash_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+			std::unordered_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #else
 			std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #endif
@@ -57,7 +57,7 @@ namespace QuickGUI
 	void EventHandlerManager::unregisterEventHandler(const Ogre::String& handlerName)
 	{
 #if USEHASHMAPS
-			stdext::hash_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+			std::unordered_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #else
 			std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #endif

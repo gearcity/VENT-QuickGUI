@@ -9,6 +9,8 @@
 #include "OgrePrerequisites.h"
 #include "OgreSingleton.h"
 
+#include <unordered_map>
+
 #include <map>
 
 namespace QuickGUI
@@ -93,7 +95,7 @@ namespace QuickGUI
 		float dpiScale;
 
 #if USEHASHMAPS
-		stdext::hash_map<std::string,GUIManager*> mGUIManagers;
+		std::unordered_map<std::string,GUIManager*> mGUIManagers;
 #else
 		std::map<std::string,GUIManager*> mGUIManagers;
 #endif

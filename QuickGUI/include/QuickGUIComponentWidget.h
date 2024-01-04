@@ -5,6 +5,7 @@
 
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 namespace QuickGUI
 {
@@ -110,7 +111,7 @@ namespace QuickGUI
 		virtual ~ComponentWidget();
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String,Widget*> mComponents;
+        std::unordered_map<Ogre::String,Widget*> mComponents;
 #else
 		std::map<Ogre::String,Widget*> mComponents;
 #endif

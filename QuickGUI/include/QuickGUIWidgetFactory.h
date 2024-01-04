@@ -4,6 +4,7 @@
 #include "QuickGUIException.h"
 #include "QuickGUIExportDLL.h"
 #include "QuickGUIWidget.h"
+#include <unordered_map>
 
 #include "OgrePrerequisites.h"
 
@@ -74,7 +75,7 @@ namespace QuickGUI
 		ClassType* createInstance(const Ogre::String& className, const Ogre::String& name)
 		{
 #if USEHASHMAPS
-			typename stdext::hash_map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
+			typename std::unordered_map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
 #else
 			typename std::map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
 #endif
@@ -96,7 +97,7 @@ namespace QuickGUI
 		virtual ~WidgetFactory() {}
 
 #if USEHASHMAPS
-		stdext::hash_map<Ogre::String, createWidgetFunction> mFunctorMap;
+		std::unordered_map<Ogre::String, createWidgetFunction> mFunctorMap;
 #else
 		std::map<Ogre::String, createWidgetFunction> mFunctorMap;
 #endif

@@ -4,6 +4,7 @@
 #include "QuickGUIComponentWidget.h"
 #include "QuickGUIEventTypes.h"
 #include "QuickGUIScrollBarButtonLayouts.h"
+#include <OgreDeprecated.h>
 
 namespace QuickGUI
 {

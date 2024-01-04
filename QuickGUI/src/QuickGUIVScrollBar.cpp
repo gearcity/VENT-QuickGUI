@@ -535,7 +535,7 @@ namespace QuickGUI
 		mWidgetDesc->widget_skinTypeName = type;
 
 #if USEHASHMAPS
-		for(stdext::hash_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
 		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
