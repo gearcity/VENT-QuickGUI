@@ -178,8 +178,8 @@ namespace QuickGUI
 			Ogre::TexturePtr tp = 
 				static_cast<Ogre::TexturePtr>(Ogre::TextureManager::getSingleton().createManual("TextSelection",Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,Ogre::TEX_TYPE_2D,1,1,0,Ogre::PF_B8G8R8A8)); 
 
-			Ogre::HardwarePixelBufferSharedPtr buf = tp->getBuffer(); 
-			buf->lock(Ogre::HardwareBuffer::HBL_NORMAL); 
+                        Ogre::HardwarePixelBufferSharedPtr buf = tp->getBuffer();
+                        buf->lock(Ogre::HardwareBuffer::HBL_NORMAL);
 			const Ogre::PixelBox& pb = buf->getCurrentLock(); 
 			Ogre::uint8* pixelData = static_cast<Ogre::uint8*>(pb.data); 
 

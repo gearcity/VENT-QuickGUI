@@ -409,9 +409,9 @@ namespace QuickGUI
 			int barWidth = static_cast<int>(mBarImage.getWidth());
 			int barHeight = static_cast<int>(mBarImage.getHeight());
 
-			// Hardware Pixel Buffer for moving pixels around, and correctly creating the barTexture.
-			Ogre::HardwarePixelBufferSharedPtr buf = mOutputBarTexture->getBuffer();
-			buf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+                        // Hardware Pixel Buffer for moving pixels around, and correctly creating the barTexture.
+                        Ogre::HardwarePixelBufferSharedPtr buf = mOutputBarTexture->getBuffer();
+                        buf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 			Ogre::uint8* bufPtr = static_cast<Ogre::uint8*>((buf->getCurrentLock()).data);
 			for( int i = 0; i < barHeight; ++i )
 			{
@@ -435,9 +435,9 @@ namespace QuickGUI
 
 			buf->blitFromMemory(srcBox,dstBox);
 
-			// Use clipmap to clip pixels
+                        // Use clipmap to clip pixels
 
-			buf->lock(Ogre::HardwareBuffer::HBL_NORMAL);
+                        buf->lock(Ogre::HardwareBuffer::HBL_NORMAL);
 			bufPtr = static_cast<Ogre::uint8*>((buf->getCurrentLock()).data);
 			for( int i = 0; i < barHeight; ++i )
 			{
