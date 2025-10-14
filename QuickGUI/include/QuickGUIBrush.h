@@ -12,6 +12,7 @@
 #include "OgreHardwareBufferManager.h"
 #include "OgreHardwarePixelBuffer.h"
 #include "OgreHardwareVertexBuffer.h"
+#include "OgreHighLevelGpuProgram.h"
 #include "OgreRenderOperation.h"
 #include "OgreRenderSystem.h"
 #include "OgreRoot.h"
@@ -216,9 +217,9 @@ namespace QuickGUI
 		float mTargetWidth;
 		float mTargetHeight;
 		
-		Ogre::HardwareVertexBufferSharedPtr mVertexBuffer;
-		
-		Ogre::RenderOperation mRenderOperation;
+        Ogre::HardwareVertexBufferSharedPtr mVertexBuffer;
+
+        Ogre::RenderOperation mRenderOperation;
 		Ogre::TexturePtr mDefaultTexture;
 
 		/// Texture used for draw operations.
@@ -231,7 +232,11 @@ namespace QuickGUI
 		/// Cache Data
 		Ogre::TextureUnitState::UVWAddressingMode mTextureAddressMode; //we cache this to save cpu time
 
-		bool mUsingOpenGL;
+        bool mUsingOpenGL;
+        bool mUsingProgrammablePipeline;
+
+        Ogre::HighLevelGpuProgramPtr mGuiVertexProgram;
+        Ogre::HighLevelGpuProgramPtr mGuiFragmentProgram;
 
 		float mHorizontalTexelOffset;
 		float mVerticalTexelOffset;
@@ -266,8 +271,12 @@ namespace QuickGUI
 		* Populates and fills vertex and uv information for rendering.
 		* NOTE: verts and uv should be arrays of size 6.
 		*/
-		void _buildQuadVertices(const Rect& dimensions, const UVRect& uvCoords, Vector3* verts, Vector2* uv);
-	};
+        void _buildQuadVertices(const Rect& dimensions, const UVRect& uvCoords, Vector3* verts, Vector2* uv);
+
+        void _initialiseGpuPipeline();
+        void _applyPassState();
+        void _applyFixedFunctionDefaults();
+    };
 }
 
 #endif

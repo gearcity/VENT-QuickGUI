@@ -29,7 +29,6 @@
 
 //#include "OgreOverlayPrerequisites.h"
 #include "OgrePrerequisites.h"
-#include "QuickGUIExportDLL.h"
 
 
 // these are explained later
@@ -163,7 +162,7 @@ namespace Ogre {
     - For additional information on UTF-8 encoding: http://en.wikipedia.org/wiki/UTF-8
     - For additional information on UTF-32 encoding: http://en.wikipedia.org/wiki/UTF-32
     */
-    class _QuickGUIExport UTFString {
+    class UTFString {
         // constants used in UTF-8 conversions
         static const unsigned char _lead1 = 0xC0;      //110xxxxx
         static const unsigned char _lead1_mask = 0x1F; //00011111
@@ -209,7 +208,7 @@ namespace Ogre {
 
         //#########################################################################
         //! base iterator class for UTFString
-    class _QuickGUIExport _base_iterator: public std::iterator<std::random_access_iterator_tag, value_type> { /* i don't know why the beautifier is freaking out on this line */
+    class _base_iterator: public std::iterator<std::random_access_iterator_tag, value_type> { /* i don't know why the beautifier is freaking out on this line */
             friend class UTFString;
         protected:
             _base_iterator();
@@ -235,10 +234,10 @@ namespace Ogre {
         //#########################################################################
         // FORWARD ITERATORS
         //#########################################################################
-        class _QuickGUIExport _const_fwd_iterator; // forward declaration
+        class _const_fwd_iterator; // forward declaration
 
         //! forward iterator for UTFString
-    class _QuickGUIExport _fwd_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
+    class _fwd_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
             friend class _const_fwd_iterator;
         public:
             _fwd_iterator();
@@ -287,7 +286,7 @@ namespace Ogre {
 
         //#########################################################################
         //! const forward iterator for UTFString
-    class _QuickGUIExport _const_fwd_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
+    class _const_fwd_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
         public:
             _const_fwd_iterator();
             _const_fwd_iterator( const _const_fwd_iterator& i );
@@ -348,9 +347,9 @@ namespace Ogre {
         //#########################################################################
         // REVERSE ITERATORS
         //#########################################################################
-        class _QuickGUIExport _const_rev_iterator; // forward declaration
+        class _const_rev_iterator; // forward declaration
         //! forward iterator for UTFString
-    class _QuickGUIExport _rev_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
+    class _rev_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
             friend class _const_rev_iterator;
         public:
             _rev_iterator();
@@ -386,7 +385,7 @@ namespace Ogre {
         };
         //#########################################################################
         //! const reverse iterator for UTFString
-    class _QuickGUIExport _const_rev_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
+    class _const_rev_iterator: public _base_iterator { /* i don't know why the beautifier is freaking out on this line */
         public:
             _const_rev_iterator();
             _const_rev_iterator( const _const_rev_iterator& i );
