@@ -7,7 +7,7 @@
 #include "QuickGUIOgreEquivalents.h"
 
 #include "OgreColourValue.h"
-#include "Overlay/OgreFont.h"
+#include <OgreFont.h>
 #include "OgreUTFString.h"
 
 namespace QuickGUI
@@ -43,6 +43,22 @@ namespace QuickGUI
 		* Sets whether this character is highlighted or not.
 		*/
 		void setHighlighted(bool highlighted);
+		/**
+		* Returns the current baseline position of the character.
+		*/
+		float getBaseline() const { return mBaseline; }
+		/**
+		* Sets the baseline position of the character.
+		*/
+		void setBaseline(float baseline);
+		/**
+		* Returns the horizontal advance for this glyph.
+		*/
+		float getAdvance() const { return mAdvance; }
+		/**
+		* Returns the horizontal bearing for this glyph.
+		*/
+		float getBearing() const { return mBearing; }
 
 		/// Code point of the glyph
 		Ogre::UTFString::code_point codePoint;
@@ -62,7 +78,12 @@ namespace QuickGUI
 
 		bool mHighlighted;
 		bool mWhiteSpace;
-	};
+		float mAdvance;
+		float mBearing;
+		float mBaseline;
+
+		void updateMetrics();
+        };
 }
 
 #endif
