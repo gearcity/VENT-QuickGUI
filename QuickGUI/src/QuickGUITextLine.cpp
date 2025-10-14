@@ -255,8 +255,9 @@ namespace QuickGUI
 			if(firstCharacter == NULL)
 				firstCharacter = character;
 			
-		lastCharacter = character;
-
+			lastCharacter = character;
+		}
+		
 		if(firstCharacter == NULL || lastCharacter == NULL)
 			return 0;
 
