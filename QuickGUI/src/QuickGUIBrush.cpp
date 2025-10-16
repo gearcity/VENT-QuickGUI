@@ -4,6 +4,7 @@
 
 #include <OgreMaterialManager.h>
 #include <OgreGpuProgramManager.h>
+#include <OgreHighLevelGpuProgramManager.h>
 
 #include "OgreTechnique.h"
 #include "OgreViewport.h"
@@ -14,16 +15,17 @@ template<> QuickGUI::Brush* Ogre::Singleton<QuickGUI::Brush>::msSingleton = 0;
 
 namespace QuickGUI
 {
-	Brush::Brush() :
-		mSceneManager(NULL),
-		mDefaultViewport(NULL),
-		mRenderTarget(NULL),
-		mQueuedItems(false),
-		mBufferPtr(NULL),
-		mFilterMode(BRUSHFILTER_LINEAR),
-		mBrushBlendMode(BRUSHBLEND_ALPHA)
-	{
-		mRenderSystem = Ogre::Root::getSingleton().getRenderSystem();
+    Brush::Brush() :
+                mSceneManager(NULL),
+                mDefaultViewport(NULL),
+                mRenderTarget(NULL),
+                mQueuedItems(false),
+                mBufferPtr(NULL),
+                mFilterMode(BRUSHFILTER_LINEAR),
+                mBrushBlendMode(BRUSHBLEND_ALPHA),
+                mUsingProgrammablePipeline(false)
+    {
+        mRenderSystem = Ogre::Root::getSingleton().getRenderSystem();
 
 		_createVertexBuffer();
 
@@ -33,8 +35,9 @@ namespace QuickGUI
 		mTextureAddressMode.w = Ogre::TextureUnitState::TAM_CLAMP;
 
 		// Search for "GL" somewhere in name, to see if we using OpenGL
-		Ogre::String rSysName = mRenderSystem->getName();
-		mUsingOpenGL = (rSysName.find("GL") != Ogre::String::npos);
+        Ogre::String rSysName = mRenderSystem->getName();
+        mUsingOpenGL = (rSysName.find("GL") != Ogre::String::npos);
+        mUsingProgrammablePipeline = (rSysName.find("OpenGL 3+") != Ogre::String::npos);
 
 		// Store Texel offset for quick use
 		mHorizontalTexelOffset = mRenderSystem->getHorizontalTexelOffset();
@@ -47,7 +50,7 @@ namespace QuickGUI
 			Ogre::TEX_TYPE_2D, 64, 64, 1, 0, Ogre::PF_R8G8B8A8, Ogre::TU_DEFAULT );
 
 		// Clear default texture
-		void* buffer = mDefaultTexture->getBuffer()->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+        void* buffer = mDefaultTexture->getBuffer()->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 		memset(buffer, 0, mDefaultTexture->getBuffer()->getSizeInBytes());
 		mDefaultTexture->getBuffer()->unlock();
 
@@ -65,9 +68,17 @@ namespace QuickGUI
 		mGUIPass->setLightingEnabled(false);
 		mGUIPass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
 
-		Ogre::TextureUnitState* tus = mGUIPass->createTextureUnitState();
-		tus->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-		tus->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        Ogre::TextureUnitState* tus = mGUIPass->createTextureUnitState();
+        tus->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        tus->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        if(!mDefaultTexture.isNull())
+#if OGRE_VERSION >= ((1 << 16) | (13 << 8))
+        tus->setTexture(mDefaultTexture);
+#else
+        tus->setTextureName(mDefaultTexture->getName(), mDefaultTexture->getGroup());
+#endif
+        if(mUsingProgrammablePipeline)
+                _initialiseGpuPipeline();
 	}
 
 	Brush::~Brush()
@@ -160,27 +171,27 @@ namespace QuickGUI
 
 	void Brush::_createVertexBuffer()
 	{
-		mRenderOperation.vertexData = OGRE_NEW Ogre::VertexData();
+        mRenderOperation.vertexData = OGRE_NEW Ogre::VertexData();
 		mRenderOperation.vertexData->vertexStart = 0;
 
 		_declareVertexStructure();
 
 		// Create the Vertex Buffer, using the Vertex Structure we previously declared in _declareVertexStructure.
-		mVertexBuffer = Ogre::HardwareBufferManager::getSingleton( ).createVertexBuffer(
+        mVertexBuffer = Ogre::HardwareBufferManager::getSingleton( ).createVertexBuffer(
 			mRenderOperation.vertexData->vertexDeclaration->getVertexSize(0), // declared Vertex used
 			VERTEX_COUNT,
-			Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE,
+            Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE,
 			false );
 
 		// Bind the created buffer to the renderOperation object.  Now we can manipulate the buffer, and the RenderOp keeps the changes.
 		mRenderOperation.vertexData->vertexBufferBinding->setBinding( 0, mVertexBuffer );
-		mRenderOperation.operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
+        mRenderOperation.operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
 		mRenderOperation.useIndexes = false;
 	}
 
 	void Brush::_declareVertexStructure()
 	{
-		Ogre::VertexDeclaration* vd = mRenderOperation.vertexData->vertexDeclaration;
+        Ogre::VertexDeclaration* vd = mRenderOperation.vertexData->vertexDeclaration;
 
 		// Add position - Ogre::Vector3 : 4 bytes per float * 3 floats = 12 bytes
 
@@ -188,12 +199,12 @@ namespace QuickGUI
 
 		// Add color - Ogre::RGBA : 8 bits per channel (1 byte) * 4 channels = 4 bytes
 
-		vd->addElement( 0, Ogre::VertexElement::getTypeSize( Ogre::VET_FLOAT3 ), Ogre::VET_FLOAT4, Ogre::VES_DIFFUSE );
+        vd->addElement( 0, Ogre::VertexElement::getTypeSize( Ogre::VET_FLOAT3 ), Ogre::VET_FLOAT4, Ogre::VES_DIFFUSE );
 
 		// Add texture coordinates - Ogre::Vector2 : 4 bytes per float * 2 floats = 8 bytes
 
-		vd->addElement( 0, Ogre::VertexElement::getTypeSize( Ogre::VET_FLOAT3 ) +
-						   Ogre::VertexElement::getTypeSize( Ogre::VET_FLOAT4 ),
+        vd->addElement( 0, Ogre::VertexElement::getTypeSize( Ogre::VET_FLOAT3 ) +
+                           Ogre::VertexElement::getTypeSize( Ogre::VET_FLOAT4 ),
 						   Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES );
 
 		/* Our structure representing the Vertices used in the buffer (24 bytes):
@@ -223,10 +234,10 @@ namespace QuickGUI
 		{
 			mRenderOperation.vertexData->vertexStart = 0;
 			mRenderOperation.vertexData->vertexCount = 0;
-			mBufferPtr = (Vertex*)mVertexBuffer->lock( Ogre::HardwareBuffer::HBL_DISCARD );
-		}
+            mBufferPtr = (Vertex*)mVertexBuffer->lock( Ogre::HardwareBuffer::HBL_DISCARD );
+        }
 
-		mRenderOperation.operationType = Ogre::RenderOperation::OT_LINE_LIST;
+        mRenderOperation.operationType = Ogre::RenderOperation::OT_LINE_LIST;
 
 		mQueuedItems = true;
 	}
@@ -603,48 +614,20 @@ namespace QuickGUI
 		return mTexture;
 	}
 
-	void Brush::prepareToDraw()
-	{
-		// The OpenGL renderer for some reason requires the identity matrices
-		// to be set manually, even though we are using a fully programmable pipline
+    void Brush::prepareToDraw()
+    {
+           if(mUsingProgrammablePipeline)
+                   _applyPassState();
+           else
+                   _applyFixedFunctionDefaults();
 
-		mRenderSystem->_setWorldMatrix( Ogre::Matrix4::IDENTITY );
-		mRenderSystem->_setProjectionMatrix( Ogre::Matrix4::IDENTITY );
-		mRenderSystem->_setViewMatrix( Ogre::Matrix4::IDENTITY );
-/*
-		// initialise render settings
-		mRenderSystem->setLightingEnabled(false);
-		mRenderSystem->_setDepthBufferParams(false, false);
-		mRenderSystem->_setDepthBias(0, 0);
-		mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
-		mRenderSystem->_setFog(Ogre::FOG_NONE);
-		mRenderSystem->_setColourBufferWriteEnabled(true, true, true, true);
-		mRenderSystem->unbindGpuProgram(Ogre::GPT_FRAGMENT_PROGRAM);
-		mRenderSystem->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
-		mRenderSystem->setShadingType(Ogre::SO_GOURAUD);
-		mRenderSystem->_setPolygonMode(Ogre::PM_SOLID);
+           // Set default settings
 
-		// initialise texture settings
-		mRenderSystem->_setTextureCoordCalculation(0, Ogre::TEXCALC_NONE);
-		mRenderSystem->_setTextureCoordSet(0, 0);
-		mRenderSystem->_setTextureAddressingMode(0, mTextureAddressMode);
-		mRenderSystem->_setTextureMatrix(0, Ogre::Matrix4::IDENTITY);
-		mRenderSystem->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, false);
-		mRenderSystem->_disableTextureUnitsFrom(1);
-*/
-		// Set material pass. This will bind the vertex and fragment program,
-		// and setup some basic state settings for rendering 2D elements.
-
-		if(mSceneManager != NULL)
-                        mSceneManager->_setPass(mGUIPass,false);
-
-		// Set default settings
-
-		setTexture("");
-		setColor(ColourValue::White);
-		setBlendMode(BRUSHBLEND_ALPHA);
-		setFilterMode(BRUSHFILTER_NEAREST);
-	}
+           setTexture("");
+           setColor(ColourValue::White);
+           setBlendMode(BRUSHBLEND_ALPHA);
+           setFilterMode(BRUSHFILTER_NEAREST);
+    }
 
 	void Brush::queueLine(Point p1, Point p2)
 	{
@@ -720,16 +703,45 @@ namespace QuickGUI
 	{
 	}
 
-	void Brush::setBlendMode(BrushBlendMode m)
-	{
-		mBrushBlendMode = m;
 
-		switch(mBrushBlendMode)
-		{
-		case BRUSHBLEND_NONE:
-			mRenderSystem->_setSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO );
-			break;
+    void Brush::setBlendMode(BrushBlendMode m)
+    {
+        mBrushBlendMode = m;
 
+        if(mUsingProgrammablePipeline)
+        {
+                switch(mBrushBlendMode)
+                {
+                case BRUSHBLEND_NONE:
+                        mGUIPass->setSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO );
+                        break;
+
+                case BRUSHBLEND_MODULATE:
+                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_ZERO, Ogre::SBF_SOURCE_COLOUR, Ogre::SBF_ONE, Ogre::SBF_ONE );
+                        break;
+
+                case BRUSHBLEND_DISCARDALPHA:
+                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO, Ogre::SBF_ZERO, Ogre::SBF_ONE );
+                        break;
+
+                case BRUSHBLEND_INVERT:
+                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_ONE_MINUS_DEST_COLOUR, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE );
+                        break;
+
+                case BRUSHBLEND_ALPHA:
+                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE );
+                        break;
+                }
+
+                _applyPassState();
+                return;
+        }
+
+        switch(mBrushBlendMode)
+        {
+        case BRUSHBLEND_NONE:
+                mRenderSystem->_setSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO );
+                break;
 		case BRUSHBLEND_MODULATE:
 			mRenderSystem->_setSeparateSceneBlending( Ogre::SBF_ZERO, Ogre::SBF_SOURCE_COLOUR, Ogre::SBF_ONE, Ogre::SBF_ONE );
 			break;
@@ -759,16 +771,40 @@ namespace QuickGUI
 		mClipRegion = r;
 	}
 
-	void Brush::setFilterMode(BrushFilterMode m)
-	{
-		mFilterMode = m;
+    void Brush::setFilterMode(BrushFilterMode m)
+    {
+            mFilterMode = m;
 
-               Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr();
+            if(mUsingProgrammablePipeline)
+            {
+                    Ogre::TextureUnitState* tus = mGUIPass->getTextureUnitState(0);
+
+                    if(tus != NULL)
+                    {
+                            switch (mFilterMode)
+                            {
+                            case BRUSHFILTER_NONE:
+                                    tus->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE );
+                                    break;
+                            case BRUSHFILTER_NEAREST:
+                                    tus->setTextureFiltering( Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT );
+                                    break;
+                            case BRUSHFILTER_LINEAR:
+                                    tus->setTextureFiltering( Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT );
+                                    break;
+                            }
+                    }
+
+                    _applyPassState();
+                    return;
+            }
+
+           Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr();
 
 
-		switch (mFilterMode)
-		{
-		case BRUSHFILTER_NONE:                        
+            switch (mFilterMode)
+            {
+            case BRUSHFILTER_NONE:
                         tm->getDefaultSampler()->setFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE );
 			break;
 		case BRUSHFILTER_NEAREST:
@@ -792,13 +828,13 @@ namespace QuickGUI
 		mColourValue.a = opacity;
 	}
 
-	void Brush::setRenderTarget(Ogre::TexturePtr p)
-	{
-		if(p->getUsage() != Ogre::TU_RENDERTARGET)
-			throw Exception(Exception::ERR_INVALID_RENDER_TARGET,"Texture is not a valid Render Target. Make sure the Texture is created with TU_RENDERTARGET.", "Brush::setRenderTarget");
+    void Brush::setRenderTarget(Ogre::TexturePtr p)
+    {
+            if((p->getUsage() & Ogre::TU_RENDERTARGET) == 0)
+                    throw Exception(Exception::ERR_INVALID_RENDER_TARGET,"Texture is not a valid Render Target. Make sure the Texture is created with TU_RENDERTARGET.", "Brush::setRenderTarget");
 
-		setRenderTarget(p->getBuffer()->getRenderTarget()->getViewport(0));
-	}
+            setRenderTarget(p->getBuffer()->getRenderTarget()->getViewport(0));
+    }
 
 	void Brush::setRenderTarget(Ogre::Viewport* vp)
 	{
@@ -810,17 +846,20 @@ namespace QuickGUI
 		// Set new viewport on render system and reset clip region
 		mTargetWidth = mRenderTarget->getActualWidth();
 		mTargetHeight = mRenderTarget->getActualHeight();
+        mRenderSystem->_setViewport(mRenderTarget);
+       if(!mUsingProgrammablePipeline)
+               mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
 
-		mRenderSystem->_setViewport(mRenderTarget);
-		mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
+       setClipRegion(Rect(mRenderTarget->getActualLeft(), mRenderTarget->getActualTop(), mRenderTarget->getActualWidth(), mRenderTarget->getActualHeight()));
 
-		setClipRegion(Rect(mRenderTarget->getActualLeft(), mRenderTarget->getActualTop(), mRenderTarget->getActualWidth(), mRenderTarget->getActualHeight()));
-	}
+       if(mUsingProgrammablePipeline)
+               _applyPassState();
+    }
 
-	void Brush::setTexture(const Ogre::String& textureName)
-	{
-		if(mQueuedItems)
-			throw Exception(Exception::ERR_RENDERINGAPI_ERROR,"Cannot Change Texture with Items Queued for Drawing! Call endRectQueue to draw all queued items before hand.","Brush::setTexture");
+    void Brush::setTexture(const Ogre::String& textureName)
+    {
+        if(mQueuedItems)
+                throw Exception(Exception::ERR_RENDERINGAPI_ERROR,"Cannot Change Texture with Items Queued for Drawing! Call endRectQueue to draw all queued items before hand.","Brush::setTexture");
 
 		if(textureName == "")
 		{
@@ -835,34 +874,181 @@ namespace QuickGUI
 
 			mTexture = tm->getByName(textureName);
 		}
+        if(mUsingProgrammablePipeline)
+        {
+                Ogre::TextureUnitState* tus = mGUIPass->getTextureUnitState(0);
+                if((tus != NULL) && !mTexture.isNull())
+                {
+                #if OGRE_VERSION >= ((1 << 16) | (13 << 8))
+                    tus->setTexture(mTexture);
+                #else
+                    tus->setTextureName(mTexture->getName(), mTexture->getGroup());
+                #endif
+                }
 
-		mRenderSystem->_setTexture(0, true, mTexture);
-	}
+                _applyPassState();
+        }
+        else
+        {
+                mRenderSystem->_setTexture(0, true, mTexture);
+        }
+    }
 
-	void Brush::setTexture(Ogre::TexturePtr p)
-	{
-		if(mQueuedItems)
-			throw Exception(Exception::ERR_RENDERINGAPI_ERROR,"Cannot Change Texture with Items Queued for Drawing! Call endRectQueue to draw all queued items before hand.","Brush::setTexture");
+    void Brush::setTexture(Ogre::TexturePtr p)
+    {
+        if(mQueuedItems)
+                throw Exception(Exception::ERR_RENDERINGAPI_ERROR,"Cannot Change Texture with Items Queued for Drawing! Call endRectQueue to draw all queued items before hand.","Brush::setTexture");
+
 
 		if(p.isNull())
 			mTexture = mDefaultTexture;
 		else
 			mTexture = p;
 
-		mRenderSystem->_setTexture(0, true, mTexture);
-	}
+        if(mUsingProgrammablePipeline)
+        {
+                Ogre::TextureUnitState* tus = mGUIPass->getTextureUnitState(0);
+                if((tus != NULL) && !mTexture.isNull())
+                {
+               #if OGRE_VERSION >= ((1 << 16) | (13 << 8))
+                    tus->setTexture(mTexture);
+               #else
+                    tus->setTextureName(mTexture->getName(), mTexture->getGroup());
+               #endif
+                }
+
+                _applyPassState();
+        }
+        else
+        {
+                mRenderSystem->_setTexture(0, true, mTexture);
+        }
+    }
 
 	void Brush::updateSceneManager(Ogre::SceneManager* sceneManager)
 	{
 		mSceneManager = sceneManager;
 	}
 
-	void Brush::updateViewport(Ogre::Viewport* viewport)
-	{
-		if(viewport == NULL)
-			throw Exception(Exception::ERR_INVALIDPARAMS,"Brush class must have a valid default Viewport! (Cannot be NULL)","Brush::updateViewport");
+    void Brush::updateViewport(Ogre::Viewport* viewport)
+    {
+            if(viewport == NULL)
+                    throw Exception(Exception::ERR_INVALIDPARAMS,"Brush class must have a valid default Viewport! (Cannot be NULL)","Brush::updateViewport");
 
-		mDefaultViewport = viewport;
-		mRenderTarget = viewport;
-	}
+            mDefaultViewport = viewport;
+            mRenderTarget = viewport;
+    }
+
+   void Brush::_applyFixedFunctionDefaults()
+   {
+           // Legacy render systems rely on the fixed-function transform and state setup.
+           mRenderSystem->_setWorldMatrix( Ogre::Matrix4::IDENTITY );
+           mRenderSystem->_setProjectionMatrix( Ogre::Matrix4::IDENTITY );
+           mRenderSystem->_setViewMatrix( Ogre::Matrix4::IDENTITY );
+
+           mRenderSystem->setLightingEnabled(false);
+           mRenderSystem->_setDepthBufferParams(false, false);
+           mRenderSystem->_setDepthBias(0, 0);
+           mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
+           mRenderSystem->_setFog(Ogre::FOG_NONE);
+           mRenderSystem->_setColourBufferWriteEnabled(true, true, true, true);
+           mRenderSystem->unbindGpuProgram(Ogre::GPT_FRAGMENT_PROGRAM);
+           mRenderSystem->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
+           mRenderSystem->setShadingType(Ogre::SO_GOURAUD);
+           mRenderSystem->_setPolygonMode(Ogre::PM_SOLID);
+
+           mRenderSystem->_setTextureCoordCalculation(0, Ogre::TEXCALC_NONE);
+           mRenderSystem->_setTextureCoordSet(0, 0);
+#if OGRE_VERSION >= ((1 << 16) | (13 << 8))
+               if(Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr())
+               {
+                       Ogre::SamplerPtr sampler = tm->getDefaultSampler();
+                       sampler->setAddressingMode(mTextureAddressMode);
+                       mRenderSystem->_setSampler(0, *sampler);
+               }
+#else
+               mRenderSystem->_setTextureAddressingMode(0, mTextureAddressMode);
+#endif
+           mRenderSystem->_setTextureMatrix(0, Ogre::Matrix4::IDENTITY);
+           mRenderSystem->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, false);
+           mRenderSystem->_disableTextureUnitsFrom(1);
+   }
+
+    void Brush::_initialiseGpuPipeline()
+    {
+            Ogre::HighLevelGpuProgramManager& programManager = Ogre::HighLevelGpuProgramManager::getSingleton();
+
+            const Ogre::String vertexProgramName = "QuickGUI/GL3PlusVertex";
+            if(!programManager.resourceExists(vertexProgramName))
+            {
+                    Ogre::HighLevelGpuProgramPtr vertexProgram = programManager.createProgram(
+                            vertexProgramName,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                            "glsl",
+                            Ogre::GPT_VERTEX_PROGRAM);
+
+                    const Ogre::String vertexSource =
+                            "#version 330 core\n"
+                            "in vec4 vertex;\n"
+                            "in vec4 colour;\n"
+                            "in vec2 uv0;\n"
+                            "out vec4 vColour;\n"
+                            "out vec2 vTexCoord;\n"
+                            "void main()\n"
+                            "{\n"
+                            "    gl_Position = vec4(vertex.xy, 0.0, 1.0);\n"
+                            "    vColour = colour;\n"
+                            "    vTexCoord = uv0;\n"
+                            "}\n";
+
+                    vertexProgram->setSource(vertexSource);
+                    vertexProgram->setParameter("profiles", "glsl330");
+                    vertexProgram->setParameter("entry_point", "main");
+                    vertexProgram->load();
+            }
+
+            mGuiVertexProgram = programManager.getByName(vertexProgramName);
+
+            const Ogre::String fragmentProgramName = "QuickGUI/GL3PlusFragment";
+            if(!programManager.resourceExists(fragmentProgramName))
+            {
+                    Ogre::HighLevelGpuProgramPtr fragmentProgram = programManager.createProgram(
+                            fragmentProgramName,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                            "glsl",
+                            Ogre::GPT_FRAGMENT_PROGRAM);
+
+                    const Ogre::String fragmentSource =
+                            "#version 330 core\n"
+                            "in vec4 vColour;\n"
+                            "in vec2 vTexCoord;\n"
+                            "uniform sampler2D guiSampler;\n"
+                            "out vec4 fragColor;\n"
+                            "void main()\n"
+                            "{\n"
+                            "    vec4 texColour = texture(guiSampler, vTexCoord);\n"
+                            "    fragColor = texColour * vColour;\n"
+                            "}\n";
+
+                    fragmentProgram->setSource(fragmentSource);
+                    fragmentProgram->setParameter("profiles", "glsl330");
+                    fragmentProgram->setParameter("entry_point", "main");
+                    fragmentProgram->load();
+            }
+
+            mGuiFragmentProgram = programManager.getByName(fragmentProgramName);
+
+            mGUIPass->setVertexProgram(vertexProgramName);
+            mGUIPass->setFragmentProgram(fragmentProgramName);
+
+            Ogre::GpuProgramParametersSharedPtr fragmentParameters = mGUIPass->getFragmentProgramParameters();
+            if(!fragmentParameters.isNull())
+                    fragmentParameters->setNamedConstant("guiSampler", 0);
+    }
+
+    void Brush::_applyPassState()
+    {
+            if(mUsingProgrammablePipeline && (mSceneManager != NULL))
+                    mSceneManager->_setPass(mGUIPass,false);
+    }
 }

@@ -60,17 +60,21 @@ namespace QuickGUI
 		void resizeAllSheets(Size s);
 		void resizeAllSheets(int widthInPixels, int heightInPixels);
 
+
+		
+
+
 	protected:
 		SheetManager();
 		virtual ~SheetManager();
-
-		/**
+        
+        /**
 		* Destroys all sheets queued for deletion.
 		*/
 		void cleanup();
 
-		std::list<Sheet*> mSheets;
 		std::list<Sheet*> mFreeList;
+		std::list<Sheet*> mSheets;
 
 	private:
 	};
