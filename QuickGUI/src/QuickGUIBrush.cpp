@@ -616,11 +616,11 @@ namespace QuickGUI
 
     void Brush::prepareToDraw()
     {
-           if(mUsingProgrammablePipeline)
-                   _applyPassState();
-           else
+           if(!mUsingProgrammablePipeline)
                    _applyFixedFunctionDefaults();
 
+			_applyPassState();
+		
            // Set default settings
 
            setTexture("");
@@ -852,8 +852,8 @@ namespace QuickGUI
 
        setClipRegion(Rect(mRenderTarget->getActualLeft(), mRenderTarget->getActualTop(), mRenderTarget->getActualWidth(), mRenderTarget->getActualHeight()));
 
-       if(mUsingProgrammablePipeline)
-               _applyPassState();
+       
+       _applyPassState();
     }
 
     void Brush::setTexture(const Ogre::String& textureName)
@@ -1048,7 +1048,8 @@ namespace QuickGUI
 
     void Brush::_applyPassState()
     {
-            if(mUsingProgrammablePipeline && (mSceneManager != NULL))
+            if(mSceneManager != NULL)
                     mSceneManager->_setPass(mGUIPass,false);
     }
 }
+
