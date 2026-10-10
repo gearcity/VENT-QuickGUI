@@ -489,7 +489,7 @@ namespace QuickGUI
 		mDesc->hscrollbar_buttonScrollPercent = percent;
 	}
 
-	void HScrollBar::setPercentage(float percentage)
+	void HScrollBar::setPercentage(float percentage, bool fireEvent)
 	{
 		// Cap percentage within bounds: [0.0,1.0]
 		if(percentage <= 0.0)
@@ -510,8 +510,11 @@ namespace QuickGUI
 		//   At 1.0, slider is at end of slider bounds.
 		mButton_Slider->setPosition(Point(mSliderBounds.x + (maxSliderDisplacement * percentage),0));
 
-		WidgetEventArgs args(this);
-		fireScrollBarEvent(SCROLLBAR_EVENT_ON_SCROLLED,args);
+		if(fireEvent)
+        {
+            WidgetEventArgs args(this);
+            fireScrollBarEvent(SCROLLBAR_EVENT_ON_SCROLLED,args);
+        }
 	}
 
 	void HScrollBar::setSkinType(const Ogre::String type)
