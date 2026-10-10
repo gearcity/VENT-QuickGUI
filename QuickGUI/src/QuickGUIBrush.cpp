@@ -852,8 +852,8 @@ namespace QuickGUI
 
        setClipRegion(Rect(mRenderTarget->getActualLeft(), mRenderTarget->getActualTop(), mRenderTarget->getActualWidth(), mRenderTarget->getActualHeight()));
 
-       
-       _applyPassState();
+       if(mUsingProgrammablePipeline)
+       		_applyPassState();
     }
 
     void Brush::setTexture(const Ogre::String& textureName)
