@@ -174,7 +174,7 @@ namespace QuickGUI
 		/**
 		* Sets the position of the slider relative to the bar bounds. 0 percent is at the top, 100 at the bottom.
 		*/
-		void setPercentage(float percentage);
+		void setPercentage(float percentage, bool fireEvent = true);
 		/**
 		* Sets the "type" of this widget.  For example you
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
