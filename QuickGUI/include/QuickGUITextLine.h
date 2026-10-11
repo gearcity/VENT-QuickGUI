@@ -67,6 +67,9 @@ namespace QuickGUI
 		void setMaskText(bool mask, Ogre::UTFString::code_point maskSymbol);
 
 	protected:
+		/// Pen advance of the mask symbol, in the largest font of this line
+		float getMaskAdvance();
+
 		Point mPosition;
 
 		bool mMaskText;
