@@ -187,35 +187,35 @@ namespace QuickGUI
 		* Returns the pixel size of a particular code point for a specified font.
 		*/
 		static Size getGlyphSize(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the pixel width of a particular code point for a specified font.
-                */
-                static float getGlyphWidth(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the pixel width of a particular code point for a specified font.
-                */
-                static float getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the horizontal advance of a particular code point for a specified font.
-                */
-                static float getGlyphAdvance(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the horizontal advance of a particular code point for a specified font.
-                */
-                static float getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the horizontal bearing (offset from the baseline) for a specified glyph.
-                */
-                static float getGlyphBearing(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the horizontal bearing (offset from the baseline) for a specified glyph.
-                */
-                static float getGlyphBearing(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
-                /**
-                * Returns the pixel width of a particular string of text for a specified font.
-                */
-                static float getTextWidth(const Ogre::String& fontName, Ogre::UTFString s);
-                /**
+		/**
+		* Returns the pixel width of a particular code point for a specified font.
+		*/
+		static float getGlyphWidth(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		/**
+		* Returns the pixel width of a particular code point for a specified font.
+		*/
+		static float getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		/**
+		* Returns the horizontal advance of a particular code point for a specified font.
+		*/
+		static float getGlyphAdvance(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		/**
+		* Returns the horizontal advance of a particular code point for a specified font.
+		*/
+		static float getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		/**
+		* Returns the horizontal bearing (offset from the baseline) for a specified glyph.
+		*/
+		static float getGlyphBearing(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		/**
+		* Returns the horizontal bearing (offset from the baseline) for a specified glyph.
+		*/
+		static float getGlyphBearing(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		/**
+		* Returns the pixel width of a particular string of text for a specified font.
+		*/
+		static float getTextWidth(const Ogre::String& fontName, Ogre::UTFString s);
+		/**
 		* Returns the pixel width of a particular string of text for a specified font.
 		*/
 		static float getTextWidth(Ogre::FontPtr fp, Ogre::UTFString s);

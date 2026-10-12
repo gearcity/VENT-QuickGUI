@@ -322,14 +322,14 @@ namespace QuickGUI
         return getGlyphHeight(getFont(fontName),cp);
     }
 
-        float Text::getGlyphHeight(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
-        {
-                Ogre::TexturePtr tp = getFontTexture(fp);
+    float Text::getGlyphHeight(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        Ogre::TexturePtr tp = getFontTexture(fp);
 
-                Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
+        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
 
-                return ((uvRect.bottom - uvRect.top) * tp->getHeight());
-        }
+        return ((uvRect.bottom - uvRect.top) * tp->getHeight());
+    }
 
     UVRect Text::getGlyphUVCoords(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
     {
@@ -357,94 +357,94 @@ namespace QuickGUI
         return getGlyphSize(getFont(fontName),cp);
     }
 
-        Size Text::getGlyphSize(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
-        {
-                float height = getGlyphHeight(fp, cp);
-                float width = getGlyphAdvance(fp, cp);
+    Size Text::getGlyphSize(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        float height = getGlyphHeight(fp, cp);
+        float width = getGlyphAdvance(fp, cp);
 
-                return Size(width,height);
-        }
+        return Size(width,height);
+    }
 
     float Text::getGlyphWidth(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
     {
         return getGlyphWidth(getFont(fontName),cp);
     }
 
-        float Text::getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
-        {
-                return getGlyphAdvance(fp, cp);
-        }
+    float Text::getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        return getGlyphAdvance(fp, cp);
+    }
 
-        float Text::getGlyphAdvance(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
-        {
-                return getGlyphAdvance(getFont(fontName),cp);
-        }
+    float Text::getGlyphAdvance(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    {
+        return getGlyphAdvance(getFont(fontName),cp);
+    }
 
-        float Text::getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
-        {
-                Ogre::TexturePtr tp = getFontTexture(fp);
+    float Text::getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        Ogre::TexturePtr tp = getFontTexture(fp);
 
-                const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
-                float fontHeight = (glyph.uvRect.bottom - glyph.uvRect.top) * tp->getHeight();
-                if(fontHeight == 0)
-                        fontHeight = getGlyphHeight(fp, Text::UNICODE_ZERO);
-                float advance = Ogre::Math::Floor((glyph.advance * fontHeight) + 0.5f);
-                if(advance <= 0)
-                {
-                        float width = (glyph.uvRect.right - glyph.uvRect.left) * tp->getWidth();
-                        if(width > advance)
-                                advance = width;
-                }
-                return advance;
-        }
-
-        float Text::getGlyphBearing(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+        const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
+        float fontHeight = (glyph.uvRect.bottom - glyph.uvRect.top) * tp->getHeight();
+        if(fontHeight == 0)
+            fontHeight = getGlyphHeight(fp, Text::UNICODE_ZERO);
+        float advance = Ogre::Math::Floor((glyph.advance * fontHeight) + 0.5f);
+        if(advance <= 0)
         {
-                return getGlyphBearing(getFont(fontName),cp);
+            float width = (glyph.uvRect.right - glyph.uvRect.left) * tp->getWidth();
+            if(width > advance)
+                advance = width;
         }
+        return advance;
+    }
 
-        float Text::getGlyphBearing(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
-        {
-                Ogre::TexturePtr tp = getFontTexture(fp);
-                const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
-                float fontHeight = (glyph.uvRect.bottom - glyph.uvRect.top) * tp->getHeight();
-                if(fontHeight == 0)
-                        fontHeight = getGlyphHeight(fp, Text::UNICODE_ZERO);
-                return Ogre::Math::Floor((glyph.bearing * fontHeight) + 0.5f);
-        }
+    float Text::getGlyphBearing(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    {
+        return getGlyphBearing(getFont(fontName),cp);
+    }
+
+    float Text::getGlyphBearing(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        Ogre::TexturePtr tp = getFontTexture(fp);
+        const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
+        float fontHeight = (glyph.uvRect.bottom - glyph.uvRect.top) * tp->getHeight();
+        if(fontHeight == 0)
+            fontHeight = getGlyphHeight(fp, Text::UNICODE_ZERO);
+        return Ogre::Math::Floor((glyph.bearing * fontHeight) + 0.5f);
+    }
 
     float Text::getTextWidth(const Ogre::String& fontName, Ogre::UTFString s)
     {
         return getTextWidth(getFont(fontName),s);
     }
 
-        float Text::getTextWidth(Ogre::FontPtr fp, Ogre::UTFString s)
+    float Text::getTextWidth(Ogre::FontPtr fp, Ogre::UTFString s)
+    {
+        float width = 0;
+
+        for(Ogre::UTFString::iterator it = s.begin(); it != s.end(); ++it)
         {
-                float width = 0;
+            if(isNewLine((*it)))
+                continue;
 
-                for(Ogre::UTFString::iterator it = s.begin(); it != s.end(); ++it)
-                {
-                        if(isNewLine((*it)))
-                                continue;
-
-                        if(isTab((*it)))
-                        {
-                                float spaceAdvance = getGlyphAdvance(fp, Text::UNICODE_ZERO);
-                                if(spaceAdvance <= 0)
-                                        spaceAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
-                                width += (spaceAdvance * 4.0f);
-                        }
-                        else
-                        {
-                                float charAdvance = getGlyphAdvance(fp, isSpace((*it)) ? Text::UNICODE_ZERO : (*it));
-                                if(charAdvance <= 0)
-                                        charAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
-                                width += charAdvance;
-                        }
-                }
-
-                return width;
+            if(isTab((*it)))
+            {
+                float spaceAdvance = getGlyphAdvance(fp, Text::UNICODE_ZERO);
+                if(spaceAdvance <= 0)
+                    spaceAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
+                width += (spaceAdvance * 4.0f);
+            }
+            else
+            {
+                float charAdvance = getGlyphAdvance(fp, isSpace((*it)) ? Text::UNICODE_ZERO : (*it));
+                if(charAdvance <= 0)
+                    charAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
+                width += charAdvance;
+            }
         }
+
+        return width;
+    }
 
     void Text::saveFontTextureToFile(const Ogre::String& fontName, const Ogre::String& fileName)
     {

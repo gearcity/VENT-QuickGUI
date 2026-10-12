@@ -40,7 +40,6 @@ namespace QuickGUI
 		c->setBaseline(baseline);
 		mCharacters.push_back(c);
 
-
 		if(mLargestFont.isNull() || Text::getFontHeight(c->fontPtr) > Text::getFontHeight(mLargestFont))
 		{
 			mLargestFont = c->fontPtr;
