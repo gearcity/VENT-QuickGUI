@@ -115,7 +115,7 @@ namespace QuickGUI
 
 		Brush* b = Brush::getSingletonPtr();
 		b->setColor(ColourValue(1,1,1,mMouseCursorDesc.opacity));
-		b->setRenderTarget(NULL);
+		b->setDefaultRenderTarget();
 		b->setFilterMode(mMouseCursorDesc.brushFilterMode);
 		b->drawSkinElement(mDimensions,mSkinTypeManager->getSkinType("MouseCursor",mSkinType)->getSkinElement(TEXTURE));
 	}

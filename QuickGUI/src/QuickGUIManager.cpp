@@ -241,7 +241,7 @@ namespace QuickGUI
 
 		mBrush->updateSceneManager(mGUIManagerDesc.sceneManager);
 		mBrush->updateViewport(mGUIManagerDesc.viewport);
-		mBrush->setRenderTarget(mGUIManagerDesc.viewport);
+		mBrush->setDefaultRenderTarget();
 
 		mBrush->prepareToDraw();
 

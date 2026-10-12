@@ -55,10 +55,10 @@ namespace QuickGUI
 		QuickGUI::Brush* brush = QuickGUI::Brush::getSingletonPtr();
 
 		// Store Render Target
-		Ogre::Viewport* currentRenderTarget = brush->getRenderTarget();
+		brush->pushRenderTarget();
 
 		// Set Render Target to Viewport
-		brush->setRenderTarget(NULL);
+		brush->setDefaultRenderTarget();
 
 		// Save current clipping region
 		Rect clipRegion = brush->getClipRegion();
@@ -75,7 +75,7 @@ namespace QuickGUI
 		brush->drawSkinElement(mDimensions,mSkinElement);
 
 		// Restore Render Target
-		brush->setRenderTarget(currentRenderTarget);
+		brush->popRenderTarget();
 
 		// Restore Clip Region
 		brush->setClipRegion(clipRegion);
