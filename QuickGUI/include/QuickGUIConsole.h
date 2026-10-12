@@ -26,21 +26,21 @@ namespace QuickGUI
 		HorizontalTextAlignment console_displayAreaHorizontalAlignment;
 		float console_inputBoxHeight;
 		ColourValue console_inputBoxDefaultColor;
-		Ogre::String console_inputBoxDefaultFontName;
+		std::string console_inputBoxDefaultFontName;
 		HorizontalTextAlignment console_inputBoxHorizontalAlignment;
 		ConsoleLayout console_layout;
-		Ogre::String console_inputBoxTextCursorDefaultSkinTypeName;
+		std::string console_inputBoxTextCursorDefaultSkinTypeName;
 
 		TextDesc textDesc;
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ConsoleDesc"; }
+		virtual std::string getClass() { return "ConsoleDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Console"; }
+		virtual std::string getWidgetClass() { return "Console"; }
 
 		/**
 		* Restore properties to default values
@@ -58,9 +58,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String TEXTBOX;
-		static const Ogre::String TEXTAREA;
+		static const std::string BACKGROUND;
+		static const std::string TEXTBOX;
+		static const std::string TEXTAREA;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -83,17 +83,17 @@ namespace QuickGUI
 		/**
 		* Adds text to the output Display area.
 		*/
-		void addDisplayAreaText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void addDisplayAreaText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void addDisplayAreaText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void addDisplayAreaText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to the output Display area.
 		*/
-		void addDisplayAreaText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void addDisplayAreaText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Adds text to the output Display area.
 		*/
-		void addDisplayAreaText(Ogre::UTFString s);
+		void addDisplayAreaText(UTFString s);
 		/**
 		* Adds text to the output Display area.
 		*/
@@ -101,17 +101,17 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
-		void addInputBoxText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void addInputBoxText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void addInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void addInputBoxText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
 		*/
-		void addInputBoxText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void addInputBoxText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Adds text to this object.
 		*/
-		void addInputBoxText(Ogre::UTFString s);
+		void addInputBoxText(UTFString s);
 		/**
 		* Adds Text using Text Segments.
 		*/
@@ -134,7 +134,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Gets the alignment of text in the Display Area.
 		*/
@@ -142,7 +142,7 @@ namespace QuickGUI
 		/**
 		* Gets the Text displayed in the Display Area in the form of UTFString.
 		*/
-		Ogre::UTFString getDisplayAreaText();
+		UTFString getDisplayAreaText();
 		/**
 		* Gets the Text displayed in the Display Area in the form of TextSegments.
 		*/
@@ -154,7 +154,7 @@ namespace QuickGUI
 		/**
 		* Gets the default font used for text in the input box.
 		*/
-		Ogre::String getInputBoxDefaultFont();
+		std::string getInputBoxDefaultFont();
 		/**
 		* Gets the height of the Input Box in pixels.
 		*/
@@ -166,11 +166,11 @@ namespace QuickGUI
 		/**
 		* Gets the InputBox's Text.
 		*/
-		Ogre::UTFString getInputBoxText();
+		UTFString getInputBoxText();
 		/**
 		* Gets the InputBox's TextCursor's skin type.
 		*/
-		Ogre::String getInputBoxTextCursorSkinType();
+		std::string getInputBoxTextCursorSkinType();
 		/**
 		* Gets the InputBox's TextSegments.
 		*/
@@ -185,7 +185,7 @@ namespace QuickGUI
 				setTextInputValidator(myClass::myFunction,this);
 			@note
 				You may see Visual Studio give an error warning such as "error C2660: 'QuickGUI::TextBox::setTextInputValidator' : function does not take x arguments".
-				This is an incorrect error message.  Make sure your function pointer points to a function which returns bool, and takes parameters "Ogre::UTFString::code_point cp, unsigned int index, const Ogre::UTFString& currentText".
+				This is an incorrect error message.  Make sure your function pointer points to a function which returns bool, and takes parameters "UTFString::code_point cp, unsigned int index, const UTFString& currentText".
         */
 		template<typename T> void setConsoleInputHandler(void (T::*ConsoleInputHandler)(Console* console, bool& clearInputBox, bool& addToDisplayArea), T* obj)
 		{
@@ -205,7 +205,7 @@ namespace QuickGUI
 		/**
 		* Sets the default font used for text in the input box.
 		*/
-		void setInputBoxDefaultFont(const Ogre::String& fontName);
+		void setInputBoxDefaultFont(const std::string& fontName);
 		/**
 		* Sets the height of the Input Box in pixels.
 		*/
@@ -217,13 +217,13 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
-		void setInputBoxText(Ogre::UTFString s);
+		void setInputBoxText(UTFString s);
 		/**
 		* Sets the text for this object.
 		*/
-		void setInputBoxText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void setInputBoxText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void setInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setInputBoxText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the Text using Text Segments.
 		*/
@@ -231,7 +231,7 @@ namespace QuickGUI
 		/**
 		* Sets the SkinType of the TextCursor.
 		*/
-		void setInputBoxTextCursorSkinType(const Ogre::String& skinTypeName);
+		void setInputBoxTextCursorSkinType(const std::string& skinTypeName);
 		/**
 		* Sets whether the input box is on top of the display area or below it.
 		*/
@@ -241,7 +241,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 
 	public:
 		// Here we have to call out any protected Widget set accesors we want to expose
@@ -272,7 +272,7 @@ namespace QuickGUI
 		using ComponentWidget::setWidth;
 
 	protected:
-		Console(const Ogre::String& name);
+		Console(const std::string& name);
 		virtual ~Console();
 
 		// Pointer pointing to mWidgetDesc object, but casted for quick use.

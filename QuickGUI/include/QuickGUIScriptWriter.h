@@ -35,7 +35,7 @@ namespace QuickGUI
 		* Creates or reads in the file specified, preparing
 		* the writer to write script.
 		*/
-		void begin(const Ogre::String& fileName);
+		void begin(const std::string& fileName);
 
 		/**
 		* Overwrites the file with all Definitions that have been queued
@@ -56,7 +56,7 @@ namespace QuickGUI
 		/// keep track of whether we are writing to file or not.
 		bool mWritingToFile;
 		/// name of the file we will write to
-		Ogre::String mFileName;
+		std::string mFileName;
 
 		/// list of Definitions queued for writing.
 		std::list<ScriptDefinition*> mDefinitions;
@@ -72,7 +72,7 @@ namespace QuickGUI
 		/**
 		* Creates a string with the specified number of spaces.
 		*/
-		Ogre::String getSpaces(unsigned int numberOfSpaces);
+		std::string getSpaces(unsigned int numberOfSpaces);
 
 	private:
 	};

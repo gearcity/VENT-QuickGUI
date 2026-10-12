@@ -27,7 +27,7 @@ namespace QuickGUI
 
 	public:
 		template<typename ClassType>
-		bool registerClass(const Ogre::String& className)
+		bool registerClass(const std::string& className)
 		{
 			if (mFunctorMap.find(className) != mFunctorMap.end())
 				return false;
@@ -37,7 +37,7 @@ namespace QuickGUI
 			return true;
 		}
 
-		bool unregisterClass(const Ogre::String& className)
+		bool unregisterClass(const std::string& className)
 		{
 			return (mFunctorMap.erase(className) == 1);
 		}
@@ -45,13 +45,13 @@ namespace QuickGUI
 	protected:
 
 		template<typename ClassType>
-		ClassType* createInstance(const Ogre::String& className)
+		ClassType* createInstance(const std::string& className)
 		{
 
 #if USEHASHMAPS
-		typename std::unordered_map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
+		typename std::unordered_map<std::string, createDescFunction>::iterator iter = mFunctorMap.find(className);
 #else
-			typename std::map<Ogre::String, createDescFunction>::iterator iter = mFunctorMap.find(className);
+			typename std::map<std::string, createDescFunction>::iterator iter = mFunctorMap.find(className);
 #endif
 
 			if (iter == mFunctorMap.end())
@@ -72,9 +72,9 @@ namespace QuickGUI
 		virtual ~DescFactory() {}
 
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String, createDescFunction> mFunctorMap;
+		std::unordered_map<std::string, createDescFunction> mFunctorMap;
 #else
-		std::map<Ogre::String, createDescFunction> mFunctorMap;
+		std::map<std::string, createDescFunction> mFunctorMap;
 #endif
 		template<typename ClassType>
 		Desc* createDesc()

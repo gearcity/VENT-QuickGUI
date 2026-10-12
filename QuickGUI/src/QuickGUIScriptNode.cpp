@@ -2,7 +2,7 @@
 
 namespace QuickGUI
 {
-	ScriptNode::ScriptNode(ScriptNode* parent, const Ogre::String& name)
+	ScriptNode::ScriptNode(ScriptNode* parent, const std::string& name)
 	{
 		ScriptNode::name = name;
 		ScriptNode::parent = parent;
@@ -39,12 +39,12 @@ namespace QuickGUI
 		}
 	}
 
-	ScriptNode* ScriptNode::addChild(const Ogre::String& name)
+	ScriptNode* ScriptNode::addChild(const std::string& name)
 	{
 		return new ScriptNode(this, name);
 	}
 
-	void ScriptNode::addValue(const Ogre::String& value)
+	void ScriptNode::addValue(const std::string& value)
 	{
 		values.push_back(value);
 	}
@@ -54,7 +54,7 @@ namespace QuickGUI
 		values.clear();
 	}
 
-	ScriptNode* ScriptNode::findChild(const Ogre::String &name, bool recursive)
+	ScriptNode* ScriptNode::findChild(const std::string &name, bool recursive)
 	{
 		std::vector<ScriptNode*>::iterator i;
 
@@ -81,7 +81,7 @@ namespace QuickGUI
 		return children;
 	}
 
-	Ogre::String ScriptNode::getName()
+	std::string ScriptNode::getName()
 	{
 		return name;
 	}
@@ -112,12 +112,12 @@ namespace QuickGUI
 		return NULL;
 	}
 
-	Ogre::StringVector& ScriptNode::getValues()
+	std::vector<std::string>& ScriptNode::getValues()
 	{
 		return values;
 	}
 
-	void ScriptNode::setName(const Ogre::String& name)
+	void ScriptNode::setName(const std::string& name)
 	{
 		this->name = name;
 	}

@@ -15,7 +15,7 @@ namespace QuickGUI
 		mFont->load();
 	}
 
-	Ogre::String OgreFont::getName() const
+	std::string OgreFont::getName() const
 	{
 		return mFont->getName();
 	}
@@ -25,7 +25,7 @@ namespace QuickGUI
 		return static_cast<float>(mFont->getTrueTypeMaxBearingY());
 	}
 
-	Ogre::String OgreFont::getTextureName() const
+	std::string OgreFont::getTextureName() const
 	{
 		return mFont->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName();
 	}
@@ -35,14 +35,14 @@ namespace QuickGUI
 		return static_cast<Ogre::TexturePtr>(Ogre::TextureManager::getSingleton().getByName(getTextureName()));
 	}
 
-	float OgreFont::getGlyphHeight(Ogre::UTFString::code_point cp) const
+	float OgreFont::getGlyphHeight(UTFString::code_point cp) const
 	{
 		Ogre::Font::UVRect uvRect = mFont->getGlyphTexCoords(cp);
 
 		return ((uvRect.bottom - uvRect.top) * getTexture()->getHeight());
 	}
 
-	UVRect OgreFont::getGlyphUVCoords(Ogre::UTFString::code_point cp) const
+	UVRect OgreFont::getGlyphUVCoords(UTFString::code_point cp) const
 	{
 		Ogre::Font::UVRect uvRect = mFont->getGlyphTexCoords(cp);
 
@@ -55,7 +55,7 @@ namespace QuickGUI
 		return retVal;
 	}
 
-	Size OgreFont::getGlyphBitmapSize(Ogre::UTFString::code_point cp) const
+	Size OgreFont::getGlyphBitmapSize(UTFString::code_point cp) const
 	{
 		Ogre::TexturePtr tp = getTexture();
 		Ogre::Font::UVRect uvRect = mFont->getGlyphTexCoords(cp);
@@ -63,7 +63,7 @@ namespace QuickGUI
 		return Size(((uvRect.right - uvRect.left) * tp->getWidth()),((uvRect.bottom - uvRect.top) * tp->getHeight()));
 	}
 
-	float OgreFont::getGlyphMetricScale(Ogre::UTFString::code_point cp) const
+	float OgreFont::getGlyphMetricScale(UTFString::code_point cp) const
 	{
 		const Ogre::GlyphInfo& glyph = mFont->getGlyphInfo(cp);
 
@@ -76,14 +76,14 @@ namespace QuickGUI
 		return scale;
 	}
 
-	float OgreFont::getGlyphBearing(Ogre::UTFString::code_point cp) const
+	float OgreFont::getGlyphBearing(UTFString::code_point cp) const
 	{
 		const Ogre::GlyphInfo& glyph = mFont->getGlyphInfo(cp);
 
 		return Ogre::Math::Floor((glyph.bearing * getGlyphMetricScale(cp)) + 0.5f);
 	}
 
-	float OgreFont::getGlyphDesignAdvance(Ogre::UTFString::code_point cp) const
+	float OgreFont::getGlyphDesignAdvance(UTFString::code_point cp) const
 	{
 		const Ogre::GlyphInfo& glyph = mFont->getGlyphInfo(cp);
 
@@ -100,7 +100,7 @@ namespace QuickGUI
 		return advance;
 	}
 
-	void OgreFont::saveTextureToFile(const Ogre::String& fileName) const
+	void OgreFont::saveTextureToFile(const std::string& fileName) const
 	{
 		Ogre::TexturePtr tp = getTexture();
 

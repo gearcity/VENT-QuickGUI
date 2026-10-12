@@ -33,18 +33,18 @@ namespace QuickGUI
 		float					combobox_dropDownWidth;
 		// A value of 0 means there is no Max Height.
 		float					combobox_dropDownMaxHeight;
-		Ogre::String			combobox_userHandlers[COMBOBOX_EVENT_COUNT];
+		std::string			combobox_userHandlers[COMBOBOX_EVENT_COUNT];
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment	combobox_verticalTextAlignment;
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ComboBoxDesc"; }
+		virtual std::string getClass() { return "ComboBoxDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ComboBox"; }
+		virtual std::string getWidgetClass() { return "ComboBox"; }
 
 		/**
 		* Restore properties to default values
@@ -67,12 +67,12 @@ namespace QuickGUI
 		friend class WidgetFactory;
 	public:
 		// Skin Constants
-		static const Ogre::String COMBOBOXITEM;
-		static const Ogre::String DEFAULT;
-		static const Ogre::String DOWN;
-		static const Ogre::String OVER;
-		static const Ogre::String DROPDOWNBUTTON;
-		static const Ogre::String DROPDOWNMENUPANEL;
+		static const std::string COMBOBOXITEM;
+		static const std::string DEFAULT;
+		static const std::string DOWN;
+		static const std::string OVER;
+		static const std::string DROPDOWNBUTTON;
+		static const std::string DROPDOWNMENUPANEL;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -98,7 +98,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedComboBoxEventHandler(ComboBoxEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedComboBoxEventHandler(ComboBoxEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: BUTTON_EVENT_STATE_CHANGED, etc.
@@ -140,12 +140,12 @@ namespace QuickGUI
 		/**
 		* Adds a ListImageItem to the end of the DropDownList.
 		*/
-		ListImageItem* createImageItem(const Ogre::String& imageName, int index = -1);
+		ListImageItem* createImageItem(const std::string& imageName, int index = -1);
 		ListImageItem* createImageItem(int index = -1);
 		/**
 		* Adds a ListTextItem to the end of the DropDownList
 		*/
-		ListTextItem* createTextItem(const Ogre::UTFString& text, int index = -1);
+		ListTextItem* createTextItem(const UTFString& text, int index = -1);
 		ListTextItem* createTextItem(std::vector<TextSegment> segments, int index = -1);
 		ListTextItem* createTextItem(int index = -1);
 
@@ -163,7 +163,7 @@ namespace QuickGUI
 		* Recursively searches through children and returns first widget found with name given.
 		* NULL is returned if the widget is not found.
 		*/
-		Widget* findWidget(const Ogre::String& widget_name);
+		Widget* findWidget(const std::string& widget_name);
 		/**
 		* Event Handler that executes the appropriate User defined Event Handlers for a given event.
 		* Returns true if the event was handled, false otherwise.
@@ -173,7 +173,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Gets the width of the Drop down MenuPanel.
 		*/
@@ -208,7 +208,7 @@ namespace QuickGUI
 		/**
 		* Gets the text in UTFString form.
 		*/
-		Ogre::UTFString getText();
+		UTFString getText();
 
 		/**
 		* Hides Drop Down List.
@@ -241,7 +241,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 		/**
 		* Shows the Drop Down List.
 		*/
@@ -284,7 +284,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		ComboBox(const Ogre::String& name);
+		ComboBox(const std::string& name);
 		virtual ~ComboBox();
 
 		ComboBoxDesc* mDesc;
@@ -304,10 +304,10 @@ namespace QuickGUI
 		std::vector<EventHandlerSlot*> mComboBoxEventHandlers[COMBOBOX_EVENT_COUNT];
 
 		// Current settings applied to newly added text.
-		Ogre::String mCurrentFontName;
+		std::string mCurrentFontName;
 		ColourValue mCurrentColourValue;
 
-		Ogre::String mImageName;
+		std::string mImageName;
 		bool mTileImage;
 
 		/**

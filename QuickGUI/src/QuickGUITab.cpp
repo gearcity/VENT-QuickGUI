@@ -8,8 +8,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Tab::FRONT = "front";
-	const Ogre::String Tab::MAIN = "main";
+	const std::string Tab::FRONT = "front";
+	const std::string Tab::MAIN = "main";
 
 	void Tab::registerSkinDefinition()
 	{
@@ -40,7 +40,7 @@ namespace QuickGUI
 		// Tabs never get serialized, their data is duplicated and serialized from TabPage widget
 	}
 
-	Tab::Tab(const Ogre::String& name) :
+	Tab::Tab(const std::string& name) :
 		Label(name),
 		mDesc(NULL)
 	{
@@ -120,7 +120,7 @@ namespace QuickGUI
 		return BORDER_NONE;
 	}
 
-	Ogre::String Tab::getClass()
+	std::string Tab::getClass()
 	{
 		return "Tab";
 	}
@@ -198,56 +198,56 @@ namespace QuickGUI
 		_adjustTabWidth();
 	}
 
-	void Tab::setFont(const Ogre::String& fontName)
+	void Tab::setFont(const std::string& fontName)
 	{
 		Label::setFont(fontName);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setFont(const Ogre::String& fontName, unsigned int index)
+	void Tab::setFont(const std::string& fontName, unsigned int index)
 	{
 		Label::setFont(fontName,index);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex)
+	void Tab::setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex)
 	{
 		Label::setFont(fontName,startIndex,endIndex);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences)
+	void Tab::setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences)
 	{
 		Label::setFont(fontName,c,allOccurrences);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences)
+	void Tab::setFont(const std::string& fontName, UTFString s, bool allOccurrences)
 	{
 		Label::setFont(fontName,s,allOccurrences);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
+	void Tab::setText(UTFString s, const Font& font, const ColourValue& cv)
 	{
 		Label::setText(s,font,cv);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void Tab::setText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
 		Label::setText(s,fontName,cv);
 
 		_adjustTabWidth();
 	}
 
-	void Tab::setText(Ogre::UTFString s)
+	void Tab::setText(UTFString s)
 	{
 		Label::setText(s);
 
@@ -270,7 +270,7 @@ namespace QuickGUI
 			mSkinElement = mSkinType->getSkinElement(MAIN);
 	}
 
-	void Tab::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Tab::setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
 	{
 		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}

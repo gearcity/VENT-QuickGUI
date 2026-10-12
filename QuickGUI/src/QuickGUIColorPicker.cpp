@@ -7,10 +7,10 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ColorPicker::BACKGROUND = "background";
-	const Ogre::String ColorPicker::COLORSOURCE = "colorsource";
-	const Ogre::String ColorPicker::TRANSPARENCYBACKGROUND = "transparencybackground";
-	const Ogre::String ColorPicker::TRANSPARENCYSLIDER = "transparencyslider";
+	const std::string ColorPicker::BACKGROUND = "background";
+	const std::string ColorPicker::COLORSOURCE = "colorsource";
+	const std::string ColorPicker::TRANSPARENCYBACKGROUND = "transparencybackground";
+	const std::string ColorPicker::TRANSPARENCYSLIDER = "transparencyslider";
 
 	void ColorPicker::registerSkinDefinition()
 	{
@@ -42,7 +42,7 @@ namespace QuickGUI
 		ComponentWidgetDesc::serialize(b);
 	}
 
-	ColorPicker::ColorPicker(const Ogre::String& name) :
+	ColorPicker::ColorPicker(const std::string& name) :
 		ComponentWidget(name),
 		mColorSource(NULL),
 		mTransparencySlider(NULL)
@@ -78,7 +78,7 @@ namespace QuickGUI
 		setSkinType(cpd->widget_skinTypeName);
 	}
 
-	Ogre::String ColorPicker::getClass()
+	std::string ColorPicker::getClass()
 	{
 		return "ColorPicker";
 	}

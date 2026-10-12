@@ -5,7 +5,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Image::BACKGROUND = "background";
+	const std::string Image::BACKGROUND = "background";
 
 	void Image::registerSkinDefinition()
 	{
@@ -43,7 +43,7 @@ namespace QuickGUI
 		b->IO("UpdateEveryFrame",&image_updateEveryFrame);
 	}
 
-	Image::Image(const Ogre::String& name) :
+	Image::Image(const std::string& name) :
 		Widget(name),
 		mUpdateTimer(NULL)
 	{
@@ -71,12 +71,12 @@ namespace QuickGUI
 		setUpdateEveryFrame(id->image_updateEveryFrame);
 	}
 
-	Ogre::String Image::getClass()
+	std::string Image::getClass()
 	{
 		return "Image";
 	}
 
-	Ogre::String Image::getImageName()
+	std::string Image::getImageName()
 	{
 		return mDesc->image_imageName;
 	}
@@ -120,7 +120,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Image::setImage(const Ogre::String& name)
+	void Image::setImage(const std::string& name)
 	{
 		mDesc->image_imageName = name;
 

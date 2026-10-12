@@ -28,11 +28,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ToolBarDesc"; }
+		virtual std::string getClass() { return "ToolBarDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ToolBar"; }
+		virtual std::string getWidgetClass() { return "ToolBar"; }
 
 		/**
 		* Restore properties to default values
@@ -50,7 +50,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -74,7 +74,7 @@ namespace QuickGUI
 		* Creates a Menu.  Position and orientation depends on
 		* toolbar_itemLayout and ToolBar orientation.
 		*/
-		Menu* createMenu(const Ogre::UTFString& text, int index = -1);
+		Menu* createMenu(const UTFString& text, int index = -1);
 		Menu* createMenu(std::vector<TextSegment> segments, int index = -1);
 		Menu* createMenu(int index = -1);
 		/**
@@ -91,7 +91,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the number of ToolBarItems in the ToolBar.
 		*/
@@ -144,7 +144,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		ToolBar(const Ogre::String& name);
+		ToolBar(const std::string& name);
 		virtual ~ToolBar();
 
 		ToolBarOrientation mOrientation;

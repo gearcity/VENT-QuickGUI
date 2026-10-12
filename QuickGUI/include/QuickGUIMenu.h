@@ -31,11 +31,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "MenuDesc"; }
+		virtual std::string getClass() { return "MenuDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Menu"; }
+		virtual std::string getWidgetClass() { return "Menu"; }
 
 		/**
 		* Restore properties to default values
@@ -53,10 +53,10 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String DEFAULT;
-		static const Ogre::String DOWN;
-		static const Ogre::String OVER;
-		static const Ogre::String MENUPANEL;
+		static const std::string DEFAULT;
+		static const std::string DOWN;
+		static const std::string OVER;
+		static const std::string MENUPANEL;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -97,17 +97,17 @@ namespace QuickGUI
 		* Creates a Child MenuImageItem.
 		*/
 		MenuImageItem* createImageItem(int index = -1);
-		MenuImageItem* createImageItem(const Ogre::String& skin, int index = -1);
+		MenuImageItem* createImageItem(const std::string& skin, int index = -1);
 		/**
 		* Creates a Child MenuTextItem.
 		*/
-		MenuTextItem* createTextItem(const Ogre::UTFString& text, int index = -1);
+		MenuTextItem* createTextItem(const UTFString& text, int index = -1);
 		MenuTextItem* createTextItem(std::vector<TextSegment> segments, int index = -1);
 		MenuTextItem* createTextItem(int index = -1);
 		/**
 		* Creates a Child Menu.
 		*/
-		Menu* createSubMenu(const Ogre::UTFString& text, int index = -1);
+		Menu* createSubMenu(const UTFString& text, int index = -1);
 		Menu* createSubMenu(std::vector<TextSegment> segments, int index = -1);
 		Menu* createSubMenu(int index = -1);
 
@@ -121,12 +121,12 @@ namespace QuickGUI
 		* Recursively searches through children and returns first widget found with name given.
 		* NULL is returned if the widget is not found.
 		*/
-		virtual Widget* findWidget(const Ogre::String& name);
+		virtual Widget* findWidget(const std::string& name);
 
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the Item at the index given.  If the index is invalid,
 		* NULL is returned.
@@ -193,10 +193,10 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 
 	protected:
-		Menu(const Ogre::String& name);
+		Menu(const std::string& name);
 		virtual ~Menu();
 
 		MenuDesc* mDesc;

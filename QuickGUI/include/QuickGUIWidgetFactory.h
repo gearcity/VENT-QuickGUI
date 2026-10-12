@@ -38,16 +38,16 @@ namespace QuickGUI
 		// Editor creates and manages its own Widgets
 		friend class QuickGUIEditor::MainForm;
 	protected:
-		typedef Widget* (WidgetFactory::*createWidgetFunction)(const Ogre::String&);
+		typedef Widget* (WidgetFactory::*createWidgetFunction)(const std::string&);
 
 	public:
-		Ogre::String& getNamePrefix()
+		std::string& getNamePrefix()
 		{
 			return mNamingPrefix;
 		}
 
 		template<typename ClassType>
-		bool registerClass(const Ogre::String& className)
+		bool registerClass(const std::string& className)
 		{
 			if (mFunctorMap.find(className) != mFunctorMap.end())
 				return false;
@@ -60,24 +60,24 @@ namespace QuickGUI
 		/**
 		* Sets the string prepended to every instance created by this factory
 		*/
-		void setNamePrefix(const Ogre::String& prefix)
+		void setNamePrefix(const std::string& prefix)
 		{
 			mNamingPrefix = prefix;
 		}
 
-		bool unregisterClass(const Ogre::String& className)
+		bool unregisterClass(const std::string& className)
 		{
 			return (mFunctorMap.erase(className) == 1);
 		}
 
 	protected:
 		template<typename ClassType>
-		ClassType* createInstance(const Ogre::String& className, const Ogre::String& name)
+		ClassType* createInstance(const std::string& className, const std::string& name)
 		{
 #if USEHASHMAPS
-			typename std::unordered_map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
+			typename std::unordered_map<std::string, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
 #else
-			typename std::map<Ogre::String, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
+			typename std::map<std::string, createWidgetFunction>::iterator iter = mFunctorMap.find(className);
 #endif
 			if (iter == mFunctorMap.end())
 				throw Exception(Exception::ERR_FACTORY,"\"" + className + "\" is not a registered class!","WidgetFactory::createInstance");
@@ -97,15 +97,15 @@ namespace QuickGUI
 		virtual ~WidgetFactory() {}
 
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String, createWidgetFunction> mFunctorMap;
+		std::unordered_map<std::string, createWidgetFunction> mFunctorMap;
 #else
-		std::map<Ogre::String, createWidgetFunction> mFunctorMap;
+		std::map<std::string, createWidgetFunction> mFunctorMap;
 #endif
 
-		Ogre::String mNamingPrefix;
+		std::string mNamingPrefix;
 		
 		template<typename ClassType>
-		Widget* createWidget(const Ogre::String& param1)
+		Widget* createWidget(const std::string& param1)
 		{
 			return OGRE_NEW_T(ClassType,Ogre::MEMCATEGORY_GENERAL)(param1);
 		}

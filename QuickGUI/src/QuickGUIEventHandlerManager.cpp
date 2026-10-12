@@ -23,29 +23,29 @@ namespace QuickGUI
 		return ( *msSingleton ); 
 	}
 
-	void EventHandlerManager::executEventHandler(const Ogre::String& handlerName, EventArgs& args)
+	void EventHandlerManager::executEventHandler(const std::string& handlerName, EventArgs& args)
 	{
 #if USEHASHMAPS
-	std::unordered_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+	std::unordered_map<std::string,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #else
-	std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+	std::map<std::string,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #endif
 		
 		if(it != mUserDefinedEventHandlers.end())
 			mUserDefinedEventHandlers[handlerName]->execute(args);
 	}
 
-	bool EventHandlerManager::hasEventHandler(const Ogre::String& handlerName)
+	bool EventHandlerManager::hasEventHandler(const std::string& handlerName)
 	{
 		return (mUserDefinedEventHandlers.find(handlerName) != mUserDefinedEventHandlers.end());
 	}
 
-	void EventHandlerManager::registerEventHandler(const Ogre::String& handlerName, EventHandlerSlot* function)
+	void EventHandlerManager::registerEventHandler(const std::string& handlerName, EventHandlerSlot* function)
 	{
 #if USEHASHMAPS
-			std::unordered_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+			std::unordered_map<std::string,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #else
-			std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+			std::map<std::string,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #endif
 		
 		if(it != mUserDefinedEventHandlers.end())
@@ -54,12 +54,12 @@ namespace QuickGUI
 		mUserDefinedEventHandlers[handlerName] = function;
 	}
 
-	void EventHandlerManager::unregisterEventHandler(const Ogre::String& handlerName)
+	void EventHandlerManager::unregisterEventHandler(const std::string& handlerName)
 	{
 #if USEHASHMAPS
-			std::unordered_map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+			std::unordered_map<std::string,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #else
-			std::map<Ogre::String,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
+			std::map<std::string,EventHandlerSlot*>::iterator it = mUserDefinedEventHandlers.find(handlerName);
 #endif
 		
 		if(it != mUserDefinedEventHandlers.end())

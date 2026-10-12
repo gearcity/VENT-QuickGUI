@@ -24,7 +24,7 @@ namespace QuickGUI
 		/// Describes the Text used in this Label
 		TextDesc			textDesc;
 		ColourValue	text_defaultColor;
-		Ogre::String		text_defaultFontName;
+		std::string		text_defaultFontName;
 
 		/**
 		* Restore properties to default values
@@ -54,17 +54,17 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void addText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void addText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void addText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s);
+		void addText(UTFString s);
 		/**
 		* Adds Text using Text Segments.
 		*/
@@ -82,7 +82,7 @@ namespace QuickGUI
 		/**
 		* Gets the font used when adding text without specifying font.
 		*/
-		Ogre::String getDefaultFont();
+		std::string getDefaultFont();
 		/**
 		* Returns the horizontal alignment of text within this widget's client area.
 		*/
@@ -90,7 +90,7 @@ namespace QuickGUI
 		/**
 		* Gets the text in UTFString form.
 		*/
-		Ogre::UTFString getText();
+		UTFString getText();
 		/**
 		* Returns the amount of width defined for this text.  Word wrapping occurs
 		* when the allotted width is smaller than the width of the text.
@@ -126,29 +126,29 @@ namespace QuickGUI
 		/**
 		* Sets the font used when adding text without specifying font.
 		*/
-		void setDefaultFont(const Ogre::String& fontName);
+		void setDefaultFont(const std::string& fontName);
 		/**
 		* Sets all characters of the text to the specified font.
 		*/
-		virtual void setFont(const Ogre::String& fontName);
+		virtual void setFont(const std::string& fontName);
 		/**
 		* Sets the character at the index given to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName, unsigned int index);
+		void setFont(const std::string& fontName, unsigned int index);
 		/**
 		* Sets all characters within the defined range to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex);
+		void setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex);
 		/**
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences);
+		void setFont(const std::string& fontName, UTFString s, bool allOccurrences);
 		/**
 		* Sets the Horizontal alignment of Text as displayed within the Label area.
 		*/
@@ -156,17 +156,17 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
-		virtual void setText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		virtual void setText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		virtual void setText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		virtual void setText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		virtual void setText(Ogre::UTFString s);
+		virtual void setText(UTFString s);
 		/**
 		* Sets the Text using Text Segments.
 		*/
@@ -197,12 +197,12 @@ namespace QuickGUI
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setTextColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setTextColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setTextColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences);
+		void setTextColor(const ColourValue& cv, UTFString s, bool allOccurrences);
 		/**
 		* Sets the number of pixels placed between each line of text, if there
 		* are multiple lines of text.

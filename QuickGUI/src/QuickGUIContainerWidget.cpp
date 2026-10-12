@@ -14,8 +14,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ContainerWidget::HSCROLLBAR = "hscrollbar";
-	const Ogre::String ContainerWidget::VSCROLLBAR = "vscrollbar";
+	const std::string ContainerWidget::HSCROLLBAR = "hscrollbar";
+	const std::string ContainerWidget::VSCROLLBAR = "vscrollbar";
 
 	ContainerWidgetDesc::ContainerWidgetDesc() :
 		ComponentWidgetDesc()
@@ -53,7 +53,7 @@ namespace QuickGUI
 		b->IO("YScrollOffset",&containerwidget_yScrollOffset);
 	}
 
-	ContainerWidget::ContainerWidget(const Ogre::String& name) :
+	ContainerWidget::ContainerWidget(const std::string& name) :
 		ComponentWidget(name),
 		mDesc(NULL),
 		mHScrollBar(NULL),
@@ -353,9 +353,9 @@ namespace QuickGUI
 
 		// draw components
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
 			(*it).second->draw();
 
@@ -363,7 +363,7 @@ namespace QuickGUI
 		brush->setClipRegion(prevClipRegion);
 	}
 
-	Widget* ContainerWidget::findFirstWidgetOfClass(const Ogre::String& className)
+	Widget* ContainerWidget::findFirstWidgetOfClass(const std::string& className)
 	{
 		Widget* w = NULL;
 		for(std::vector<Widget*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
@@ -376,7 +376,7 @@ namespace QuickGUI
 		return Widget::findFirstWidgetOfClass(className);
 	}
 
-	Widget* ContainerWidget::findWidget(const Ogre::String& name)
+	Widget* ContainerWidget::findWidget(const std::string& name)
 	{
 		Widget* w;
 		for(std::vector<Widget*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
@@ -401,9 +401,9 @@ namespace QuickGUI
 
 		// Check components before verifying point is within bounds. (Components can lie outside widget dimensions)
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
@@ -687,16 +687,16 @@ namespace QuickGUI
 			mHScrollBar->setButtonScrollPercent(percent);
 	}
 
-	void ContainerWidget::setSkinType(const Ogre::String type)
+	void ContainerWidget::setSkinType(const std::string type)
 	{
 		mWidgetDesc->widget_skinTypeName = type;
 
 		_setSkinType(type);
 
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
 		{
 			if(mSkinType->hasSkinReference((*it).first))
@@ -786,9 +786,9 @@ namespace QuickGUI
 
 		// Handle anchoring for Components
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
 		{
 			if((*it).second == mHScrollBar)
@@ -826,9 +826,9 @@ namespace QuickGUI
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)			
 #endif
 		{
 			(*it).second->updateTexturePosition();

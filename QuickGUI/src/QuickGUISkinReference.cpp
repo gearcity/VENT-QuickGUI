@@ -2,7 +2,7 @@
 
 namespace QuickGUI
 {
-	SkinReference::SkinReference(const Ogre::String& alias) :
+	SkinReference::SkinReference(const std::string& alias) :
 		className(""),
 		skinAlias(alias),
 		typeName("")

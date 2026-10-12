@@ -15,20 +15,20 @@ namespace QuickGUI
 	public:
 		explicit OgreFont(Ogre::FontPtr fp);
 
-		Ogre::String getName() const;
+		std::string getName() const;
 		float getMaxBearingY() const;
-		Ogre::String getTextureName() const;
-		float getGlyphHeight(Ogre::UTFString::code_point cp) const;
-		UVRect getGlyphUVCoords(Ogre::UTFString::code_point cp) const;
-		Size getGlyphBitmapSize(Ogre::UTFString::code_point cp) const;
-		float getGlyphBearing(Ogre::UTFString::code_point cp) const;
-		float getGlyphDesignAdvance(Ogre::UTFString::code_point cp) const;
-		void saveTextureToFile(const Ogre::String& fileName) const;
+		std::string getTextureName() const;
+		float getGlyphHeight(UTFString::code_point cp) const;
+		UVRect getGlyphUVCoords(UTFString::code_point cp) const;
+		Size getGlyphBitmapSize(UTFString::code_point cp) const;
+		float getGlyphBearing(UTFString::code_point cp) const;
+		float getGlyphDesignAdvance(UTFString::code_point cp) const;
+		void saveTextureToFile(const std::string& fileName) const;
 
 	protected:
 		Ogre::TexturePtr getTexture() const;
 		/// Pixel height that the bearing and advance Ogre reports, as fractions of the glyph height, are scaled by.
-		float getGlyphMetricScale(Ogre::UTFString::code_point cp) const;
+		float getGlyphMetricScale(UTFString::code_point cp) const;
 
 		Ogre::FontPtr mFont;
 	};

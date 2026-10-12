@@ -17,12 +17,12 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ComboBox::COMBOBOXITEM = "comboboxitem";
-	const Ogre::String ComboBox::DEFAULT = "default";
-	const Ogre::String ComboBox::DOWN = "down";
-	const Ogre::String ComboBox::OVER = "over";
-	const Ogre::String ComboBox::DROPDOWNBUTTON = "dropdownbutton";
-	const Ogre::String ComboBox::DROPDOWNMENUPANEL = "dropdownmenupanel";
+	const std::string ComboBox::COMBOBOXITEM = "comboboxitem";
+	const std::string ComboBox::DEFAULT = "default";
+	const std::string ComboBox::DOWN = "down";
+	const std::string ComboBox::OVER = "over";
+	const std::string ComboBox::DROPDOWNBUTTON = "dropdownbutton";
+	const std::string ComboBox::DROPDOWNMENUPANEL = "dropdownmenupanel";
 
 	void ComboBox::registerSkinDefinition()
 	{
@@ -98,7 +98,7 @@ namespace QuickGUI
 		combobox_itemHeight *= Root::getSingletonPtr()->getGUIScale();
 	}
 
-	ComboBox::ComboBox(const Ogre::String& name) :
+	ComboBox::ComboBox(const std::string& name) :
 		ContainerWidget(name),
 		TextUser(),
 		mMenuPanel(NULL),
@@ -222,7 +222,7 @@ namespace QuickGUI
 			(*it)->_setSheet(sheet);
 	}
 
-	void ComboBox::addUserDefinedComboBoxEventHandler(ComboBoxEvent EVENT, const Ogre::String& handlerName)
+	void ComboBox::addUserDefinedComboBoxEventHandler(ComboBoxEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->combobox_userHandlers[EVENT] = handlerName;
 	}
@@ -338,7 +338,7 @@ namespace QuickGUI
 		return newItem;
 	}
 
-	ListImageItem* ComboBox::createImageItem(const Ogre::String& imageName, int index)
+	ListImageItem* ComboBox::createImageItem(const std::string& imageName, int index)
 	{
 		ListImageItemDesc* d = DescManager::getSingletonPtr()->getDefaultListImageItemDesc();
 		d->resetToDefault();
@@ -356,7 +356,7 @@ namespace QuickGUI
 		return createImageItem("",index);
 	}
 
-	ListTextItem* ComboBox::createTextItem(const Ogre::UTFString& text, int index)
+	ListTextItem* ComboBox::createTextItem(const UTFString& text, int index)
 	{
 		ListTextItemDesc* d = DescManager::getSingletonPtr()->getDefaultListTextItemDesc();
 		d->resetToDefault();
@@ -447,7 +447,7 @@ namespace QuickGUI
 		destroyItem(i->getIndex());
 	}
 
-	Widget* ComboBox::findWidget(const Ogre::String& widget_name)
+	Widget* ComboBox::findWidget(const std::string& widget_name)
 	{
 		Widget* w = ContainerWidget::findWidget(widget_name);
 		if(w != NULL)
@@ -474,7 +474,7 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String ComboBox::getClass()
+	std::string ComboBox::getClass()
 	{
 		return "ComboBox";
 	}
@@ -521,7 +521,7 @@ namespace QuickGUI
 		return mSelectedItem;
 	}
 
-	Ogre::UTFString ComboBox::getText()
+	UTFString ComboBox::getText()
 	{
 		return mText->getText();
 	}
@@ -814,14 +814,14 @@ namespace QuickGUI
 			mMenuPanel->setMaxHeight(height);
 	}
 
-	void ComboBox::setSkinType(const Ogre::String type)
+	void ComboBox::setSkinType(const std::string type)
 	{
 		Widget::setSkinType(type);
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 #else
-	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 #endif
 		if(mMenuPanel != NULL)

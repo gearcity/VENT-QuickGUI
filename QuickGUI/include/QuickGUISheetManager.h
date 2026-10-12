@@ -41,7 +41,7 @@ namespace QuickGUI
 		* If loadFromFile is true, s is treated as a File, and opened, parsed and used to build a Sheet.
 		* If loadFromFile is false, s is treated as a String, and parsed and used to build a Sheet.
 		*/
-		Sheet* createSheet(const Ogre::String& s, bool loadFromFile);
+		Sheet* createSheet(const std::string& s, bool loadFromFile);
 
 		/**
 		* Queues a Sheet for destruction.

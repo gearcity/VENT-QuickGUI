@@ -23,24 +23,24 @@ namespace QuickGUI
 		static SkinTypeManager& getSingleton(void);
 		static SkinTypeManager* getSingletonPtr(void);
 
-		void addSkinType(const Ogre::String& className, const Ogre::String& typeName, SkinType* t);
+		void addSkinType(const std::string& className, const std::string& typeName, SkinType* t);
 
-		SkinType* getSkinType(const Ogre::String& className, const Ogre::String& typeName);
+		SkinType* getSkinType(const std::string& className, const std::string& typeName);
 
-		bool hasSkinType(const Ogre::String& className, const Ogre::String& typeName);
+		bool hasSkinType(const std::string& className, const std::string& typeName);
 
 		void loadTypes();
 
-		void saveTypesToFile(const Ogre::String& fileName);
+		void saveTypesToFile(const std::string& fileName);
 
 	protected:
 		SkinTypeManager();
 		virtual ~SkinTypeManager();
 
 #if USEHASHMAPS
-	std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,SkinType*> > mSkinTypes;
+	std::unordered_map<std::string, std::unordered_map<std::string,SkinType*> > mSkinTypes;
 #else
-	std::map<Ogre::String, std::map<Ogre::String,SkinType*> > mSkinTypes;
+	std::map<std::string, std::map<std::string,SkinType*> > mSkinTypes;
 #endif
 		
 	private:

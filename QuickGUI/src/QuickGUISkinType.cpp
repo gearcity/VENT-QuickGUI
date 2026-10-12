@@ -3,7 +3,7 @@
 
 namespace QuickGUI
 {
-	SkinType::SkinType(const Ogre::String& className, const Ogre::String& typeName) :
+	SkinType::SkinType(const std::string& className, const std::string& typeName) :
 		mClassName(className),
 		mName(typeName)
 	{
@@ -12,22 +12,22 @@ namespace QuickGUI
 	SkinType::~SkinType()
 	{
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+	for(std::unordered_map<std::string,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinElement,Ogre::MEMCATEGORY_GENERAL);
 
-		for(std::unordered_map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+		for(std::unordered_map<std::string,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinReference,Ogre::MEMCATEGORY_GENERAL);
 #else
-	for(std::map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+	for(std::map<std::string,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinElement,Ogre::MEMCATEGORY_GENERAL);
 
-		for(std::map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+		for(std::map<std::string,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinReference,Ogre::MEMCATEGORY_GENERAL);
 #endif
 		
 	}
 
-	void SkinType::addSkinReference(const Ogre::String& componentAlias, SkinReference* t)
+	void SkinType::addSkinReference(const std::string& componentAlias, SkinReference* t)
 	{
 		if(hasSkinReference(componentAlias))
 			throw Exception(Exception::ERR_SKINNING,"SkinReference for alias \"" + componentAlias + "\" already exists!","SkinType::addSkinReference");
@@ -35,7 +35,7 @@ namespace QuickGUI
 		mSkinReferences[componentAlias] = t;
 	}
 
-	void SkinType::addSkinElement(const Ogre::String& elementName, SkinElement* e)
+	void SkinType::addSkinElement(const std::string& elementName, SkinElement* e)
 	{
 		if(hasSkinElement(elementName))
 			throw Exception(Exception::ERR_SKINNING,"SkinElement \"" + elementName + "\" already exists!","SkinType::addSkinElement");
@@ -43,12 +43,12 @@ namespace QuickGUI
 		mSkinElements[elementName] = e;
 	}
 
-	Ogre::String SkinType::getClassName()
+	std::string SkinType::getClassName()
 	{
 		return mClassName;
 	}
 
-	SkinReference* SkinType::getSkinReference(const Ogre::String& componentAlias)
+	SkinReference* SkinType::getSkinReference(const std::string& componentAlias)
 	{
 		if(!hasSkinReference(componentAlias))
 			throw Exception(Exception::ERR_SKINNING,"SkinReference with alias \"" + componentAlias + "\" does not exist!","SkinType::getSkinReference");
@@ -56,12 +56,12 @@ namespace QuickGUI
 		return mSkinReferences[componentAlias];
 	}
 
-	Ogre::String SkinType::getName()
+	std::string SkinType::getName()
 	{
 		return mName;
 	}
 
-	SkinElement* SkinType::getSkinElement(const Ogre::String& elementName)
+	SkinElement* SkinType::getSkinElement(const std::string& elementName)
 	{
 		if(!hasSkinElement(elementName))
 			throw Exception(Exception::ERR_SKINNING,"SkinElement \"" + elementName + "\" does not exist!","SkinType::getSkinElement");
@@ -69,12 +69,12 @@ namespace QuickGUI
 		return mSkinElements[elementName];
 	}
 
-	bool SkinType::hasSkinReference(const Ogre::String& componentAlias)
+	bool SkinType::hasSkinReference(const std::string& componentAlias)
 	{
 		return (mSkinReferences.find(componentAlias) != mSkinReferences.end());
 	}
 
-	bool SkinType::hasSkinElement(const Ogre::String& elementName)
+	bool SkinType::hasSkinElement(const std::string& elementName)
 	{
 		return (mSkinElements.find(elementName) != mSkinElements.end());
 	}
@@ -107,17 +107,17 @@ namespace QuickGUI
 			b->begin(mClassName,mName);
 
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+	for(std::unordered_map<std::string,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
 				(*it).second->serialize(b);
 
-			for(std::unordered_map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+			for(std::unordered_map<std::string,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
 				(*it).second->serialize(b);
 
 #else
-	for(std::map<Ogre::String,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
+	for(std::map<std::string,SkinReference*>::iterator it = mSkinReferences.begin(); it != mSkinReferences.end(); ++it)
 				(*it).second->serialize(b);
 
-			for(std::map<Ogre::String,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
+			for(std::map<std::string,SkinElement*>::iterator it = mSkinElements.begin(); it != mSkinElements.end(); ++it)
 				(*it).second->serialize(b);
 
 #endif

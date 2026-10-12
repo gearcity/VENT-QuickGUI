@@ -35,7 +35,7 @@ namespace QuickGUI
 		PropertyGridItemDesc::serialize(b);
 	}
 
-	PropertyGridTextProperty::PropertyGridTextProperty(const Ogre::String& name) :
+	PropertyGridTextProperty::PropertyGridTextProperty(const std::string& name) :
 		PropertyGridItem(name),
 		mTextBox(NULL)
 	{
@@ -64,7 +64,7 @@ namespace QuickGUI
 		mFieldWidget = mTextBox;
 	}
 
-	Ogre::String PropertyGridTextProperty::getClass()
+	std::string PropertyGridTextProperty::getClass()
 	{
 		return "PropertyGridTextProperty";
 	}

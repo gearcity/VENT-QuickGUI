@@ -28,7 +28,7 @@ namespace QuickGUI
 		/// Percentage of progressbar_progress of the bar. (0-100)
 		float progressbar_progress;
 
-		Ogre::String progressbar_userHandlers[PROGRESSBAR_EVENT_COUNT];
+		std::string progressbar_userHandlers[PROGRESSBAR_EVENT_COUNT];
 
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment progressbar_verticalTextAlignment;
@@ -36,11 +36,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ProgressBarDesc"; }
+		virtual std::string getClass() { return "ProgressBarDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ProgressBar"; }
+		virtual std::string getWidgetClass() { return "ProgressBar"; }
 
 		/**
 		* Restore properties to default values
@@ -59,9 +59,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String BAR;
-		static const Ogre::String CLIPMAP;
+		static const std::string BACKGROUND;
+		static const std::string BAR;
+		static const std::string CLIPMAP;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -81,7 +81,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedProgressBarEventHandler(ProgressBarEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedProgressBarEventHandler(ProgressBarEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WINDOW_EVENT_FOCUS_LOST, WINDOW_EVENT_FOCUS_GAINED, etc.
@@ -118,7 +118,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Gets the side of the bar texture that is clipped to simulate progressbar_progress.
 		*/
@@ -162,7 +162,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 		/**
 		* Sets the Vertical alignment of Text as displayed within the Label area.
 		*/
@@ -201,7 +201,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		ProgressBar(const Ogre::String& name);
+		ProgressBar(const std::string& name);
 		virtual ~ProgressBar();
 
 		/// Pointer pointing to mWidgetDesc object, but casted for quick use.

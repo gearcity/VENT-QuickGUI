@@ -27,7 +27,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Panel::BACKGROUND = "background";
+	const std::string Panel::BACKGROUND = "background";
 
 	void Panel::registerSkinDefinition()
 	{
@@ -40,7 +40,7 @@ namespace QuickGUI
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("Panel",d);
 	}
 
-	Panel::Panel(const Ogre::String& name) :
+	Panel::Panel(const std::string& name) :
 		ContainerWidget(name)
 	{
 	}
@@ -59,7 +59,7 @@ namespace QuickGUI
 			setSkinType(d->widget_skinTypeName);
 	}
 
-	Widget* Panel::createCustomWidget(const Ogre::String& className, WidgetDesc* d)
+	Widget* Panel::createCustomWidget(const std::string& className, WidgetDesc* d)
 	{
 		if((className == "TitleBar") || (className == "Window") || (className == "Sheet"))
 			throw Exception(Exception::ERR_UNSUPPORTED_WIDGET,"This widget does not support creation of widget's of class \"" + className + "\".","Panel::createCustomWidget");
@@ -108,7 +108,7 @@ namespace QuickGUI
 		return createButton(bd);
 	}
 
-	Button* Panel::createButton(const Ogre::UTFString& text, const Rect& dimensions)
+	Button* Panel::createButton(const UTFString& text, const Rect& dimensions)
 	{
 		ButtonDesc* bd = DescManager::getSingletonPtr()->getDefaultButtonDesc();
 		bd->resetToDefault();
@@ -393,7 +393,7 @@ namespace QuickGUI
 		return createLabel(ld);
 	}
 
-	Label* Panel::createLabel(const Ogre::UTFString& text, const Point& position)
+	Label* Panel::createLabel(const UTFString& text, const Point& position)
 	{
 		LabelDesc* ld = DescManager::getSingletonPtr()->getDefaultLabelDesc();
 		ld->resetToDefault();
@@ -415,7 +415,7 @@ namespace QuickGUI
 		return createLabel(ld);
 	}
 
-	Label* Panel::createLabel(const Ogre::UTFString& text, const Rect& dimensions)
+	Label* Panel::createLabel(const UTFString& text, const Rect& dimensions)
 	{
 		LabelDesc* ld = DescManager::getSingletonPtr()->getDefaultLabelDesc();
 		ld->resetToDefault();
@@ -844,7 +844,7 @@ namespace QuickGUI
 		return createVScrollBar(sd);
 	}
 
-	Ogre::String Panel::getClass()
+	std::string Panel::getClass()
 	{
 		return "Panel";
 	}

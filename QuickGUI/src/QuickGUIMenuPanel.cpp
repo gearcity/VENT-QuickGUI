@@ -11,7 +11,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String MenuPanel::BACKGROUND = "background";
+	const std::string MenuPanel::BACKGROUND = "background";
 
 	void MenuPanel::registerSkinDefinition()
 	{
@@ -50,7 +50,7 @@ namespace QuickGUI
 		widget_serialize = false;
 	}
 
-	MenuPanel::MenuPanel(const Ogre::String& name) :
+	MenuPanel::MenuPanel(const std::string& name) :
 		Window(name),
 		mDesc(NULL)
 	{
@@ -126,7 +126,7 @@ namespace QuickGUI
 		return mDesc->menupanel_owner->getAbsoluteOpacity() * mWidgetDesc->widget_relativeOpacity;
 	}
 
-	Ogre::String MenuPanel::getClass()
+	std::string MenuPanel::getClass()
 	{
 		return "MenuPanel";
 	}
@@ -165,7 +165,7 @@ namespace QuickGUI
 	{
 		if(mDesc->menupanel_owner != NULL)
 		{
-			Ogre::String ownerClass = mDesc->menupanel_owner->getClass();
+			std::string ownerClass = mDesc->menupanel_owner->getClass();
 			if(ownerClass == "Menu")
 			{
 				ToolBar* tb = dynamic_cast<Menu*>(mDesc->menupanel_owner)->getToolBar();

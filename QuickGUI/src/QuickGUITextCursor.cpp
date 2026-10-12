@@ -7,7 +7,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TextCursor::BACKGROUND = "background";
+	const std::string TextCursor::BACKGROUND = "background";
 
 	void TextCursor::registerSkinDefinition()
 	{
@@ -93,7 +93,7 @@ namespace QuickGUI
 		mDimensions.position.y = p.y;
 	}
 
-	void TextCursor::setSkinType(const Ogre::String type)
+	void TextCursor::setSkinType(const std::string type)
 	{
 		mSkinType = SkinTypeManager::getSingleton().getSkinType("TextCursor",type);
 		mSkinElement = mSkinType->getSkinElement(BACKGROUND);

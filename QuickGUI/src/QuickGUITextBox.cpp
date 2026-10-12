@@ -10,8 +10,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TextBox::BACKGROUND = "background";
-	const Ogre::String TextBox::TEXTOVERLAY = "textoverlay";
+	const std::string TextBox::BACKGROUND = "background";
+	const std::string TextBox::TEXTOVERLAY = "textoverlay";
 
 	void TextBox::registerSkinDefinition()
 	{
@@ -63,7 +63,7 @@ namespace QuickGUI
 		b->IO("TBHorizontalPadding",&textbox_horizontalPadding);
 		b->IO("KeyDownTime",&textbox_keyDownTime);
 		b->IO("KeyRepeatTime",&textbox_keyRepeatTime);
-		b->IO("MaskSymbol",static_cast<unsigned short*>(&textbox_maskSymbol));
+		b->IO("MaskSymbol",reinterpret_cast<unsigned short*>(&textbox_maskSymbol));
 		b->IO("MaskText",&textbox_maskText);
 		b->IO("MaxCharacters",&textbox_maxCharacters);
 		b->IO("TextCursorDefaultSkinTypeName",&textbox_textCursorDefaultSkinTypeName);
@@ -73,7 +73,7 @@ namespace QuickGUI
 		textDesc.serialize(b);
 	}
 
-	TextBox::TextBox(const Ogre::String& name) :
+	TextBox::TextBox(const std::string& name) :
 		Widget(name),
 		mText(NULL),
 		mDesc(NULL),
@@ -164,12 +164,12 @@ namespace QuickGUI
 		setSkinType(d->widget_skinTypeName);
 	}
 
-	Ogre::String TextBox::getClass()
+	std::string TextBox::getClass()
 	{
 		return "TextBox";
 	}
 
-	void TextBox::addCharacter(Ogre::UTFString::code_point cp)
+	void TextBox::addCharacter(UTFString::code_point cp)
 	{
 		if(mText->getLength() >= static_cast<int>(mDesc->textbox_maxCharacters))
 			return;
@@ -182,19 +182,19 @@ namespace QuickGUI
 		setCursorIndex(mCursorIndex+1);
 	}
 
-	void TextBox::addText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
+	void TextBox::addText(UTFString s, const Font& font, const ColourValue& cv)
 	{
 		mText->addText(s,font,cv);
 
 		redraw();
 	}
 
-	void TextBox::addText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void TextBox::addText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
 		addText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
-	void TextBox::addText(Ogre::UTFString s)
+	void TextBox::addText(UTFString s)
 	{
 		addText(s,mDesc->textbox_defaultFontName,mDesc->textbox_defaultColor);
 	}
@@ -233,7 +233,7 @@ namespace QuickGUI
 		return mDesc->textbox_defaultColor;
 	}
 
-	Ogre::String TextBox::getDefaultFont()
+	std::string TextBox::getDefaultFont()
 	{
 		return mDesc->textbox_defaultFontName;
 	}
@@ -248,7 +248,7 @@ namespace QuickGUI
 		return mDesc->textbox_horizontalTextAlignment;
 	}
 
-	Ogre::UTFString::code_point TextBox::getMaskSymbol()
+	UTFString::code_point TextBox::getMaskSymbol()
 	{
 		return mDesc->textbox_maskSymbol;
 	}
@@ -273,7 +273,7 @@ namespace QuickGUI
 		return r;
 	}
 
-	Ogre::UTFString TextBox::getText()
+	UTFString TextBox::getText()
 	{
 		return mText->getText();
 	}
@@ -288,7 +288,7 @@ namespace QuickGUI
 		return mText->getTextSegments();
 	}
 
-	Ogre::String TextBox::getTextCursorSkinType()
+	std::string TextBox::getTextCursorSkinType()
 	{
 		return mDesc->textbox_textCursorDefaultSkinTypeName;
 	}
@@ -563,7 +563,7 @@ namespace QuickGUI
 		mDesc->textbox_defaultColor = cv;
 	}
 
-	void TextBox::setDefaultFont(const Ogre::String& fontName)
+	void TextBox::setDefaultFont(const std::string& fontName)
 	{
 		mDesc->textbox_defaultFontName = fontName;
 		mCurrentFont = &Root::getSingleton().getFont(fontName);
@@ -585,35 +585,35 @@ namespace QuickGUI
 		}
 	}
 
-	void TextBox::setFont(const Ogre::String& fontName)
+	void TextBox::setFont(const std::string& fontName)
 	{
 		mText->setFont(fontName);
 
 		redraw();
 	}
 
-	void TextBox::setFont(const Ogre::String& fontName, unsigned int index)
+	void TextBox::setFont(const std::string& fontName, unsigned int index)
 	{
 		mText->setFont(fontName,index);
 
 		redraw();
 	}
 
-	void TextBox::setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex)
+	void TextBox::setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex)
 	{
 		mText->setFont(fontName,startIndex,endIndex);
 
 		redraw();
 	}
 
-	void TextBox::setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences)
+	void TextBox::setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences)
 	{
 		mText->setFont(fontName,c,allOccurrences);
 
 		redraw();
 	}
 
-	void TextBox::setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences)
+	void TextBox::setFont(const std::string& fontName, UTFString s, bool allOccurrences)
 	{
 		mText->setFont(fontName,s,allOccurrences);
 
@@ -636,7 +636,7 @@ namespace QuickGUI
 		setCursorIndex(mCursorIndex);
 	}
 
-	void TextBox::setMaskText(bool mask, Ogre::UTFString::code_point textbox_maskSymbol)
+	void TextBox::setMaskText(bool mask, UTFString::code_point textbox_maskSymbol)
 	{
 		mDesc->textbox_maskText = mask;
 		mDesc->textbox_maskSymbol = textbox_maskSymbol;
@@ -681,12 +681,12 @@ namespace QuickGUI
 		updateTexturePosition();
 	}
 
-	void TextBox::setText(Ogre::UTFString s)
+	void TextBox::setText(UTFString s)
 	{
 		setText(s,Root::getSingleton().getFont(mDesc->textbox_defaultFontName),mDesc->textbox_defaultColor);
 	}
 
-	void TextBox::setText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
+	void TextBox::setText(UTFString s, const Font& font, const ColourValue& cv)
 	{
 		mText->setText(s,font,cv);
 
@@ -729,14 +729,14 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextBox::setTextColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences)
+	void TextBox::setTextColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences)
 	{
 		mText->setColor(cv,c,allOccurrences);
 
 		redraw();
 	}
 
-	void TextBox::setTextColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences)
+	void TextBox::setTextColor(const ColourValue& cv, UTFString s, bool allOccurrences)
 	{
 		mText->setColor(cv,s,allOccurrences);
 
@@ -750,7 +750,7 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextBox::setTextCursorSkinType(const Ogre::String type)
+	void TextBox::setTextCursorSkinType(const std::string type)
 	{
 		mDesc->textbox_textCursorDefaultSkinTypeName = type;
 
@@ -785,12 +785,12 @@ namespace QuickGUI
 		}
 	}
 
-	void TextBox::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextBox::addText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
 	{
 		addText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 
-	void TextBox::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextBox::setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
 	{
 		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}

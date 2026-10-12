@@ -17,17 +17,17 @@ namespace QuickGUI
 	public:
 
 		/// Name of the image file to display
-		Ogre::String	button_imageName;
+		std::string	button_imageName;
 		bool			button_tileImage;
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ButtonDesc"; }
+		virtual std::string getClass() { return "ButtonDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Button"; }
+		virtual std::string getWidgetClass() { return "Button"; }
 
 		/**
 		* Restore properties to default values
@@ -45,9 +45,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String DEFAULT;
-		static const Ogre::String OVER;
-		static const Ogre::String DOWN;
+		static const std::string DEFAULT;
+		static const std::string OVER;
+		static const std::string DOWN;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:		
@@ -65,11 +65,11 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the name of the image file used for display.
 		*/
-		Ogre::String getImageName();
+		std::string getImageName();
 		/**
 		* Returns true if image is tiled within client dimensions, false otherwise.
 		*/
@@ -81,21 +81,21 @@ namespace QuickGUI
 		* NOTE: Image must be listed within an Ogre resource directory.
 		* NOTE: Setting the name to "" will result in only the background showing.
 		*/
-		void setImage(const Ogre::String& name);
+		void setImage(const std::string& name);
 		/**
 		* Sets the text for this object.
 		*/
-		void setText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void setText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		void setText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void setText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		void setText(Ogre::UTFString s);
+		void setText(UTFString s);
 		/**
 		* Sets the Text using Text Segments.
 		*/
@@ -113,11 +113,11 @@ namespace QuickGUI
 		virtual void setHiddenID(int ID);
 		virtual int getHiddenID();
 
-		virtual void setHiddenString(Ogre::String str);
-		virtual Ogre::String getHiddenString();
+		virtual void setHiddenString(std::string str);
+		virtual std::string getHiddenString();
 
 	protected:
-		Button(const Ogre::String& name);
+		Button(const std::string& name);
 		virtual ~Button();
 
 		ButtonDesc* mDesc;
@@ -149,7 +149,7 @@ namespace QuickGUI
 
 	private:
 	  int hiddenInt;
-	  Ogre::String hiddenString;
+	  std::string hiddenString;
 	};
 }
 

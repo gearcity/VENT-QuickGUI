@@ -17,7 +17,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -59,7 +59,7 @@ namespace QuickGUI
 		* can create several types of Text Cursors: "default", "italic", "plain", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		void setSkinType(const Ogre::String type);
+		void setSkinType(const std::string type);
 		/**
 		* Sets the cursor visible or not.
 		*/

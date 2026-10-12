@@ -13,7 +13,7 @@
 #include <OgreFontManager.h>
 #include "OgrePrerequisites.h"
 #include "OgreTextureManager.h"
-#include "OgreUTFString.h"
+#include "QuickGUIUTFString.h"
 
 #include <list>
 #include <vector>
@@ -29,16 +29,16 @@ namespace QuickGUI
 	{
 	public:
 		TextSegment();
-		TextSegment(const Ogre::String FontName, const ColourValue& Color, const Ogre::UTFString& Text);
-		TextSegment(const ColourValue& Color, const Ogre::UTFString& Text);
-		TextSegment(const Ogre::UTFString& Text);
+		TextSegment(const std::string FontName, const ColourValue& Color, const UTFString& Text);
+		TextSegment(const ColourValue& Color, const UTFString& Text);
+		TextSegment(const UTFString& Text);
 
 		// Font of this segment of text
-		Ogre::String fontName;
+		std::string fontName;
 		// Color of this segment of text
 		ColourValue color;
 		// Array of code points
-		Ogre::UTFString text;
+		UTFString text;
 	};
 
 	class _QuickGUIExport TextDesc :
@@ -60,7 +60,7 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TextDesc"; }
+		virtual std::string getClass() { return "TextDesc"; }
 		/**
 		* Returns the height of the Text if it were treated as one line of text.
 		*/
@@ -104,80 +104,80 @@ namespace QuickGUI
 		/**
 		* Returns true if the given unicode character is a Tab, false otherwise.
 		*/
-		static inline bool	isTab			(Ogre::UTFString::unicode_char c) { return c == UNICODE_TAB; }
+		static inline bool	isTab			(UTFString::unicode_char c) { return c == UNICODE_TAB; }
 		/**
 		* Returns true if the given unicode character is a Space, false otherwise.
 		*/
-		static inline bool	isSpace			(Ogre::UTFString::unicode_char c) { return c == UNICODE_SPACE; }
+		static inline bool	isSpace			(UTFString::unicode_char c) { return c == UNICODE_SPACE; }
 		/**
 		* Returns true if the given unicode character is a NewLine ('\n' or '\r'), false otherwise.
 		*/
-		static inline bool	isNewLine		(Ogre::UTFString::unicode_char c) { return c == UNICODE_CR || c == UNICODE_LF || c == UNICODE_NEL; }
+		static inline bool	isNewLine		(UTFString::unicode_char c) { return c == UNICODE_CR || c == UNICODE_LF || c == UNICODE_NEL; }
 		/**
 		* Returns true if the given unicode character is a Null character, false otherwise.
 		*/
-		static inline bool  isNullCharacter (Ogre::UTFString::unicode_char c) { return c == UNICODE_NEL; }
+		static inline bool  isNullCharacter (UTFString::unicode_char c) { return c == UNICODE_NEL; }
 		/**
 		* Returns true if the given unicode character is a Space, Tab, or NewLine, false otherwise.
 		*/
-		static inline bool	isWhiteSpace	(Ogre::UTFString::unicode_char c) { return isTab(c) || isSpace(c) || isNewLine(c); }
+		static inline bool	isWhiteSpace	(UTFString::unicode_char c) { return isTab(c) || isSpace(c) || isNewLine(c); }
 	public:
 		/**
 		* Converts '\n' and '\r' into "\\n", and '\t' into "\\t".
 		*/
-		static void convertWhitespaceToText(Ogre::UTFString& s);
+		static void convertWhitespaceToText(UTFString& s);
 		/**
 		* Converts "\\n" and "\\r" into '\n', and "\\t" into '\t'.
 		*/
-		static void convertTextToWhiteSpace(Ogre::UTFString& s);
+		static void convertTextToWhiteSpace(UTFString& s);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
 		static Ogre::FontPtr getFirstAvailableFont();
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static Ogre::FontPtr getFont(const Ogre::String& fontName);
+		static Ogre::FontPtr getFont(const std::string& fontName);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getFontHeight(const Ogre::String& fontName);
+		static float getFontHeight(const std::string& fontName);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
 		static float getFontHeight(Ogre::FontPtr fp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static Ogre::TexturePtr getFontTexture(const Ogre::String& fontName);
+		static Ogre::TexturePtr getFontTexture(const std::string& fontName);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
 		static Ogre::TexturePtr getFontTexture(Ogre::FontPtr fp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static Ogre::String getFontTextureName(const Ogre::String& fontName);
+		static std::string getFontTextureName(const std::string& fontName);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static Ogre::String getFontTextureName(Ogre::FontPtr fp);
+		static std::string getFontTextureName(Ogre::FontPtr fp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphHeight(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		static float getGlyphHeight(const std::string& fontName, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphHeight(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		static float getGlyphHeight(Ogre::FontPtr fp, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static UVRect getGlyphUVCoords(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		static UVRect getGlyphUVCoords(const std::string& fontName, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static UVRect getGlyphUVCoords(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		static UVRect getGlyphUVCoords(Ogre::FontPtr fp, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static Size getGlyphSize(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		static Size getGlyphSize(const std::string& fontName, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static Size getGlyphSize(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		static Size getGlyphSize(Ogre::FontPtr fp, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphWidth(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		static float getGlyphWidth(const std::string& fontName, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		static float getGlyphWidth(Ogre::FontPtr fp, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphAdvance(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		static float getGlyphAdvance(const std::string& fontName, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		static float getGlyphAdvance(Ogre::FontPtr fp, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphBearing(const Ogre::String& fontName, Ogre::UTFString::code_point cp);
+		static float getGlyphBearing(const std::string& fontName, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getGlyphBearing(Ogre::FontPtr fp, Ogre::UTFString::code_point cp);
+		static float getGlyphBearing(Ogre::FontPtr fp, UTFString::code_point cp);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getTextWidth(const Ogre::String& fontName, Ogre::UTFString s);
+		static float getTextWidth(const std::string& fontName, UTFString s);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static float getTextWidth(Ogre::FontPtr fp, Ogre::UTFString s);
+		static float getTextWidth(Ogre::FontPtr fp, UTFString s);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static void saveFontTextureToFile(const Ogre::String& fontName, const Ogre::String& fileName);
+		static void saveFontTextureToFile(const std::string& fontName, const std::string& fileName);
 		QUICKGUI_DEPRECATED("Use Root::getFont and the Font class.")
-		static void saveFontTextureToFile(Ogre::FontPtr fp, const Ogre::String& fileName);
+		static void saveFontTextureToFile(Ogre::FontPtr fp, const std::string& fileName);
 	public:
 		Text(TextDesc& d);
 		~Text();
@@ -195,9 +195,9 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void addText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void addText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds Text using Text Segments.
 		*/
@@ -205,9 +205,9 @@ namespace QuickGUI
 		/**
 		* Adds new line of text to this object.
 		*/
-		void addTextLine(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void addTextLine(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void addTextLine(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void addTextLine(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds new line of Text using Text Segments.
 		*/
@@ -303,7 +303,7 @@ namespace QuickGUI
 		/**
 		* Returns a string of characters representing the text.
 		*/
-		Ogre::UTFString getText();
+		UTFString getText();
 		/**
 		* Returns the desc object representing this Text instance.
 		*/
@@ -355,12 +355,12 @@ namespace QuickGUI
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be highlighted, otherwise only the first occurrence is highlighted.
 		*/
-		void highlight(Ogre::UTFString::code_point c, bool allOccurrences);
+		void highlight(UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be highlighted, otherwise only the first occurrence is highlighted.
 		*/
-		void highlight(Ogre::UTFString s, bool allOccurrences);
+		void highlight(UTFString s, bool allOccurrences);
 
 		/**
 		* Removes a character from the index given.
@@ -392,44 +392,44 @@ namespace QuickGUI
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences);
+		void setColor(const ColourValue& cv, UTFString s, bool allOccurrences);
 		/**
 		* Sets all characters of the text to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName);
+		void setFont(const std::string& fontName);
 		/**
 		* Sets the character at the index given to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName, unsigned int index);
+		void setFont(const std::string& fontName, unsigned int index);
 		/**
 		* Sets all characters within the defined range to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex);
+		void setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex);
 		/**
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences);
+		void setFont(const std::string& fontName, UTFString s, bool allOccurrences);
 		/**
 		* Sets whether or not the Text will be masked. (password box)
 		*/
-		void setMaskText(bool mask, Ogre::UTFString::code_point maskSymbol);
+		void setMaskText(bool mask, UTFString::code_point maskSymbol);
 		/**
 		* Sets the text for this object.
 		*/
-		void setText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void setText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the Text using Text Segments.
 		*/
@@ -453,9 +453,9 @@ namespace QuickGUI
 		TextDesc* mTextDesc;
 
 		bool mMaskText;
-		Ogre::UTFString::code_point mMaskSymbol;
+		UTFString::code_point mMaskSymbol;
 
-		Ogre::UTFString mText;
+		UTFString mText;
 		// Store information of every character in this Text object
 		std::list<Character*> mCharacters;
 

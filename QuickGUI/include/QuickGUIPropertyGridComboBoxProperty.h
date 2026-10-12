@@ -24,11 +24,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "PropertyGridComboBoxPropertyDesc"; }
+		virtual std::string getClass() { return "PropertyGridComboBoxPropertyDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "PropertyGridComboBoxProperty"; }
+		virtual std::string getWidgetClass() { return "PropertyGridComboBoxProperty"; }
 
 		/**
 		* Restore properties to default values
@@ -64,12 +64,12 @@ namespace QuickGUI
 		/**
 		* Adds a ListImageItem to the end of the DropDownList.
 		*/
-		ListImageItem* createImageItem(const Ogre::String& imageName, int index = -1);
+		ListImageItem* createImageItem(const std::string& imageName, int index = -1);
 		ListImageItem* createImageItem(int index = -1);
 		/**
 		* Adds a ListTextItem to the end of the DropDownList
 		*/
-		ListTextItem* createTextItem(const Ogre::UTFString& text, int index = -1);
+		ListTextItem* createTextItem(const UTFString& text, int index = -1);
 		ListTextItem* createTextItem(std::vector<TextSegment> segments, int index = -1);
 		ListTextItem* createTextItem(int index = -1);
 
@@ -85,7 +85,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Gets the width of the Drop down MenuPanel.
 		*/
@@ -132,7 +132,7 @@ namespace QuickGUI
 		void showDropDownList();
 
 	protected:
-		PropertyGridComboBoxProperty(const Ogre::String& name);
+		PropertyGridComboBoxProperty(const std::string& name);
 		virtual ~PropertyGridComboBoxProperty();
 
 		PropertyGridComboBoxPropertyDesc* mDesc;

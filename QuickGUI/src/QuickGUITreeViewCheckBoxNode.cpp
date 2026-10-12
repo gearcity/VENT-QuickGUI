@@ -8,7 +8,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TreeViewCheckBoxNode::CHECKBOX = "checkbox";
+	const std::string TreeViewCheckBoxNode::CHECKBOX = "checkbox";
 
 	void TreeViewCheckBoxNode::registerSkinDefinition()
 	{
@@ -62,7 +62,7 @@ namespace QuickGUI
 		}
 	}
 
-	TreeViewCheckBoxNode::TreeViewCheckBoxNode(const Ogre::String& name) :
+	TreeViewCheckBoxNode::TreeViewCheckBoxNode(const std::string& name) :
 		TreeViewNode(name),
 		mCheckBox(NULL)
 	{
@@ -105,7 +105,7 @@ namespace QuickGUI
 			setChecked(true);
 	}
 
-	void TreeViewCheckBoxNode::addUserDefinedTreeViewCheckBoxNodeEventHandler(TreeViewCheckBoxNodeEvent EVENT, const Ogre::String& handlerName)
+	void TreeViewCheckBoxNode::addUserDefinedTreeViewCheckBoxNodeEventHandler(TreeViewCheckBoxNodeEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->treeviewcheckboxnode_userHandlers[EVENT] = handlerName;
 	}
@@ -143,7 +143,7 @@ namespace QuickGUI
 		return mCheckBox->getChecked();
 	}
 
-	Ogre::String TreeViewCheckBoxNode::getClass()
+	std::string TreeViewCheckBoxNode::getClass()
 	{
 		return "TreeViewCheckBoxNode";
 	}

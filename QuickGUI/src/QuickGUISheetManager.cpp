@@ -65,7 +65,7 @@ namespace QuickGUI
 		return newSheet;
 	}
 
-	Sheet* SheetManager::createSheet(const Ogre::String& s, bool loadFromFile)
+	Sheet* SheetManager::createSheet(const std::string& s, bool loadFromFile)
 	{
 		Sheet* newSheet = OGRE_NEW_T(Sheet,Ogre::MEMCATEGORY_GENERAL)(s,loadFromFile);
 

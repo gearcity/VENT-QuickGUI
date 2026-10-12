@@ -55,11 +55,11 @@ namespace QuickGUI
 		* By default, the name of the first font found on initialization of Root is returned.
 		* The default font name can be changed using "setDefaultFontName"
 		*/
-		Ogre::String getDefaultFontName();
+		std::string getDefaultFontName();
 		/**
 		* Gets a font by the name it was registered with. Throws if there is no such font.
 		*/
-		const Font& getFont(const Ogre::String& fontName);
+		const Font& getFont(const std::string& fontName);
 		/**
 		* Gets the font that is used by widgets on initialization, see "getDefaultFontName".
 		*/
@@ -77,7 +77,7 @@ namespace QuickGUI
 		/**
 		* Sets the default font used by widgets on initialization.
 		*/
-		void setDefaultFontName(const Ogre::String& fontName);
+		void setDefaultFontName(const std::string& fontName);
 		/**
 		* Set the number of seconds the cursor has to idle over a widget
 		* before the ON_HOVER event is fired. (Commonly used for tool tips)
@@ -96,8 +96,8 @@ namespace QuickGUI
 
 	protected:
 		ColourValue mDefaultColor;
-		Ogre::String mDefaultFontName;
-		std::map<Ogre::String,Font*> mFonts;
+		std::string mDefaultFontName;
+		std::map<std::string,Font*> mFonts;
 
 		int mGUIManagerCounter;
 

@@ -25,7 +25,7 @@ namespace QuickGUI
 		ToolBarItemDesc::serialize(b);
 	}
 
-	MenuItem::MenuItem(const Ogre::String& name) :
+	MenuItem::MenuItem(const std::string& name) :
 		ToolBarItem(name)
 	{
 	}
@@ -56,11 +56,11 @@ namespace QuickGUI
 
 		if(mParentWidget != NULL)
 		{
-			Ogre::String className = mParentWidget->getClass();
+			std::string className = mParentWidget->getClass();
 			if(className == "MenuPanel")
 			{
 				Widget* owner = dynamic_cast<MenuPanel*>(mParentWidget)->getOwner();
-				Ogre::String ownerClassName = owner->getClass();
+				std::string ownerClassName = owner->getClass();
 				
 				if(ownerClassName == "Menu")
 					dynamic_cast<Menu*>(owner)->destroyItem(this);

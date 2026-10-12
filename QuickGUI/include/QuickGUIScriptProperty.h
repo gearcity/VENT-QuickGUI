@@ -12,14 +12,14 @@ namespace QuickGUI
 	public:
 		friend class ScriptReader;
 	public:
-		Ogre::String getPropertyName();
-		Ogre::StringVector& getValues();
+		std::string getPropertyName();
+		std::vector<std::string>& getValues();
 
 	protected:
-		ScriptProperty(const Ogre::String& propertyName);
+		ScriptProperty(const std::string& propertyName);
 
-		Ogre::String mPropertyName;
-		Ogre::StringVector mValues;
+		std::string mPropertyName;
+		std::vector<std::string> mValues;
 
 	private:
 	};

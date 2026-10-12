@@ -70,7 +70,7 @@ namespace QuickGUI
 		static DescManager* getSingletonPtr(void);
 
 		template<class T>
-		T* createDesc(const Ogre::String& className, const Ogre::String& id)
+		T* createDesc(const std::string& className, const std::string& id)
 		{
 			if(mUserCreatedDescs.find(id) != mUserCreatedDescs.end())
 				throw Exception(Exception::ERR_FACTORY,"Cannot create Desc with id \"" + id + "\", it already exists!","DescManager::createDesc");
@@ -85,7 +85,7 @@ namespace QuickGUI
 		void destroyDesc(Desc* d);
 
 		template<class T>
-		T* getDesc(const Ogre::String id)
+		T* getDesc(const std::string id)
 		{
 			if(mUserCreatedDescs.find(id) == mUserCreatedDescs.end())
 				throw Exception(Exception::ERR_FACTORY,"Cannot get Desc with id \"" + id + "\", it does not exist!","DescManager::getDesc");
@@ -139,9 +139,9 @@ namespace QuickGUI
 		virtual ~DescManager();
 
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String,Desc*> mUserCreatedDescs;
+		std::unordered_map<std::string,Desc*> mUserCreatedDescs;
 #else
-		std::map<Ogre::String,Desc*> mUserCreatedDescs;
+		std::map<std::string,Desc*> mUserCreatedDescs;
 #endif
 
 		ButtonDesc* mDefaultButtonDesc;

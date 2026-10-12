@@ -5,12 +5,12 @@
 
 namespace QuickGUI
 {
-	const Ogre::String CheckBox::CHECKED = "checked";
-	const Ogre::String CheckBox::CHECKED_DOWN = "checked_down";
-	const Ogre::String CheckBox::CHECKED_OVER = "checked_over";
-	const Ogre::String CheckBox::UNCHECKED = "unchecked";
-	const Ogre::String CheckBox::UNCHECKED_DOWN = "unchecked_down";
-	const Ogre::String CheckBox::UNCHECKED_OVER = "unchecked_over";
+	const std::string CheckBox::CHECKED = "checked";
+	const std::string CheckBox::CHECKED_DOWN = "checked_down";
+	const std::string CheckBox::CHECKED_OVER = "checked_over";
+	const std::string CheckBox::UNCHECKED = "unchecked";
+	const std::string CheckBox::UNCHECKED_DOWN = "unchecked_down";
+	const std::string CheckBox::UNCHECKED_OVER = "unchecked_over";
 
 	void CheckBox::registerSkinDefinition()
 	{
@@ -69,7 +69,7 @@ namespace QuickGUI
 		}
 	}
 
-	CheckBox::CheckBox(const Ogre::String& name) :
+	CheckBox::CheckBox(const std::string& name) :
 		Widget(name)
 	{
 		Widget::addWidgetEventHandler(WIDGET_EVENT_MOUSE_ENTER,&CheckBox::onMouseEnter,this);
@@ -103,7 +103,7 @@ namespace QuickGUI
 		setChecked(cbd->checkbox_checked);
 	}
 
-	void CheckBox::addUserDefinedCheckBoxEventHandler(CheckBoxEvent EVENT, const Ogre::String& handlerName)
+	void CheckBox::addUserDefinedCheckBoxEventHandler(CheckBoxEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->checkbox_userHandlers[EVENT] = handlerName;
 	}
@@ -118,7 +118,7 @@ namespace QuickGUI
 		mDesc->checkbox_userHandlers[EVENT] = "";
 	}
 
-	Ogre::String CheckBox::getClass()
+	std::string CheckBox::getClass()
 	{
 		return "CheckBox";
 	}

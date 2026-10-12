@@ -17,7 +17,7 @@ namespace QuickGUI
 		public Serializable
 	{
 	public:
-		SkinElement(const Ogre::String& elementName);
+		SkinElement(const std::string& elementName);
 
 		/**
 		* Returns the UV coordinates of the Background.
@@ -38,7 +38,7 @@ namespace QuickGUI
 		/**
 		* Returns the name of the SkinElement.
 		*/
-		Ogre::String getName();
+		std::string getName();
 		/**
 		* Returns the texture of the skin element as an Ogre Image object.
 		*/
@@ -46,7 +46,7 @@ namespace QuickGUI
 		/**
 		* Returns the Texture name representing the SkinElement.
 		*/
-		Ogre::String getTextureName();
+		std::string getTextureName();
 		/**
 		* Returns true if the background texture is tiled when drawn,
 		* false if background texture is stretched when drawn.
@@ -78,7 +78,7 @@ namespace QuickGUI
 		/**
 		* Sets the Texture name representing the SkinElement.
 		*/
-		void setTextureName(const Ogre::String& textureName);
+		void setTextureName(const std::string& textureName);
 		/**
 		* Set true if the Background texture should be tiled when drawn.  Set
 		* false if the Background texture should be stretched when drawn.
@@ -91,9 +91,9 @@ namespace QuickGUI
 		void setTileBorders(bool tile);
 
 	protected:
-		Ogre::String mName;
+		std::string mName;
 
-		Ogre::String mTextureName;
+		std::string mTextureName;
 
 		bool mTileBackground;
 		bool mTileBorders;

@@ -4,7 +4,7 @@
 #include "QuickGUIExportDLL.h"
 #include "QuickGUIText.h"
 
-#include "OgreUTFString.h"
+#include "QuickGUIUTFString.h"
 
 #include <vector>
 

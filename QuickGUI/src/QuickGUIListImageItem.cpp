@@ -37,7 +37,7 @@ namespace QuickGUI
 		b->IO("TileImage",&listimageitem_tileImage);
 	}
 
-	ListImageItem::ListImageItem(const Ogre::String& name) :
+	ListImageItem::ListImageItem(const std::string& name) :
 		ListItem(name)
 	{
 	}
@@ -59,12 +59,12 @@ namespace QuickGUI
 		setTileImage(ltid->listimageitem_tileImage);
 	}
 
-	Ogre::String ListImageItem::getClass()
+	std::string ListImageItem::getClass()
 	{
 		return "ListImageItem";
 	}
 
-	Ogre::String ListImageItem::getImageName()
+	std::string ListImageItem::getImageName()
 	{
 		return mDesc->listimageitem_imageName;
 	}
@@ -106,7 +106,7 @@ namespace QuickGUI
 		}
 	}
 
-	void ListImageItem::setImage(const Ogre::String& name)
+	void ListImageItem::setImage(const std::string& name)
 	{
 		mDesc->listimageitem_imageName = name;
 

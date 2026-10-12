@@ -8,7 +8,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ToolBar::BACKGROUND = "background";
+	const std::string ToolBar::BACKGROUND = "background";
 
 	void ToolBar::registerSkinDefinition()
 	{
@@ -42,7 +42,7 @@ namespace QuickGUI
 		b->IO("ItemLayout",&toolbar_itemLayout);
 	}
 
-	ToolBar::ToolBar(const Ogre::String& name) :
+	ToolBar::ToolBar(const std::string& name) :
 		ContainerWidget(name),
 		mCurrentState(TOOLBAR_STATE_DEFAULT),
 		mMenuOpened(false)
@@ -158,7 +158,7 @@ namespace QuickGUI
 		mMenuOpened = false;
 	}
 
-	Menu* ToolBar::createMenu(const Ogre::UTFString& text, int index)
+	Menu* ToolBar::createMenu(const UTFString& text, int index)
 	{
 		MenuDesc* d = DescManager::getSingletonPtr()->getDefaultMenuDesc();
 		d->resetToDefault();
@@ -206,7 +206,7 @@ namespace QuickGUI
 		throw Exception(0,"Not Implemented","ToolBar::destroyItem");
 	}
 
-	Ogre::String ToolBar::getClass()
+	std::string ToolBar::getClass()
 	{
 		return "ToolBar";
 	}

@@ -4,7 +4,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Label::BACKGROUND = "background";
+	const std::string Label::BACKGROUND = "background";
 
 	void Label::registerSkinDefinition()
 	{
@@ -43,7 +43,7 @@ namespace QuickGUI
 		TextUserDesc::serialize(b);
 	}
 
-	Label::Label(const Ogre::String& name) :
+	Label::Label(const std::string& name) :
 		Widget(name),
 		TextUser()
 	{
@@ -89,7 +89,7 @@ namespace QuickGUI
 		TextUser::_initialize(this,mDesc);
 	}
 
-	Ogre::String Label::getClass()
+	std::string Label::getClass()
 	{
 		return "Label";
 	}

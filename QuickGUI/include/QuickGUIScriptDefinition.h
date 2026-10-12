@@ -27,17 +27,17 @@ namespace QuickGUI
 		/**
 		* Performs a recursive search to find a definition of the type and id given.
 		*/
-		ScriptDefinition* findDefinition(const Ogre::String& type, const Ogre::String& id);
+		ScriptDefinition* findDefinition(const std::string& type, const std::string& id);
 
 		std::list<ScriptDefinition*> getDefinitions();
-		std::list<ScriptDefinition*> getDefinitions(const Ogre::String& type);
+		std::list<ScriptDefinition*> getDefinitions(const std::string& type);
 		/**
 		* Searches through immediate sub definitions and returns the definition matching given type and id, if it exists.
 		*/
-		ScriptDefinition* getDefinition(const Ogre::String& type, const Ogre::String& id);
-		Ogre::String getID();
-		Ogre::String getType();
-		DefinitionProperty* getProperty(const Ogre::String& propertyName);
+		ScriptDefinition* getDefinition(const std::string& type, const std::string& id);
+		std::string getID();
+		std::string getType();
+		DefinitionProperty* getProperty(const std::string& propertyName);
 		std::list<DefinitionProperty*> getProperties();
 
 		/**
@@ -47,25 +47,25 @@ namespace QuickGUI
 		bool isEmpty();
 
 	protected:
-		ScriptDefinition(const Ogre::String& type, const Ogre::String& id);
+		ScriptDefinition(const std::string& type, const std::string& id);
 		~ScriptDefinition();
 
-		Ogre::String mType;
-		Ogre::String mID;
+		std::string mType;
+		std::string mID;
 
 		ScriptDefinition* mParentDefinition;
 
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > mSubDefinitions;
+		std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> > mSubDefinitions;
 #else
-		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mSubDefinitions;
+		std::map<std::string, std::map<std::string,ScriptDefinition*> > mSubDefinitions;
 #endif
 		std::list<ScriptDefinition*> mSubDefinitionsInOrder;
 
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String, DefinitionProperty*> mProperties;
+		std::unordered_map<std::string, DefinitionProperty*> mProperties;
 #else
-		std::map<Ogre::String, DefinitionProperty*> mProperties;
+		std::map<std::string, DefinitionProperty*> mProperties;
 #endif
 
 	private:

@@ -35,7 +35,7 @@ namespace QuickGUI
 		static ScriptReader* getSingletonPtr(void);
 
 		float getLoadingOrder() const;
-		const Ogre::StringVector& getScriptPatterns() const;
+		const std::vector<std::string>& getScriptPatterns() const;
 
 		/**
 		* Starts isolated parsing.  All files parsed between 'begin' and 'end' create temporary
@@ -49,21 +49,21 @@ namespace QuickGUI
 		/**
 		* Performs a recursive search to find a definition of the type and id given.
 		*/
-		ScriptDefinition* findDefinition(const Ogre::String& type, const Ogre::String& id);
+		ScriptDefinition* findDefinition(const std::string& type, const std::string& id);
 
 		std::list<ScriptDefinition*> getDefinitions();
-		std::list<ScriptDefinition*> getDefinitions(const Ogre::String& type);
-		ScriptDefinition* getDefinition(const Ogre::String& type, const Ogre::String& id);
+		std::list<ScriptDefinition*> getDefinitions(const std::string& type);
+		ScriptDefinition* getDefinition(const std::string& type, const std::string& id);
 
 		/**
 		* Parses a file and returns all definitions found in the file.
 		*/
-		std::list<ScriptDefinition*> parseFile(const Ogre::String& fileName);
+		std::list<ScriptDefinition*> parseFile(const std::string& fileName);
 
-		void parseScript(Ogre::DataStreamPtr &stream, const Ogre::String &groupName);
-//		void parseScript(std::ifstream& stream, const Ogre::String& groupName);
+		void parseScript(Ogre::DataStreamPtr &stream, const std::string &groupName);
+//		void parseScript(std::ifstream& stream, const std::string& groupName);
 
-		std::list<ScriptDefinition*> parseString(const Ogre::String& s);
+		std::list<ScriptDefinition*> parseString(const std::string& s);
 
 	protected:
 		ScriptReader();
@@ -74,16 +74,16 @@ namespace QuickGUI
 		static ScriptReader* mSingletonPtr;
 
 		float mLoadOrder;
-		Ogre::StringVector mScriptPatterns;
+		std::vector<std::string> mScriptPatterns;
 
 		std::vector<Token> mTokens;
 
 		bool mBegin;
 
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
+		std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> > mTempDefinitions;
 #else
-		std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mTempDefinitions;
+		std::map<std::string, std::map<std::string,ScriptDefinition*> > mTempDefinitions;
 #endif
 		
 
@@ -91,32 +91,32 @@ namespace QuickGUI
 		* Reads through a string and converts it to tokens.
 		* The tokens are added to the token list.
 		*/
-		void _convertToTokens(Ogre::String s, std::vector<Token>& tokenList);
+		void _convertToTokens(std::string s, std::vector<Token>& tokenList);
 
 		// Organized by script definition type, then name
 #if USEHASHMAPS
-	std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> > mDefinitions;
+	std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> > mDefinitions;
 #else
-	std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> > mDefinitions;
+	std::map<std::string, std::map<std::string,ScriptDefinition*> > mDefinitions;
 #endif
 		
 		/**
 		* Iterates through tokens and creates Definitions and Properties.
 		*/
 #if USEHASHMAPS
-		void _createDefinitions(std::vector<Token>& tokenList, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
-		ScriptDefinition* _findDefinition(const Ogre::String& type, const Ogre::String& id, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
-		ScriptDefinition* _getDefinition(const Ogre::String& type, const Ogre::String& id, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >& defList);
+		void _createDefinitions(std::vector<Token>& tokenList, std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >& defList);
+		ScriptDefinition* _findDefinition(const std::string& type, const std::string& id, std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >& defList);
+		ScriptDefinition* _getDefinition(const std::string& type, const std::string& id, std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(const std::string& type, std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >& defList);
 
 		
 #else
-		void _createDefinitions(std::vector<Token>& tokenList, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
-		ScriptDefinition* _findDefinition(const Ogre::String& type, const Ogre::String& id, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
-		ScriptDefinition* _getDefinition(const Ogre::String& type, const Ogre::String& id, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);
-		std::list<ScriptDefinition*> _getDefinitions(const Ogre::String& type, std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >& defList);		
+		void _createDefinitions(std::vector<Token>& tokenList, std::map<std::string, std::map<std::string,ScriptDefinition*> >& defList);
+		ScriptDefinition* _findDefinition(const std::string& type, const std::string& id, std::map<std::string, std::map<std::string,ScriptDefinition*> >& defList);
+		ScriptDefinition* _getDefinition(const std::string& type, const std::string& id, std::map<std::string, std::map<std::string,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(std::map<std::string, std::map<std::string,ScriptDefinition*> >& defList);
+		std::list<ScriptDefinition*> _getDefinitions(const std::string& type, std::map<std::string, std::map<std::string,ScriptDefinition*> >& defList);		
 #endif
 		
 	};

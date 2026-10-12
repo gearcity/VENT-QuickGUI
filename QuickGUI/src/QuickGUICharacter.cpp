@@ -4,7 +4,7 @@
 
 namespace QuickGUI
 {
-	Character::Character(Ogre::UTFString::code_point cp, const Font& f, ColourValue cv) :
+	Character::Character(UTFString::code_point cp, const Font& f, ColourValue cv) :
 		codePoint(cp),
 		colorValue(cv.r,cv.g,cv.b,cv.a),
 		font(&f),
@@ -15,7 +15,7 @@ namespace QuickGUI
 		setFont(f);
 	}
 
-	Character::Character(Ogre::UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv) :
+	Character::Character(UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv) :
 		codePoint(cp),
 		colorValue(cv.r,cv.g,cv.b,cv.a),
 		font(&Root::getSingleton().getFont(fp->getName())),

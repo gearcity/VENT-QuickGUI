@@ -15,17 +15,17 @@ namespace QuickGUI
 		virtual ~ListImageItemDesc() {}
 	public:
 
-		Ogre::String listimageitem_imageName;
+		std::string listimageitem_imageName;
 		bool listimageitem_tileImage;
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ListImageItemDesc"; }
+		virtual std::string getClass() { return "ListImageItemDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ListImageItem"; }
+		virtual std::string getWidgetClass() { return "ListImageItem"; }
 
 		/**
 		* Restore properties to default values
@@ -59,11 +59,11 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the name of the image file used for display.
 		*/
-		Ogre::String getImageName();
+		std::string getImageName();
 		/**
 		* Returns true if image is tiled within client dimensions, false otherwise.
 		*/
@@ -75,14 +75,14 @@ namespace QuickGUI
 		* NOTE: Image must be listed within an Ogre resource directory.
 		* NOTE: Setting the name to "" will result in only the background showing.
 		*/
-		void setImage(const Ogre::String& name);
+		void setImage(const std::string& name);
 		/**
 		* Sets whether or not Image will tile within client dimensions.
 		*/
 		void setTileImage(bool tile);
 
 	protected:
-		ListImageItem(const Ogre::String& name);
+		ListImageItem(const std::string& name);
 		virtual ~ListImageItem();
 
 		ListImageItemDesc* mDesc;

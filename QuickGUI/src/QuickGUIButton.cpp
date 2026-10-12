@@ -5,9 +5,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Button::DEFAULT = "default";
-	const Ogre::String Button::OVER = "over";
-	const Ogre::String Button::DOWN = "down";
+	const std::string Button::DEFAULT = "default";
+	const std::string Button::OVER = "over";
+	const std::string Button::DOWN = "down";
 
 	void Button::registerSkinDefinition()
 	{
@@ -46,7 +46,7 @@ namespace QuickGUI
 		b->IO("TileImage",&button_tileImage);
 	}
 
-	Button::Button(const Ogre::String& name) :
+	Button::Button(const std::string& name) :
 		Label(name)
 	{
 	}
@@ -73,12 +73,12 @@ namespace QuickGUI
 		Widget::addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_UP,&Button::onMouseLeftButtonUp,this);
 	}
 
-	Ogre::String Button::getClass()
+	std::string Button::getClass()
 	{
 		return "Button";
 	}
 
-	Ogre::String Button::getImageName()
+	std::string Button::getImageName()
 	{
 		return mDesc->button_imageName;
 	}
@@ -189,7 +189,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Button::setImage(const Ogre::String& name)
+	void Button::setImage(const std::string& name)
 	{
 		mDesc->button_imageName = name;
 
@@ -206,21 +206,21 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void Button::setText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
+	void Button::setText(UTFString s, const Font& font, const ColourValue& cv)
 	{
 		mText->setAllottedWidth(mClientDimensions.size.width);
 
 		TextUser::setText(s,font,cv);
 	}
 
-	void Button::setText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void Button::setText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
 		mText->setAllottedWidth(mClientDimensions.size.width);
 
 		TextUser::setText(s,fontName,cv);
 	}
 
-	void Button::setText(Ogre::UTFString s)
+	void Button::setText(UTFString s)
 	{
 		mText->setAllottedWidth(mClientDimensions.size.width);
 
@@ -270,17 +270,17 @@ namespace QuickGUI
 		return hiddenInt;
 	}
 
-	void Button::setHiddenString(Ogre::String str)
+	void Button::setHiddenString(std::string str)
 	{
 		hiddenString = str;
 	}
 
-	Ogre::String Button::getHiddenString()
+	std::string Button::getHiddenString()
 	{
 		return hiddenString;
 	}
 
-	void Button::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Button::setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
 	{
 		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}

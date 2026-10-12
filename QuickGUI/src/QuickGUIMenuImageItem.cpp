@@ -7,9 +7,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String MenuImageItem::DEFAULT = "default";
-	const Ogre::String MenuImageItem::DOWN = "down";
-	const Ogre::String MenuImageItem::OVER = "over";
+	const std::string MenuImageItem::DEFAULT = "default";
+	const std::string MenuImageItem::DOWN = "down";
+	const std::string MenuImageItem::OVER = "over";
 
 	void MenuImageItem::registerSkinDefinition()
 	{
@@ -38,7 +38,7 @@ namespace QuickGUI
 		MenuItemDesc::serialize(b);
 	}
 
-	MenuImageItem::MenuImageItem(const Ogre::String& name) :
+	MenuImageItem::MenuImageItem(const std::string& name) :
 		MenuItem(name)
 	{
 	}
@@ -61,7 +61,7 @@ namespace QuickGUI
 		setWidth(mSkinElement->getWidth());
 	}
 
-	Ogre::String MenuImageItem::getClass()
+	std::string MenuImageItem::getClass()
 	{
 		return "MenuImageItem";
 	}

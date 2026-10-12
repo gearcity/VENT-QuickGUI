@@ -19,10 +19,10 @@ namespace QuickGUI
 			TYPE_OPENBRACE
 		};
 	public:
-		Token(Type t, Ogre::String s) : type(t), value(s) {}
+		Token(Type t, std::string s) : type(t), value(s) {}
 		
 		Type type;
-		Ogre::String value;
+		std::string value;
 	};
 }
 

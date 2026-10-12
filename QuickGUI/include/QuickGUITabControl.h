@@ -14,7 +14,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -34,7 +34,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedTabControlEventHandler(TabControlEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedTabControlEventHandler(TabControlEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: BUTTON_EVENT_STATE_CHANGED, etc.
@@ -65,11 +65,11 @@ namespace QuickGUI
 		* Creates a child TabPage.
 		*/
 		TabPage* createTabPage(int index = -1);
-		TabPage* createTabPage(const Ogre::UTFString& text, int index = -1);
+		TabPage* createTabPage(const UTFString& text, int index = -1);
 		TabPage* createTabPage(std::vector<TextSegment> segments, int index = -1);
-		TabPage* createTabPageWithIcon(const Ogre::String& imageName, int index = -1);
-		TabPage* createTabPageWithIcon(const Ogre::String& imageName, const Ogre::UTFString& text, int index = -1);
-		TabPage* createTabPageWithIcon(const Ogre::String& imageName, std::vector<TextSegment> segments, int index = -1);
+		TabPage* createTabPageWithIcon(const std::string& imageName, int index = -1);
+		TabPage* createTabPageWithIcon(const std::string& imageName, const UTFString& text, int index = -1);
+		TabPage* createTabPageWithIcon(const std::string& imageName, std::vector<TextSegment> segments, int index = -1);
 
 		/**
 		* Removes an TabPage from the TabControl.
@@ -91,7 +91,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the currently selected TabPage.
 		*/
@@ -175,7 +175,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		TabControl(const Ogre::String& name);
+		TabControl(const std::string& name);
 		virtual ~TabControl();
 
 		// Pointer pointing to mWidgetDesc object, but casted for quick use.

@@ -27,11 +27,11 @@ namespace QuickGUI
 
 		bool					window_titleBar;
 		bool					window_titleBarDragable;
-		Ogre::String			window_titleBarSkinType;
+		std::string			window_titleBarSkinType;
 		bool					window_titleBarCloseButton;
 		/// number of pixels between from the top, bottom, and right of TitleBar right end
 		float					window_titleBarCloseButtonPadding;
-		Ogre::String			window_titleBarCloseButtonSkinType;
+		std::string			window_titleBarCloseButtonSkinType;
 
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment	window_titlebarVerticalTextAlignment;
@@ -39,11 +39,11 @@ namespace QuickGUI
 		/// Describes the Text used in this Window's TitleBar
 		TextDesc				textDesc;
 
-		virtual Ogre::String getClass() { return "WindowDesc"; }
+		virtual std::string getClass() { return "WindowDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Window"; }
+		virtual std::string getWidgetClass() { return "Window"; }
 
 		/**
 		* Restore properties to default values
@@ -61,8 +61,8 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String TITLEBAR;
+		static const std::string BACKGROUND;
+		static const std::string TITLEBAR;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -127,7 +127,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns true if the TitleBar is dragable, false otherwise.
 		*/
@@ -135,7 +135,7 @@ namespace QuickGUI
 		/**
 		* Gets the TitleBar's text in UTFString form.
 		*/
-		Ogre::UTFString getTitleBarText();
+		UTFString getTitleBarText();
 		/**
 		* Returns the filtering used when drawing the text of this widget.
 		*/
@@ -164,7 +164,7 @@ namespace QuickGUI
 		/**
 		* Writes the windows generated texture to file.
 		*/
-		void saveTextureToFile(const Ogre::String& filename);
+		void saveTextureToFile(const std::string& filename);
 		/**
 		* Moves the Window to the beginning of the list, meaning it will be drawn first, underneath any other windows.
 		*/
@@ -173,13 +173,13 @@ namespace QuickGUI
 		* Sets the name of the Widget.  If the name is already taken, it will be resolved,
 		* with a different name.  The resolved name is returned by the function.
 		*/
-		virtual Ogre::String setName(const Ogre::String& name);
+		virtual std::string setName(const std::string& name);
 		/**
 		* Sets the "type" of this widget.  For example you
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 		/**
 		* Sets whether the titlebar can be dragged, in effect dragging the window.
 		*/
@@ -187,17 +187,17 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
-		void setTitleBarText(Ogre::UTFString s);
+		void setTitleBarText(UTFString s);
 		/**
 		* Sets the text for this object.
 		*/
-		void setTitleBarText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void setTitleBarText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void setTitleBarText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setTitleBarText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		void setTitleBarText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void setTitleBarText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Sets the Text using Text Segments.
 		*/
@@ -223,24 +223,24 @@ namespace QuickGUI
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setTitleBarTextColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setTitleBarTextColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setTitleBarTextColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences);
+		void setTitleBarTextColor(const ColourValue& cv, UTFString s, bool allOccurrences);
 		/**
 		* Sets all characters of the text to the specified font.
 		*/
-		void setTitleBarTextFont(const Ogre::String& fontName);
+		void setTitleBarTextFont(const std::string& fontName);
 		/**
 		* Sets the character at the index given to the specified font.
 		*/
-		void setTitleBarTextFont(const Ogre::String& fontName, unsigned int index);
+		void setTitleBarTextFont(const std::string& fontName, unsigned int index);
 		/**
 		* Sets all characters within the defined range to the specified font.
 		*/
-		void setTitleBarTextFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex);
+		void setTitleBarTextFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex);
 /**
 		*Kill fucking chilrend because it's not in QUICKGUI PANEl >:|
 		**/
@@ -250,12 +250,12 @@ namespace QuickGUI
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
 
-		void setTitleBarTextFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setTitleBarTextFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setTitleBarTextFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences);
+		void setTitleBarTextFont(const std::string& fontName, UTFString s, bool allOccurrences);
 		/**
 		* Sets the filtering used when drawing the text.
 		*/
@@ -300,7 +300,7 @@ namespace QuickGUI
 
 		
 	protected:
-		Window(const Ogre::String& name);
+		Window(const std::string& name);
 		virtual ~Window();
 
 		WindowDesc* mDesc;

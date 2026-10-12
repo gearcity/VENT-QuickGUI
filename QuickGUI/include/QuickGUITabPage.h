@@ -16,11 +16,11 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String TAB;
-		static const Ogre::String TAB_DISABLED;
-		static const Ogre::String TAB_OVER;
-		static const Ogre::String TAB_SELECTED;
-		static const Ogre::String PAGE;
+		static const std::string TAB;
+		static const std::string TAB_DISABLED;
+		static const std::string TAB_OVER;
+		static const std::string TAB_SELECTED;
+		static const std::string PAGE;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -52,7 +52,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the tabpage_index of the ListItem in its owner List.
 		*/
@@ -100,29 +100,29 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 		/**
 		* Sets all characters of the text to the specified font.
 		*/
-		void setTabFont(const Ogre::String& fontName);
+		void setTabFont(const std::string& fontName);
 		/**
 		* Sets the character at the index given to the specified font.
 		*/
-		void setTabFont(const Ogre::String& fontName, unsigned int index);
+		void setTabFont(const std::string& fontName, unsigned int index);
 		/**
 		* Sets all characters within the defined range to the specified font.
 		*/
-		void setTabFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex);
+		void setTabFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex);
 		/**
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setTabFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setTabFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setTabFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences);
+		void setTabFont(const std::string& fontName, UTFString s, bool allOccurrences);
 		/**
 		* Sets the height of this tab.
 		*/
@@ -130,17 +130,17 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
-		void setTabText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		void setTabText(UTFString s, const Font& font, const ColourValue& cv);
 		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
-		void setTabText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setTabText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		void setTabText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void setTabText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/
-		void setTabText(Ogre::UTFString s);
+		void setTabText(UTFString s);
 		/**
 		* Sets whether the widget will receive mouse over events simply by having the mouse over
 		* its texture widget_dimensions, or only when the cursor is over non transparent parts.
@@ -153,7 +153,7 @@ namespace QuickGUI
 		virtual void updateClientDimensions();
 
 	protected:
-		TabPage(const Ogre::String& name);
+		TabPage(const std::string& name);
 		virtual ~TabPage();
 
 		Tab* mTab;

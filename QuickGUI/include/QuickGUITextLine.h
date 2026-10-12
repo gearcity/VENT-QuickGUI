@@ -64,13 +64,13 @@ namespace QuickGUI
 		/**
 		* Sets whether or not the Text will be masked. (password box)
 		*/
-		void setMaskText(bool mask, Ogre::UTFString::code_point maskSymbol);
+		void setMaskText(bool mask, UTFString::code_point maskSymbol);
 
 	protected:
 		Point mPosition;
 
 		bool mMaskText;
-		Ogre::UTFString::code_point mMaskSymbol;
+		UTFString::code_point mMaskSymbol;
 
 		std::vector<Character*> mCharacters;
 

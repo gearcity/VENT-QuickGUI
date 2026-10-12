@@ -21,11 +21,11 @@ namespace QuickGUI
 		Widget* menupanel_owner;
 		float	menupanel_maxHeight;
 
-		virtual Ogre::String getClass() { return "MenuPanelDesc"; }
+		virtual std::string getClass() { return "MenuPanelDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "MenuPanel"; }
+		virtual std::string getWidgetClass() { return "MenuPanel"; }
 
 		/**
 		* Restore properties to default values
@@ -41,7 +41,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -76,7 +76,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the owner of the MenuPanel.
 		*/
@@ -107,7 +107,7 @@ namespace QuickGUI
 		virtual void updateClientDimensions();
 
 	protected:
-		MenuPanel(const Ogre::String& name);
+		MenuPanel(const std::string& name);
 		virtual ~MenuPanel();
 
 		MenuPanelDesc* mDesc;

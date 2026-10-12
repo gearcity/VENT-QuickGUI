@@ -58,7 +58,7 @@ namespace QuickGUI
 		mPosition = p;
 		mPosition.roundUp();
 		Brush* brush = Brush::getSingletonPtr();
-		Ogre::String currentTexture = "TextSelection";
+		std::string currentTexture = "TextSelection";
 
 		// Render any quads queued for drawing.
 		brush->endRectQueue();
@@ -272,7 +272,7 @@ namespace QuickGUI
 		return (lastCharacter->getBaseline() + lastCharacter->getAdvance()) - firstCharacter->getBaseline();
 	}
 
-	void TextLine::setMaskText(bool mask, Ogre::UTFString::code_point maskSymbol)
+	void TextLine::setMaskText(bool mask, UTFString::code_point maskSymbol)
 	{
 		mMaskText = mask;
 		mMaskSymbol = maskSymbol;

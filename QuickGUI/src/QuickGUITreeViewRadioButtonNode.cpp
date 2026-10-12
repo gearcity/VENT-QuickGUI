@@ -8,7 +8,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TreeViewRadioButtonNode::RADIOBUTTON = "radiobutton";
+	const std::string TreeViewRadioButtonNode::RADIOBUTTON = "radiobutton";
 
 	void TreeViewRadioButtonNode::registerSkinDefinition()
 	{
@@ -62,7 +62,7 @@ namespace QuickGUI
 		}
 	}
 
-	TreeViewRadioButtonNode::TreeViewRadioButtonNode(const Ogre::String& name) :
+	TreeViewRadioButtonNode::TreeViewRadioButtonNode(const std::string& name) :
 		TreeViewNode(name),
 		mRadioButton(NULL)
 	{
@@ -105,7 +105,7 @@ namespace QuickGUI
 			selectRadioButton();
 	}
 
-	void TreeViewRadioButtonNode::addUserDefinedTreeViewRadioButtonNodeEventHandler(TreeViewRadioButtonNodeEvent EVENT, const Ogre::String& handlerName)
+	void TreeViewRadioButtonNode::addUserDefinedTreeViewRadioButtonNodeEventHandler(TreeViewRadioButtonNodeEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->treeviewradiobuttonnode_userHandlers[EVENT] = handlerName;
 	}
@@ -138,7 +138,7 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String TreeViewRadioButtonNode::getClass()
+	std::string TreeViewRadioButtonNode::getClass()
 	{
 		return "TreeViewRadioButtonNode";
 	}

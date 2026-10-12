@@ -245,7 +245,7 @@ namespace QuickGUI
 		OGRE_DELETE Brush::getSingletonPtr();
 		OGRE_DELETE SkinDefinitionManager::getSingletonPtr();
 
-		for(std::map<Ogre::String,Font*>::iterator it = mFonts.begin(); it != mFonts.end(); ++it)
+		for(std::map<std::string,Font*>::iterator it = mFonts.begin(); it != mFonts.end(); ++it)
 		{
 			OGRE_DELETE_T((*it).second,Font,Ogre::MEMCATEGORY_GENERAL);
 		}
@@ -267,7 +267,7 @@ namespace QuickGUI
 	{
 		++mGUIManagerCounter;
 
-		Ogre::String previousName = d.name;
+		std::string previousName = d.name;
 
 		// If name string is empty, generate a name for the GUIManager.
 		if(d.name == "")
@@ -328,14 +328,14 @@ namespace QuickGUI
 		return mDefaultColor;
 	}
 
-	Ogre::String Root::getDefaultFontName()
+	std::string Root::getDefaultFontName()
 	{
 		return mDefaultFontName;
 	}
 
-	const Font& Root::getFont(const Ogre::String& fontName)
+	const Font& Root::getFont(const std::string& fontName)
 	{
-		std::map<Ogre::String,Font*>::iterator it = mFonts.find(fontName);
+		std::map<std::string,Font*>::iterator it = mFonts.find(fontName);
 		if(it != mFonts.end())
 		{
 			return *(it->second);
@@ -400,7 +400,7 @@ namespace QuickGUI
 		mDefaultColor = cv;
 	}
 
-	void Root::setDefaultFontName(const Ogre::String& fontName)
+	void Root::setDefaultFontName(const std::string& fontName)
 	{
 		getFont(fontName);
 		mDefaultFontName = fontName;

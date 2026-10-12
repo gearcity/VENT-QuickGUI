@@ -10,16 +10,16 @@
 #include "OgreTexture.h"
 
 #include "OgreColourValue.h"
-#include "OgreUTFString.h"
+#include "QuickGUIUTFString.h"
 
 namespace QuickGUI
 {
 	class _QuickGUIExport Character
 	{
 	public:
-		Character(Ogre::UTFString::code_point cp, const Font& f, ColourValue cv);
+		Character(UTFString::code_point cp, const Font& f, ColourValue cv);
 		QUICKGUI_DEPRECATED("Use the constructor that takes a Font from Root::getFont.")
-		Character(Ogre::UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv);		
+		Character(UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv);		
 
 		/**
 		* Returns true if this character is highlighted, false otherwise.
@@ -67,7 +67,7 @@ namespace QuickGUI
 		float getBearing() const { return mBearing; }
 
 		/// Code point of the glyph
-		Ogre::UTFString::code_point codePoint;
+		UTFString::code_point codePoint;
 		/// Color of the character when drawn.
 		ColourValue colorValue;
 		/// Position is relative to the parent TextLine

@@ -3,7 +3,7 @@
 
 #include "QuickGUIExportDLL.h"
 
-#include "OgreUTFString.h"
+#include "QuickGUIUTFString.h"
 
 namespace QuickGUI
 {
@@ -11,7 +11,7 @@ namespace QuickGUI
 	{
 	public:
 		virtual ~TextInputValidatorSlot() {};
-		virtual bool isInputValid(Ogre::UTFString::code_point cp, unsigned int index, const Ogre::UTFString& currentText) = 0;
+		virtual bool isInputValid(UTFString::code_point cp, unsigned int index, const UTFString& currentText) = 0;
 	};
 
 	template<typename T>
@@ -19,7 +19,7 @@ namespace QuickGUI
 		public TextInputValidatorSlot
 	{
 	public:
-		typedef bool (T::*TextInputValidator)(Ogre::UTFString::code_point cp, unsigned int index, const Ogre::UTFString& currentText);
+		typedef bool (T::*TextInputValidator)(UTFString::code_point cp, unsigned int index, const UTFString& currentText);
 	public:
 		TextInputValidatorPointer() :
 			d_undefined(true),
@@ -32,7 +32,7 @@ namespace QuickGUI
 		{}
 		virtual ~TextInputValidatorPointer() {}
 
-		bool isInputValid(Ogre::UTFString::code_point cp, unsigned int index, const Ogre::UTFString& currentText)
+		bool isInputValid(UTFString::code_point cp, unsigned int index, const UTFString& currentText)
 		{
 			if(!d_undefined) 
 				return (d_object->*d_function)(cp,index,currentText);

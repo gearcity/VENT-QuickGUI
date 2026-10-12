@@ -28,12 +28,12 @@ namespace QuickGUI
 		* Executes the event handler registered under the name given.
 		* NOTE: If there is no event registered under this name, nothing handler will be called.
 		*/
-		void executEventHandler(const Ogre::String& handlerName, EventArgs& args);
+		void executEventHandler(const std::string& handlerName, EventArgs& args);
 
 		/** 
 		* Returns true if a handler is registered under the name given, false otherwise.
 		*/
-		bool hasEventHandler(const Ogre::String& handlerName);
+		bool hasEventHandler(const std::string& handlerName);
 
 		/** Registers an event handler
 			@param
@@ -52,24 +52,24 @@ namespace QuickGUI
 				You may see Visual Studio give an error warning such as "error C2660: 'QuickGUI::EventHandlerManager::addWidgetEventHandler' : function does not take 3 arguments".
 				This is an incorrect error message.  Make sure your function pointer points to a function which returns void, and takes parameter "const EventArgs&".
         */
-		template<typename T> void registerEventHandler(const Ogre::String& handlerName, void (T::*function)(const EventArgs&), T* obj)
+		template<typename T> void registerEventHandler(const std::string& handlerName, void (T::*function)(const EventArgs&), T* obj)
 		{
 			registerEventHandler(handlerName,OGRE_NEW_T(EventHandlerPointer<T>,Ogre::MEMCATEGORY_GENERAL)(function,obj));
 		}
-		void registerEventHandler(const Ogre::String& handlerName, EventHandlerSlot* function);
+		void registerEventHandler(const std::string& handlerName, EventHandlerSlot* function);
 
 		/**
 		* Removes the handler registered under the name given.
 		*/
-		void unregisterEventHandler(const Ogre::String& handlerName);
+		void unregisterEventHandler(const std::string& handlerName);
 
 	protected:
 		EventHandlerManager();
 		virtual ~EventHandlerManager();
 #if USEHASHMAPS
-		std::unordered_map<Ogre::String,EventHandlerSlot*> mUserDefinedEventHandlers;
+		std::unordered_map<std::string,EventHandlerSlot*> mUserDefinedEventHandlers;
 #else
-		std::map<Ogre::String,EventHandlerSlot*> mUserDefinedEventHandlers;
+		std::map<std::string,EventHandlerSlot*> mUserDefinedEventHandlers;
 #endif
 	private:
 	};

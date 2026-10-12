@@ -22,7 +22,7 @@ namespace QuickGUI
 
 		bool titlebar_closeButton;
 		float titlebar_closeButtonPadding;
-		Ogre::String titlebar_closeButtonSkinType;
+		std::string titlebar_closeButtonSkinType;
 
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment titlebar_verticalTextAlignment;
@@ -30,11 +30,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TitleBarDesc"; }
+		virtual std::string getClass() { return "TitleBarDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TitleBar"; }
+		virtual std::string getWidgetClass() { return "TitleBar"; }
 
 		/**
 		* Restore properties to default values
@@ -48,8 +48,8 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String CLOSE_BUTTON;
+		static const std::string BACKGROUND;
+		static const std::string CLOSE_BUTTON;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -66,7 +66,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the vertical alignment of text within this widget's client area.
 		*/
@@ -83,7 +83,7 @@ namespace QuickGUI
 		virtual void updateClientDimensions();
 
 	protected:
-		TitleBar(const Ogre::String& name);
+		TitleBar(const std::string& name);
 		virtual ~TitleBar();
 
 		Button* mCloseButton;

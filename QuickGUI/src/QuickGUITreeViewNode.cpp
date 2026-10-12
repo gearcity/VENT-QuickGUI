@@ -10,9 +10,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TreeViewNode::BACKGROUND = "background";
-	const Ogre::String TreeViewNode::ICON = "icon";
-	const Ogre::String TreeViewNode::SELECTED = "selected";
+	const std::string TreeViewNode::BACKGROUND = "background";
+	const std::string TreeViewNode::ICON = "icon";
+	const std::string TreeViewNode::SELECTED = "selected";
 
 	void TreeViewNode::registerSkinDefinition()
 	{
@@ -54,7 +54,7 @@ namespace QuickGUI
 		TextUserDesc::serialize(b);
 	}
 
-	TreeViewNode::TreeViewNode(const Ogre::String& name) :
+	TreeViewNode::TreeViewNode(const std::string& name) :
 		ContainerWidget(name),
 		TextUser(),
 		mExpanded(false),
@@ -179,7 +179,7 @@ namespace QuickGUI
 		return createNode("Node",index);
 	}
 	
-	TreeViewNode* TreeViewNode::createNode(const Ogre::UTFString& text, int index) 
+	TreeViewNode* TreeViewNode::createNode(const UTFString& text, int index) 
 	{
 		TreeViewNodeDesc* d = DescManager::getSingletonPtr()->getDefaultTreeViewNodeDesc();
 		d->resetToDefault();
@@ -210,7 +210,7 @@ namespace QuickGUI
 		return createCheckBoxNode("CheckBoxNode",index);
 	}
 
-	TreeViewCheckBoxNode* TreeViewNode::createCheckBoxNode(const Ogre::UTFString& text, int index) 
+	TreeViewCheckBoxNode* TreeViewNode::createCheckBoxNode(const UTFString& text, int index) 
 	{
 		TreeViewCheckBoxNodeDesc* d = DescManager::getSingletonPtr()->getDefaultTreeViewCheckBoxNodeDesc();
 		d->resetToDefault();
@@ -241,7 +241,7 @@ namespace QuickGUI
 		return createRadioButtonNode("RadioButtonNode",index);
 	}
 
-	TreeViewRadioButtonNode* TreeViewNode::createRadioButtonNode(const Ogre::UTFString& text, int index) 
+	TreeViewRadioButtonNode* TreeViewNode::createRadioButtonNode(const UTFString& text, int index) 
 	{
 		TreeViewRadioButtonNodeDesc* d = DescManager::getSingletonPtr()->getDefaultTreeViewRadioButtonNodeDesc();
 		d->resetToDefault();
@@ -362,9 +362,9 @@ namespace QuickGUI
 	Widget* TreeViewNode::findWidgetAtPoint(const Point& p, bool ignoreDisabled)
 	{
 		#if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
@@ -400,7 +400,7 @@ namespace QuickGUI
 		return height;
 	}
 
-	Ogre::String TreeViewNode::getClass()
+	std::string TreeViewNode::getClass()
 	{
 		return "TreeViewNode";
 	}
@@ -730,7 +730,7 @@ namespace QuickGUI
 		ContainerWidget::setHeight(pixelHeight);
 
 		// Determine width, based on the type and height
-		Ogre::String className = getClass();
+		std::string className = getClass();
 
 		// For TreeViewNode our width will be: [State][Icon][Text][5 pixel buffer]
 		if(className == "TreeViewNode")

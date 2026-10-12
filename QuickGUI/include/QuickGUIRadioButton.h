@@ -16,16 +16,16 @@ namespace QuickGUI
 	public:
 
 		bool			radiobutton_selected;
-		Ogre::String	radiobutton_userHandlers[RADIOBUTTON_EVENT_COUNT];
+		std::string	radiobutton_userHandlers[RADIOBUTTON_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "RadioButtonDesc"; }
+		virtual std::string getClass() { return "RadioButtonDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "RadioButton"; }
+		virtual std::string getWidgetClass() { return "RadioButton"; }
 
 		/**
 		* Restore properties to default values
@@ -43,12 +43,12 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String SELECTED;
-		static const Ogre::String SELECTED_DOWN;
-		static const Ogre::String SELECTED_OVER;
-		static const Ogre::String UNSELECTED;
-		static const Ogre::String UNSELECTED_DOWN;
-		static const Ogre::String UNSELECTED_OVER;
+		static const std::string SELECTED;
+		static const std::string SELECTED_DOWN;
+		static const std::string SELECTED_OVER;
+		static const std::string UNSELECTED;
+		static const std::string UNSELECTED_DOWN;
+		static const std::string UNSELECTED_OVER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -71,7 +71,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedRadioButtonEventHandler(RadioButtonEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedRadioButtonEventHandler(RadioButtonEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WIDGET_EVENT_SIZE_CHANGED, WIDGET_EVENT_MOUSE_WHEEL, etc.
@@ -112,7 +112,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 
 		/**
 		* Selects the RadioButton.
@@ -147,7 +147,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		RadioButton(const Ogre::String& name);
+		RadioButton(const std::string& name);
 		virtual ~RadioButton();
 
 		RadioButtonDesc* mDesc;

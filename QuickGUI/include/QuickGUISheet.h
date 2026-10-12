@@ -37,11 +37,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "SheetDesc"; }
+		virtual std::string getClass() { return "SheetDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Sheet"; }
+		virtual std::string getWidgetClass() { return "Sheet"; }
 
 		/**
 		* Restore properties to default values
@@ -64,7 +64,7 @@ namespace QuickGUI
 		// From WindowDesc, but not for use in Sheets
 		bool titleBar;
 		bool titleBarCloseButton;
-		Ogre::String titleBarType;
+		std::string titleBarType;
 	};
 
 	class _QuickGUIExport Sheet :
@@ -72,7 +72,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -141,7 +141,7 @@ namespace QuickGUI
 		ContextMenu* createContextMenu();
 		ContextMenu* createContextMenu(const Point& position);
 		ContextMenu* createContextMenu(const Size& size);
-		ContextMenu* createContextMenu(const Ogre::UTFString& titleBarText, const Size& size);
+		ContextMenu* createContextMenu(const UTFString& titleBarText, const Size& size);
 		ContextMenu* createContextMenu(std::vector<TextSegment> segments, const Size& size);
 		ContextMenu* createContextMenuNoTitleBar(const Size& size);
 		/**
@@ -151,7 +151,7 @@ namespace QuickGUI
 		ModalWindow* createModalWindow(ModalWindowDesc* d);
 		ModalWindow* createModalWindow();
 		ModalWindow* createModalWindow(const Rect& dimensions);
-		ModalWindow* createModalWindow(const Ogre::UTFString& titleBarText, const Rect& dimensions);
+		ModalWindow* createModalWindow(const UTFString& titleBarText, const Rect& dimensions);
 		ModalWindow* createModalWindow(std::vector<TextSegment> segments, const Rect& dimensions);
 		ModalWindow* createModalWindowNoTitleBar(const Rect& dimensions);
 		/**
@@ -161,7 +161,7 @@ namespace QuickGUI
 		Window* createWindow();
 		Window* createWindow(const Point& position);
 		Window* createWindow(const Rect& dimensions);
-		Window* createWindow(const Ogre::UTFString& titleBarText, const Rect& dimensions);
+		Window* createWindow(const UTFString& titleBarText, const Rect& dimensions);
 		Window* createWindow(std::vector<TextSegment> segments, const Rect& dimensions);
 		Window* createWindowNoTitleBar(const Rect& dimensions);
 
@@ -169,19 +169,19 @@ namespace QuickGUI
 		* Queues a widget for destruction.
 		* NOTE: Widget must not be attached to another widget.
 		*/
-		void destroyContextMenu(const Ogre::String& name);
+		void destroyContextMenu(const std::string& name);
 		void destroyContextMenu(ContextMenu* m);
-		void destroyModalWindow(const Ogre::String& name);
+		void destroyModalWindow(const std::string& name);
 		void destroyModalWindow(ModalWindow* w);
 		void destroyWidget(Widget* w);
-		void destroyWindow(const Ogre::String& name);
+		void destroyWindow(const std::string& name);
 		void destroyWindow(Window* w);
 
 		/**
 		* Recursively searches through children and returns first widget found with name given.
 		* NULL is returned if the widget is not found.
 		*/
-		virtual Widget* findWidget(const Ogre::String& name);
+		virtual Widget* findWidget(const std::string& name);
 		/**
 		* Returns the window at point p.  If ignoreDisabled is set to true,
 		* disabled windows will be ignored during the search.
@@ -197,36 +197,36 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
-		ContextMenu* getContextMenu(const Ogre::String& name);
+		virtual std::string getClass();
+		ContextMenu* getContextMenu(const std::string& name);
 		/**
 		* Returns the widget that should receive keyboard events;
 		*/
 		Widget* getKeyboardListener();
-		ModalWindow* getModalWindow(const Ogre::String& name);
-		Window* getWindow(const Ogre::String& name);
+		ModalWindow* getModalWindow(const std::string& name);
+		Window* getWindow(const std::string& name);
 		Window* getWindowInFocus();
 
 		/**
 		* Returns true if this sheet has a child contextmenu with the name given, false
 		* otherwise.
 		*/
-		bool hasContextMenu(const Ogre::String& name);
+		bool hasContextMenu(const std::string& name);
 		/**
 		* Returns true if this sheet has a child modal window with the name given, false
 		* otherwise.
 		*/
-		bool hasModalWindow(const Ogre::String& name);
+		bool hasModalWindow(const std::string& name);
 		/**
 		* Returns true if this sheet has a child window with the name given, false
 		* otherwise.
 		*/
-		bool hasWindow(const Ogre::String& name);
+		bool hasWindow(const std::string& name);
 
 		/**
 		* Returns true if the given name is used by a widget belonging to this group, false otherwise.
 		*/
-		bool isNameUsed(const Ogre::String& name);
+		bool isNameUsed(const std::string& name);
 		/**
 		* Returns true if this widget's position is managed by another widget.
 		*/
@@ -249,12 +249,12 @@ namespace QuickGUI
 		* returns a suggestion of a name not currently used by any Widget.
 		* ie. Button -> Button1 -> Button2 -> etc.
 		*/
-		Ogre::String resolveName(const Ogre::String& name);
+		std::string resolveName(const std::string& name);
 
 		/**
 		* Serializes this widget, including its properties, to disk.
 		*/
-		virtual void saveToDisk(const Ogre::String fileName);
+		virtual void saveToDisk(const std::string fileName);
 		/**
 		* Moves the Window to the beginning of the list, meaning it will be drawn first, underneath any other windows.
 		*/
@@ -308,16 +308,16 @@ namespace QuickGUI
 		* If loadFromFile is true, s is treated as a File, and opened, parsed and used to build a Sheet.
 		* If loadFromFile is false, s is treated as a String, and parsed and used to build a Sheet.
 		*/
-		Sheet(const Ogre::String& s, bool loadFromFile);
+		Sheet(const std::string& s, bool loadFromFile);
 
 		/**
 		* Destructor.
 		*/
 		virtual ~Sheet();
 
-		std::set<Ogre::String> mUsedNames;
-		void _notifyNameFreed(const Ogre::String& name);
-		void _notifyNameUsed(const Ogre::String& name);
+		std::set<std::string> mUsedNames;
+		void _notifyNameFreed(const std::string& name);
+		void _notifyNameUsed(const std::string& name);
 
 		std::list<ModalWindow*> mModalWindows;
 		

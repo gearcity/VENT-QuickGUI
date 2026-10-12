@@ -83,7 +83,7 @@ namespace QuickGUI
 		virtual void setVisible(bool visible);
 
 	protected:
-		MenuItem(const Ogre::String& name);
+		MenuItem(const std::string& name);
 		virtual ~MenuItem();
 
 		/**

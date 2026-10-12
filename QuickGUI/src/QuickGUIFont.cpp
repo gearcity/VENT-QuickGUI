@@ -8,7 +8,7 @@ namespace QuickGUI
 		return getGlyphHeight(Text::UNICODE_ZERO);
 	}
 
-	float Font::getGlyphAdvance(Ogre::UTFString::code_point cp) const
+	float Font::getGlyphAdvance(UTFString::code_point cp) const
 	{
 		if(Text::isNewLine(cp))
 		{
@@ -34,11 +34,11 @@ namespace QuickGUI
 		return getGlyphDesignAdvance(cp);
 	}
 
-	float Font::getTextWidth(const Ogre::UTFString& s) const
+	float Font::getTextWidth(const UTFString& s) const
 	{
 		float width = 0;
 
-		for(Ogre::UTFString::const_iterator it = s.begin(); it != s.end(); ++it)
+		for(UTFString::const_iterator it = s.begin(); it != s.end(); ++it)
 		{
 			width += getGlyphAdvance((*it));
 		}

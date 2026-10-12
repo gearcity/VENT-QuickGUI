@@ -19,16 +19,16 @@ namespace QuickGUI
 	public:
 
 		bool treeviewradiobuttonnode_radioButtonSelected;
-		Ogre::String treeviewradiobuttonnode_userHandlers[TREEVIEWRADIOBUTTONNODE_EVENT_COUNT];
+		std::string treeviewradiobuttonnode_userHandlers[TREEVIEWRADIOBUTTONNODE_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TreeViewRadioButtonNodeDesc"; }
+		virtual std::string getClass() { return "TreeViewRadioButtonNodeDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TreeViewRadioButtonNode"; }
+		virtual std::string getWidgetClass() { return "TreeViewRadioButtonNode"; }
 
 		/**
 		* Restore properties to default values
@@ -46,7 +46,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String RADIOBUTTON;
+		static const std::string RADIOBUTTON;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -66,7 +66,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedTreeViewRadioButtonNodeEventHandler(TreeViewRadioButtonNodeEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedTreeViewRadioButtonNodeEventHandler(TreeViewRadioButtonNodeEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WIDGET_EVENT_SIZE_CHANGED, WIDGET_EVENT_MOUSE_WHEEL, etc.
@@ -103,7 +103,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns true if the Node's RadioButton is selected, false otherwise.
 		*/
@@ -120,7 +120,7 @@ namespace QuickGUI
 		virtual void updateClientDimensions();
 
 	protected:
-		TreeViewRadioButtonNode(const Ogre::String& name);
+		TreeViewRadioButtonNode(const std::string& name);
 		virtual ~TreeViewRadioButtonNode();
 
 		TreeViewRadioButtonNodeDesc* mDesc;

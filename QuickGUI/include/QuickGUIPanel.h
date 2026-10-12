@@ -50,7 +50,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -76,7 +76,7 @@ namespace QuickGUI
 		/**
 		* Creates a user defined custom widget.
 		*/
-		Widget* createCustomWidget(const Ogre::String& className, WidgetDesc* d);
+		Widget* createCustomWidget(const std::string& className, WidgetDesc* d);
 
 		/**
 		* Creates a child Button.
@@ -85,7 +85,7 @@ namespace QuickGUI
 		Button* createButton();
 		Button* createButton(const Point& position);
 		Button* createButton(const Rect& dimensions);
-		Button* createButton(const Ogre::UTFString& text, const Rect& dimensions);
+		Button* createButton(const UTFString& text, const Rect& dimensions);
 		Button* createButton(std::vector<TextSegment> segments, const Rect& dimensions);
 		/**
 		* Creates a child CheckBox.
@@ -136,9 +136,9 @@ namespace QuickGUI
 		Label* createLabel();
 		Label* createLabel(const Point& position);
 		Label* createLabel(const Rect& dimensions);
-		Label* createLabel(const Ogre::UTFString& text, const Point& position);
+		Label* createLabel(const UTFString& text, const Point& position);
 		Label* createLabel(std::vector<TextSegment> segments, const Point& position);
-		Label* createLabel(const Ogre::UTFString& text, const Rect& dimensions);
+		Label* createLabel(const UTFString& text, const Rect& dimensions);
 		Label* createLabel(std::vector<TextSegment> segments, const Rect& dimensions);
 		/**
 		* Creates a child List.
@@ -221,7 +221,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 
 	public:
 		// Here we have to call out any protected Widget set accesors we want to expose
@@ -253,7 +253,7 @@ namespace QuickGUI
 		using ContainerWidget::destroyChild;		
 
 	protected:
-		Panel(const Ogre::String& name);
+		Panel(const std::string& name);
 		virtual ~Panel();
 
 		// Pointer pointing to mWidgetDesc object, but casted for quick use.

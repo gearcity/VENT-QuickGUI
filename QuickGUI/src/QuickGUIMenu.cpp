@@ -16,10 +16,10 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Menu::DEFAULT = "default";
-	const Ogre::String Menu::DOWN = "down";
-	const Ogre::String Menu::OVER = "over";
-	const Ogre::String Menu::MENUPANEL = "menupanel";
+	const std::string Menu::DEFAULT = "default";
+	const std::string Menu::DOWN = "down";
+	const std::string Menu::OVER = "over";
+	const std::string Menu::MENUPANEL = "menupanel";
 
 	void Menu::registerSkinDefinition()
 	{
@@ -60,7 +60,7 @@ namespace QuickGUI
 		b->IO("SubMenuOverlap",&menu_subMenuOverlap);
 	}
 
-	Menu::Menu(const Ogre::String& name) :
+	Menu::Menu(const std::string& name) :
 		MenuTextItem(name),
 		mMenuPanel(NULL),
 		mAutoNameCounter(0)
@@ -152,7 +152,7 @@ namespace QuickGUI
 			mMenuPanel->_adjustHeight();
 	}
 
-	Ogre::String Menu::getClass()
+	std::string Menu::getClass()
 	{
 		return "Menu";
 	}
@@ -296,7 +296,7 @@ namespace QuickGUI
 		return i;
 	}
 
-	MenuImageItem* Menu::createImageItem(const Ogre::String& skin, int index)
+	MenuImageItem* Menu::createImageItem(const std::string& skin, int index)
 	{
 		MenuImageItemDesc* d = DescManager::getSingletonPtr()->getDefaultMenuImageItemDesc();
 		d->resetToDefault();
@@ -309,7 +309,7 @@ namespace QuickGUI
 		return i;
 	}
 
-	MenuTextItem* Menu::createTextItem(const Ogre::UTFString& text, int index)
+	MenuTextItem* Menu::createTextItem(const UTFString& text, int index)
 	{
 		MenuTextItemDesc* d = DescManager::getSingletonPtr()->getDefaultMenuTextItemDesc();
 		d->resetToDefault();
@@ -340,7 +340,7 @@ namespace QuickGUI
 		return createTextItem("MenuTextItem",index);
 	}
 
-	Menu* Menu::createSubMenu(const Ogre::UTFString& text, int index)
+	Menu* Menu::createSubMenu(const UTFString& text, int index)
 	{
 		MenuDesc* d = DescManager::getSingletonPtr()->getDefaultMenuDesc();
 		d->resetToDefault();
@@ -428,7 +428,7 @@ namespace QuickGUI
 		destroyItem(i->getIndex());
 	}
 
-	Widget* Menu::findWidget(const Ogre::String& name)
+	Widget* Menu::findWidget(const std::string& name)
 	{
 		if(getName() == name)
 			return this;
@@ -718,15 +718,15 @@ namespace QuickGUI
 			mMenuPanel->setWidth(mDesc->menu_menuPanelWidth);
 	}
 
-	void Menu::setSkinType(const Ogre::String type)
+	void Menu::setSkinType(const std::string type)
 	{
 		Widget::setSkinType(type);
 
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 #else
-	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 
 #endif

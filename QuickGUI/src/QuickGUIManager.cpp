@@ -35,7 +35,7 @@ namespace QuickGUI
 
 		// by default, we support codepoints 9, and 32-166.
 		supportedCodePoints.insert(9);
-		for(Ogre::UTFString::code_point i = 32; i < 167; ++i)
+		for(UTFString::code_point i = 32; i < 167; ++i)
 			supportedCodePoints.insert(i);
 	}
 
@@ -315,7 +315,7 @@ namespace QuickGUI
 		return mMouseCursor;
 	}
 
-	Ogre::String GUIManager::getName()
+	std::string GUIManager::getName()
 	{
 		return mGUIManagerDesc.name;
 	}
@@ -340,7 +340,7 @@ namespace QuickGUI
 		return mGUIManagerDesc.viewport;
 	}
 
-	bool GUIManager::injectChar(Ogre::UTFString::unicode_char c)
+	bool GUIManager::injectChar(UTFString::unicode_char c)
 	{
 		// do nothing if no active sheet is in use
 		if(mActiveSheet == NULL)
@@ -980,7 +980,7 @@ namespace QuickGUI
 		return (mWidgetUnderMouseCursor != NULL);
 	}
 
-	bool GUIManager::isSupportedCodePoint(Ogre::UTFString::unicode_char c)
+	bool GUIManager::isSupportedCodePoint(UTFString::unicode_char c)
 	{		return (mGUIManagerDesc.supportedCodePoints.find(c) != mGUIManagerDesc.supportedCodePoints.end());
 	}
 
@@ -1125,7 +1125,7 @@ namespace QuickGUI
 		mGUIManagerDesc.scrollLastClicked = scroll;
 	}
 
-	void GUIManager::setSupportedCodePoints(const std::set<Ogre::UTFString::code_point>& list)
+	void GUIManager::setSupportedCodePoints(const std::set<UTFString::code_point>& list)
 	{
 		mGUIManagerDesc.supportedCodePoints = list;
 	}
@@ -1170,7 +1170,7 @@ namespace QuickGUI
 		// If NumLock key is down
 		if(mKeyModifiers | NUMLOCK)
 		{
-			Ogre::UTFString::unicode_char c = 0;
+			UTFString::unicode_char c = 0;
 			switch(kc)
 			{
 			case KC_NUMPAD0:	c = 48;	break;

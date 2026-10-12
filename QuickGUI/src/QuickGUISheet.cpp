@@ -17,7 +17,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Sheet::BACKGROUND = "background";
+	const std::string Sheet::BACKGROUND = "background";
 
 	void Sheet::registerSkinDefinition()
 	{
@@ -70,7 +70,7 @@ namespace QuickGUI
 		mWindowInFocus = this;
 	}
 
-	Sheet::Sheet(const Ogre::String& s, bool loadFromFile) :
+	Sheet::Sheet(const std::string& s, bool loadFromFile) :
 		Window(""),
 		mWindowInFocus(0),
 		mKeyboardListener(0)
@@ -118,14 +118,14 @@ namespace QuickGUI
 			f->destroyInstance((*it));
 	}
 
-	void Sheet::_notifyNameFreed(const Ogre::String& name)
+	void Sheet::_notifyNameFreed(const std::string& name)
 	{
-		std::set<Ogre::String>::iterator it = mUsedNames.find(name);
+		std::set<std::string>::iterator it = mUsedNames.find(name);
 		if(it != mUsedNames.end())
 			mUsedNames.erase(it);
 	}
 
-	void Sheet::_notifyNameUsed(const Ogre::String& name)
+	void Sheet::_notifyNameUsed(const std::string& name)
 	{
 		if(mUsedNames.find(name) == mUsedNames.end())
 			mUsedNames.insert(name);
@@ -230,7 +230,7 @@ namespace QuickGUI
 		return createContextMenu(d);
 	}
 
-	ContextMenu* Sheet::createContextMenu(const Ogre::UTFString& titleBarText, const Size& size)
+	ContextMenu* Sheet::createContextMenu(const UTFString& titleBarText, const Size& size)
 	{
 		ContextMenuDesc* d = DescManager::getSingletonPtr()->getDefaultContextMenuDesc();
 		d->resetToDefault();
@@ -296,7 +296,7 @@ namespace QuickGUI
 		return createModalWindow(d);
 	}
 
-	ModalWindow* Sheet::createModalWindow(const Ogre::UTFString& titleBarText, const Rect& dimensions)
+	ModalWindow* Sheet::createModalWindow(const UTFString& titleBarText, const Rect& dimensions)
 	{
 		ModalWindowDesc* d = DescManager::getSingletonPtr()->getDefaultModalWindowDesc();
 		d->resetToDefault();
@@ -372,7 +372,7 @@ namespace QuickGUI
 		return createWindow(d);
 	}
 
-	Window* Sheet::createWindow(const Ogre::UTFString& titleBarText, const Rect& dimensions)
+	Window* Sheet::createWindow(const UTFString& titleBarText, const Rect& dimensions)
 	{
 		WindowDesc* d = DescManager::getSingletonPtr()->getDefaultWindowDesc();
 		d->resetToDefault();
@@ -413,7 +413,7 @@ namespace QuickGUI
 		return createWindow(d);
 	}
 
-	void Sheet::destroyContextMenu(const Ogre::String& name)
+	void Sheet::destroyContextMenu(const std::string& name)
 	{
 		destroyContextMenu(getContextMenu(name));
 	}
@@ -439,7 +439,7 @@ namespace QuickGUI
 		mFreeList.push_back(w);
 	}
 
-	void Sheet::destroyModalWindow(const Ogre::String& name)
+	void Sheet::destroyModalWindow(const std::string& name)
 	{
 		destroyModalWindow(getModalWindow(name));
 	}
@@ -468,7 +468,7 @@ namespace QuickGUI
 		if(w == NULL)
 			throw Exception(Exception::ERR_INVALID_CHILD,"Widget is NULL!","Sheet::destroyWidget");
 
-		Ogre::String className = w->getClass();
+		std::string className = w->getClass();
 		if(className == "ModalWindow")
 			destroyModalWindow(dynamic_cast<ModalWindow*>(w));
 		else if(className == "Window")
@@ -485,7 +485,7 @@ namespace QuickGUI
 		mFreeList.push_back(w);
 	}
 
-	void Sheet::destroyWindow(const Ogre::String& name)
+	void Sheet::destroyWindow(const std::string& name)
 	{
 		destroyWindow(getWindow(name));
 	}
@@ -525,7 +525,7 @@ namespace QuickGUI
 			(*it)->draw();
 	}
 
-	Widget* Sheet::findWidget(const Ogre::String& name)
+	Widget* Sheet::findWidget(const std::string& name)
 	{
 		Widget* w = NULL;
 
@@ -647,12 +647,12 @@ namespace QuickGUI
 		return false;
 	}
 
-	Ogre::String Sheet::getClass()
+	std::string Sheet::getClass()
 	{
 		return "Sheet";
 	}
 
-	ContextMenu* Sheet::getContextMenu(const Ogre::String& name)
+	ContextMenu* Sheet::getContextMenu(const std::string& name)
 	{
 		if(!hasContextMenu(name))
 			throw Exception(Exception::ERR_INVALID_CHILD,"Sheet \"" + getName() + "\" does not have a child context menu with name \"" + name + "\".","Sheet::getContextMenu");
@@ -671,7 +671,7 @@ namespace QuickGUI
 		return mKeyboardListener;
 	}
 
-	ModalWindow* Sheet::getModalWindow(const Ogre::String& name)
+	ModalWindow* Sheet::getModalWindow(const std::string& name)
 	{
 		if(!hasModalWindow(name))
 			throw Exception(Exception::ERR_INVALID_CHILD,"Sheet \"" + getName() + "\" does not have a child modal window with name \"" + name + "\".","Sheet::getModalWindow");
@@ -685,7 +685,7 @@ namespace QuickGUI
 		return NULL;
 	}
 
-	Window* Sheet::getWindow(const Ogre::String& name)
+	Window* Sheet::getWindow(const std::string& name)
 	{
 		if(!hasWindow(name))
 			throw Exception(Exception::ERR_INVALID_CHILD,"Sheet \"" + getName() + "\" does not have a child window with name \"" + name + "\".","Sheet::getWindow");
@@ -704,7 +704,7 @@ namespace QuickGUI
 		return mWindowInFocus;
 	}
 
-	bool Sheet::hasContextMenu(const Ogre::String& name)
+	bool Sheet::hasContextMenu(const std::string& name)
 	{
 		for(std::list<Window*>::iterator it = mWindows.begin(); it != mWindows.end(); ++it)
 		{
@@ -715,7 +715,7 @@ namespace QuickGUI
 		return false;
 	}
 
-	bool Sheet::hasModalWindow(const Ogre::String& name)
+	bool Sheet::hasModalWindow(const std::string& name)
 	{
 		for(std::list<ModalWindow*>::iterator it = mModalWindows.begin(); it != mModalWindows.end(); ++it)
 		{
@@ -726,7 +726,7 @@ namespace QuickGUI
 		return false;
 	}
 
-	bool Sheet::hasWindow(const Ogre::String& name)
+	bool Sheet::hasWindow(const std::string& name)
 	{
 		for(std::list<Window*>::iterator it = mWindows.begin(); it != mWindows.end(); ++it)
 		{
@@ -737,7 +737,7 @@ namespace QuickGUI
 		return false;
 	}
 
-	bool Sheet::isNameUsed(const Ogre::String& name)
+	bool Sheet::isNameUsed(const std::string& name)
 	{
 		return (mUsedNames.find(name) != mUsedNames.end());
 	}
@@ -800,7 +800,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String Sheet::resolveName(const Ogre::String& name)
+	std::string Sheet::resolveName(const std::string& name)
 	{
 		if(mUsedNames.find(name) != mUsedNames.end())
 		{
@@ -814,7 +814,7 @@ namespace QuickGUI
 			if(counter != (strLen - 1))
 				n = atoi(name.substr(counter + 1).c_str());
 
-			Ogre::String baseName = name.substr(0,counter + 1);
+			std::string baseName = name.substr(0,counter + 1);
 
 			while(mUsedNames.find(baseName + Ogre::StringConverter::toString(n)) != mUsedNames.end())
 				++n;
@@ -825,7 +825,7 @@ namespace QuickGUI
 			return name;
 	}
 
-	void Sheet::saveToDisk(const Ogre::String fileName)
+	void Sheet::saveToDisk(const std::string fileName)
 	{
 		ScriptWriter::getSingletonPtr()->begin(fileName);
 

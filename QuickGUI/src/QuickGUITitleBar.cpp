@@ -10,8 +10,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TitleBar::BACKGROUND = "background";
-	const Ogre::String TitleBar::CLOSE_BUTTON = "close_button";
+	const std::string TitleBar::BACKGROUND = "background";
+	const std::string TitleBar::CLOSE_BUTTON = "close_button";
 
 	void TitleBar::registerSkinDefinition()
 	{
@@ -46,7 +46,7 @@ namespace QuickGUI
 		TextUserDesc::resetToDefault();
 	}
 
-	TitleBar::TitleBar(const Ogre::String& name) :
+	TitleBar::TitleBar(const std::string& name) :
 		ComponentWidget(name),
 		TextUser(),
 		mCloseButton(NULL),
@@ -105,7 +105,7 @@ namespace QuickGUI
 		TextUser::_initialize(this,mDesc);
 	}
 
-	Ogre::String TitleBar::getClass()
+	std::string TitleBar::getClass()
 	{
 		return "TitleBar";
 	}

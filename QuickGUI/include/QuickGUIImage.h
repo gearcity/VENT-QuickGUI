@@ -17,7 +17,7 @@ namespace QuickGUI
 	public:
 
 		/// Name of the image file to display
-		Ogre::String	image_imageName;
+		std::string	image_imageName;
 		bool			image_tileImage;
 		/// Useful for applying render to texture (RTT) to Image
 		bool			image_updateEveryFrame;
@@ -25,11 +25,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ImageDesc"; }
+		virtual std::string getClass() { return "ImageDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Image"; }
+		virtual std::string getWidgetClass() { return "Image"; }
 
 		/**
 		* Restore properties to default values
@@ -47,7 +47,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -62,11 +62,11 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the name of the image file used for display.
 		*/
-		Ogre::String getImageName();
+		std::string getImageName();
 		/**
 		* Returns true if image is tiled within client dimensions, false otherwise.
 		*/
@@ -82,7 +82,7 @@ namespace QuickGUI
 		* NOTE: Image must be listed within an Ogre resource directory.
 		* NOTE: Setting the name to "" will result in only the background showing.
 		*/
-		void setImage(const Ogre::String& name);
+		void setImage(const std::string& name);
 		/**
 		* Sets whether or not Image will tile within client dimensions.
 		*/
@@ -122,7 +122,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		Image(const Ogre::String& name);
+		Image(const std::string& name);
 		virtual ~Image();
 
 		ImageDesc* mDesc;
