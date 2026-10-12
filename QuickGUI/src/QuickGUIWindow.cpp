@@ -289,7 +289,7 @@ namespace QuickGUI
 				mDesc->textDesc = mTitleBar->mDesc->textDesc;
 		}
 
-		brush->setRenderTarget(NULL);
+		brush->setDefaultRenderTarget();
 		brush->setTexture(mTexture);
 		brush->setColor(mWidgetDesc->widget_baseColor);
 		brush->setOpacity(getAbsoluteOpacity());
