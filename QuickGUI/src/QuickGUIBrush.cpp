@@ -15,6 +15,151 @@ template<> QuickGUI::Brush* Ogre::Singleton<QuickGUI::Brush>::msSingleton = 0;
 
 namespace QuickGUI
 {
+	namespace
+	{
+		struct BlendFactors
+		{
+			Ogre::SceneBlendFactor sourceColour;
+			Ogre::SceneBlendFactor destColour;
+			Ogre::SceneBlendFactor sourceAlpha;
+			Ogre::SceneBlendFactor destAlpha;
+		};
+
+		/// Indexed by BrushBlendMode.
+		const BlendFactors BLEND_FACTORS[] =
+		{
+			{ Ogre::SBF_ONE, Ogre::SBF_ZERO, Ogre::SBF_ONE, Ogre::SBF_ZERO },
+			{ Ogre::SBF_ZERO, Ogre::SBF_SOURCE_COLOUR, Ogre::SBF_ONE, Ogre::SBF_ONE },
+			{ Ogre::SBF_ONE, Ogre::SBF_ZERO, Ogre::SBF_ZERO, Ogre::SBF_ONE },
+			{ Ogre::SBF_ONE_MINUS_DEST_COLOUR, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE },
+			{ Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE }
+		};
+	}
+
+	/// How a Brush puts its state on the render system.
+	class Brush::RenderStrategy
+	{
+	public:
+		virtual ~RenderStrategy() {}
+
+		/// Configures the render system before the first draw of a frame.
+		virtual void begin(Brush& b) = 0;
+		/// Called after the render target has been set on the render system.
+		virtual void retarget(Brush& b) = 0;
+		virtual void blend(Brush& b, const BlendFactors& f) = 0;
+		virtual void filter(Brush& b, BrushFilterMode m) = 0;
+		/// Binds the texture the Brush draws with.
+		virtual void texture(Brush& b) = 0;
+	};
+
+	/// Sets state directly on the render system, for render systems with a fixed-function pipeline.
+	class Brush::FixedFunctionStrategy :
+		public Brush::RenderStrategy
+	{
+	public:
+		void begin(Brush& b)
+		{
+			b._applyFixedFunctionDefaults();
+			b._applyPassState();
+		}
+
+		void retarget(Brush& b)
+		{
+			b.mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
+		}
+
+		void blend(Brush& b, const BlendFactors& f)
+		{
+			b.mRenderSystem->_setSeparateSceneBlending(f.sourceColour, f.destColour, f.sourceAlpha, f.destAlpha);
+		}
+
+		void filter(Brush& b, BrushFilterMode m)
+		{
+			Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr();
+
+			switch(m)
+			{
+			case BRUSHFILTER_NONE:
+				tm->getDefaultSampler()->setFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+				break;
+			case BRUSHFILTER_NEAREST:
+				tm->getDefaultSampler()->setFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT);
+				break;
+			case BRUSHFILTER_LINEAR:
+				tm->getDefaultSampler()->setFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT);
+				break;
+			}
+
+			b.mRenderSystem->_setSampler(0, *tm->getDefaultSampler());
+		}
+
+		void texture(Brush& b)
+		{
+			b.mRenderSystem->_setTexture(0, true, b.mTexture);
+		}
+	};
+
+	/// Draws through GLSL programs set on the material pass, for render systems that have no fixed-function pipeline.
+	class Brush::GlslStrategy :
+		public Brush::RenderStrategy
+	{
+	public:
+		void begin(Brush& b)
+		{
+			b._applyPassState();
+		}
+
+		void retarget(Brush& b)
+		{
+			b._applyPassState();
+		}
+
+		void blend(Brush& b, const BlendFactors& f)
+		{
+			b.mGUIPass->setSeparateSceneBlending(f.sourceColour, f.destColour, f.sourceAlpha, f.destAlpha);
+			b._applyPassState();
+		}
+
+		void filter(Brush& b, BrushFilterMode m)
+		{
+			Ogre::TextureUnitState* tus = b.mGUIPass->getTextureUnitState(0);
+
+			if(tus != NULL)
+			{
+				switch(m)
+				{
+				case BRUSHFILTER_NONE:
+					tus->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+					break;
+				case BRUSHFILTER_NEAREST:
+					tus->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT);
+					break;
+				case BRUSHFILTER_LINEAR:
+					tus->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT);
+					break;
+				}
+			}
+
+			b._applyPassState();
+		}
+
+		void texture(Brush& b)
+		{
+			Ogre::TextureUnitState* tus = b.mGUIPass->getTextureUnitState(0);
+
+			if((tus != NULL) && !b.mTexture.isNull())
+			{
+#if OGRE_VERSION >= ((1 << 16) | (13 << 8))
+				tus->setTexture(b.mTexture);
+#else
+				tus->setTextureName(b.mTexture->getName(), b.mTexture->getGroup());
+#endif
+			}
+
+			b._applyPassState();
+		}
+	};
+
     Brush::Brush() :
                 mSceneManager(NULL),
                 mDefaultViewport(NULL),
@@ -23,7 +168,8 @@ namespace QuickGUI
                 mBufferPtr(NULL),
                 mFilterMode(BRUSHFILTER_LINEAR),
                 mBrushBlendMode(BRUSHBLEND_ALPHA),
-                mUsingProgrammablePipeline(false)
+                mUsingProgrammablePipeline(false),
+                mStrategy(NULL)
     {
         mRenderSystem = Ogre::Root::getSingleton().getRenderSystem();
 
@@ -78,11 +224,19 @@ namespace QuickGUI
         tus->setTextureName(mDefaultTexture->getName(), mDefaultTexture->getGroup());
 #endif
         if(mUsingProgrammablePipeline)
+        {
                 _initialiseGpuPipeline();
+                mStrategy = new GlslStrategy();
+        }
+        else
+        {
+                mStrategy = new FixedFunctionStrategy();
+        }
 	}
 
 	Brush::~Brush()
 	{
+		delete mStrategy;
 		_destroyVertexBuffer();
 	}
 
@@ -616,10 +770,7 @@ namespace QuickGUI
 
     void Brush::prepareToDraw()
     {
-           if(!mUsingProgrammablePipeline)
-                   _applyFixedFunctionDefaults();
-
-			_applyPassState();
+           mStrategy->begin(*this);
 		
            // Set default settings
 
@@ -708,56 +859,7 @@ namespace QuickGUI
     {
         mBrushBlendMode = m;
 
-        if(mUsingProgrammablePipeline)
-        {
-                switch(mBrushBlendMode)
-                {
-                case BRUSHBLEND_NONE:
-                        mGUIPass->setSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO );
-                        break;
-
-                case BRUSHBLEND_MODULATE:
-                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_ZERO, Ogre::SBF_SOURCE_COLOUR, Ogre::SBF_ONE, Ogre::SBF_ONE );
-                        break;
-
-                case BRUSHBLEND_DISCARDALPHA:
-                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO, Ogre::SBF_ZERO, Ogre::SBF_ONE );
-                        break;
-
-                case BRUSHBLEND_INVERT:
-                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_ONE_MINUS_DEST_COLOUR, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE );
-                        break;
-
-                case BRUSHBLEND_ALPHA:
-                        mGUIPass->setSeparateSceneBlending( Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE );
-                        break;
-                }
-
-                _applyPassState();
-                return;
-        }
-
-        switch(mBrushBlendMode)
-        {
-        case BRUSHBLEND_NONE:
-                mRenderSystem->_setSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO );
-                break;
-		case BRUSHBLEND_MODULATE:
-			mRenderSystem->_setSeparateSceneBlending( Ogre::SBF_ZERO, Ogre::SBF_SOURCE_COLOUR, Ogre::SBF_ONE, Ogre::SBF_ONE );
-			break;
-
-		case BRUSHBLEND_DISCARDALPHA:
-			mRenderSystem->_setSeparateSceneBlending( Ogre::SBF_ONE, Ogre::SBF_ZERO, Ogre::SBF_ZERO, Ogre::SBF_ONE );
-			break;
-
-		case BRUSHBLEND_INVERT:
-			mRenderSystem->_setSeparateSceneBlending( Ogre::SBF_ONE_MINUS_DEST_COLOUR, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE );
-			break;
-
-		case BRUSHBLEND_ALPHA:
-			mRenderSystem->_setSeparateSceneBlending( Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE, Ogre::SBF_ONE );
-			break;
-		}
+        mStrategy->blend(*this, BLEND_FACTORS[m]);
 	}
 
 	void Brush::setColor(const ColourValue& cv)
@@ -775,47 +877,7 @@ namespace QuickGUI
     {
             mFilterMode = m;
 
-            if(mUsingProgrammablePipeline)
-            {
-                    Ogre::TextureUnitState* tus = mGUIPass->getTextureUnitState(0);
-
-                    if(tus != NULL)
-                    {
-                            switch (mFilterMode)
-                            {
-                            case BRUSHFILTER_NONE:
-                                    tus->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE );
-                                    break;
-                            case BRUSHFILTER_NEAREST:
-                                    tus->setTextureFiltering( Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT );
-                                    break;
-                            case BRUSHFILTER_LINEAR:
-                                    tus->setTextureFiltering( Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT );
-                                    break;
-                            }
-                    }
-
-                    _applyPassState();
-                    return;
-            }
-
-           Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr();
-
-
-            switch (mFilterMode)
-            {
-            case BRUSHFILTER_NONE:
-                        tm->getDefaultSampler()->setFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE );
-			break;
-		case BRUSHFILTER_NEAREST:
-                        tm->getDefaultSampler()->setFiltering( Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT );
-			break;
-		case BRUSHFILTER_LINEAR:
-                        tm->getDefaultSampler()->setFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT );
-			break;
-		}
-
-                mRenderSystem->_setSampler( 0, *tm->getDefaultSampler());
+            mStrategy->filter(*this, m);
 	}
 
 	void Brush::setOpacity(float opacity)
@@ -847,13 +909,10 @@ namespace QuickGUI
 		mTargetWidth = mRenderTarget->getActualWidth();
 		mTargetHeight = mRenderTarget->getActualHeight();
         mRenderSystem->_setViewport(mRenderTarget);
-       if(!mUsingProgrammablePipeline)
-               mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
 
        setClipRegion(Rect(mRenderTarget->getActualLeft(), mRenderTarget->getActualTop(), mRenderTarget->getActualWidth(), mRenderTarget->getActualHeight()));
 
-       if(mUsingProgrammablePipeline)
-       		_applyPassState();
+       mStrategy->retarget(*this);
     }
 
     void Brush::setTexture(const Ogre::String& textureName)
@@ -874,24 +933,8 @@ namespace QuickGUI
 
 			mTexture = tm->getByName(textureName);
 		}
-        if(mUsingProgrammablePipeline)
-        {
-                Ogre::TextureUnitState* tus = mGUIPass->getTextureUnitState(0);
-                if((tus != NULL) && !mTexture.isNull())
-                {
-                #if OGRE_VERSION >= ((1 << 16) | (13 << 8))
-                    tus->setTexture(mTexture);
-                #else
-                    tus->setTextureName(mTexture->getName(), mTexture->getGroup());
-                #endif
-                }
 
-                _applyPassState();
-        }
-        else
-        {
-                mRenderSystem->_setTexture(0, true, mTexture);
-        }
+        mStrategy->texture(*this);
     }
 
     void Brush::setTexture(Ogre::TexturePtr p)
@@ -905,24 +948,7 @@ namespace QuickGUI
 		else
 			mTexture = p;
 
-        if(mUsingProgrammablePipeline)
-        {
-                Ogre::TextureUnitState* tus = mGUIPass->getTextureUnitState(0);
-                if((tus != NULL) && !mTexture.isNull())
-                {
-               #if OGRE_VERSION >= ((1 << 16) | (13 << 8))
-                    tus->setTexture(mTexture);
-               #else
-                    tus->setTextureName(mTexture->getName(), mTexture->getGroup());
-               #endif
-                }
-
-                _applyPassState();
-        }
-        else
-        {
-                mRenderSystem->_setTexture(0, true, mTexture);
-        }
+        mStrategy->texture(*this);
     }
 
 	void Brush::updateSceneManager(Ogre::SceneManager* sceneManager)

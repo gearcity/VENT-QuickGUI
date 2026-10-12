@@ -276,6 +276,11 @@ namespace QuickGUI
         void _initialiseGpuPipeline();
         void _applyPassState();
         void _applyFixedFunctionDefaults();
+
+        class RenderStrategy;
+        class FixedFunctionStrategy;
+        class GlslStrategy;
+        RenderStrategy* mStrategy;
     };
 }
 
