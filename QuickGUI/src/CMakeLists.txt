@@ -15,6 +15,7 @@ set (QuickGUI_FILES_SRC
 	QuickGUIEventHandlerManager.cpp
 	QuickGUIException.cpp
 	QuickGUIFactoryManager.cpp
+	QuickGUIFont.cpp
 	QuickGUIForwardDeclaredDesc.cpp
 	QuickGUIHScrollBar.cpp
 	QuickGUIImage.cpp
@@ -30,6 +31,7 @@ set (QuickGUI_FILES_SRC
 	QuickGUIMenuTextItem.cpp
 	QuickGUIModalWindow.cpp
 	QuickGUIMouseCursor.cpp
+	QuickGUIOgreFont.cpp
 	QuickGUIPanel.cpp
 	QuickGUIPoint.cpp
 	QuickGUIProgressBar.cpp

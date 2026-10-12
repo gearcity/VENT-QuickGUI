@@ -1,6 +1,7 @@
 #ifndef QUICKGUIITEXTUSER_H
 #define QUICKGUIITEXTUSER_H
 
+#include "QuickGUIFont.h"
 #include "QuickGUIDesc.h"
 #include "QuickGUIText.h"
 #include "QuickGUIException.h"
@@ -53,6 +54,8 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
+		void addText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
@@ -153,7 +156,9 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
-		virtual void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		virtual void setText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
+		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
 		*/

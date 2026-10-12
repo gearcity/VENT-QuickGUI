@@ -173,7 +173,7 @@ namespace QuickGUI
 		mDesc->combobox_verticalTextAlignment = cbd->combobox_verticalTextAlignment;
 		TextUser::_initialize(this,mDesc);
 
-		mCurrentFontName = Text::getFirstAvailableFont()->getName();
+		mCurrentFontName = Root::getSingleton().getDefaultFontName();
 		mCurrentColourValue = ColourValue::White;
 
 		if(mDesc->combobox_dropDownButton)
@@ -685,7 +685,7 @@ namespace QuickGUI
 
 			if(mSelectedItem->getClass() == "ListTextItem")
 				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].text,
-				static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].fontName)),
+				Root::getSingleton().getFont(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].fontName),
  				dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].color);
 
 			if(mSelectedItem->getClass() == "ListImageItem")
@@ -715,7 +715,7 @@ namespace QuickGUI
 			if(mSelectedItem->getClass() == "ListTextItem")
 //				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->mText->getTextSegments());
 				mText->setText(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].text,
-                                static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].fontName)),
+                                Root::getSingleton().getFont(dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].fontName),
                                 dynamic_cast<ListTextItem*>(mSelectedItem)->getTextSegments()[0].color);
 
 

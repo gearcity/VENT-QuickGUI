@@ -75,7 +75,7 @@ namespace QuickGUI
 		std::vector<Character*> mCharacters;
 
 		/// Record the largest font size of any character within this TextLine
-		Ogre::FontPtr mLargestFont;
+		const Font* mLargestFont;
 
 		/**
 		* Iterates through characters and aligns them according to the largest baseline of any

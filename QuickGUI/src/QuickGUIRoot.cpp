@@ -1,6 +1,8 @@
 #include "QuickGUIRoot.h"
 // Managers
 #include "QuickGUIFactoryManager.h"
+#include "QuickGUIOgreFont.h"
+#include "OgreFontManager.h"
 #include "QuickGUIScriptReader.h"
 #include "QuickGUIScriptWriter.h"
 #include "QuickGUISheetManager.h"
@@ -62,7 +64,7 @@ namespace QuickGUI
 		// Get the default font
         Ogre::ResourceManager::ResourceMapIterator it = Ogre::FontManager::getSingleton().getResourceIterator();
         if(it.hasMoreElements())
-            mDefaultFont = it.getNext().staticCast<Ogre::Font>(); // static_cast<Ogre::FontPtr>(it.getNext());
+            mDefaultFontName = it.getNext()->getName();
         else
             throw Exception(Exception::ERR_INVALID_STATE,"No fonts have been found! At least one font must exist for QuickGUI use!","Root::Root");
 
@@ -242,6 +244,12 @@ namespace QuickGUI
 		OGRE_DELETE EventHandlerManager::getSingletonPtr();
 		OGRE_DELETE Brush::getSingletonPtr();
 		OGRE_DELETE SkinDefinitionManager::getSingletonPtr();
+
+		for(std::map<Ogre::String,Font*>::iterator it = mFonts.begin(); it != mFonts.end(); ++it)
+		{
+			OGRE_DELETE_T((*it).second,Font,Ogre::MEMCATEGORY_GENERAL);
+		}
+		mFonts.clear();
 	}
 
 	Root* Root::getSingletonPtr(void) 
@@ -322,10 +330,32 @@ namespace QuickGUI
 
 	Ogre::String Root::getDefaultFontName()
 	{
-		if(mDefaultFont.isNull())
-			return "";
-		else
-			return mDefaultFont->getName();
+		return mDefaultFontName;
+	}
+
+	const Font& Root::getFont(const Ogre::String& fontName)
+	{
+		std::map<Ogre::String,Font*>::iterator it = mFonts.find(fontName);
+		if(it != mFonts.end())
+		{
+			return *(it->second);
+		}
+
+		Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
+		if(fp.isNull())
+		{
+			throw Exception(Exception::ERR_ITEM_NOT_FOUND,"No font with name \"" + fontName + "\" exists!","Root::getFont");
+		}
+
+		Font* font = OGRE_NEW_T(OgreFont,Ogre::MEMCATEGORY_GENERAL)(fp);
+		mFonts[fontName] = font;
+
+		return *font;
+	}
+
+	const Font& Root::getDefaultFont()
+	{
+		return getFont(mDefaultFontName);
 	}
 
 	float Root::getDefaultHoverTime()
@@ -372,7 +402,8 @@ namespace QuickGUI
 
 	void Root::setDefaultFontName(const Ogre::String& fontName)
 	{
-		mDefaultFont = Text::getFont(fontName);
+		getFont(fontName);
+		mDefaultFontName = fontName;
 	}
 
 	void Root::setDefaultHoverTime(float seconds)
