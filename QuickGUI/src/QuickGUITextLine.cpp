@@ -102,7 +102,10 @@ namespace QuickGUI
 			float maskAdvance = mLargestFont->getGlyphAdvance(mMaskSymbol);
 			float maskBearing = mLargestFont->getGlyphBearing(mMaskSymbol);
 
-			Point glyphPosition(maskBearing, mCharacters.front()->dimensions.position.y);
+			// An asterisk is drawn near the top of its bitmap, so center what the glyph shows in the line.
+			float maskShift = (mLargestFont->getHeight() / 2.0f) - mLargestFont->getGlyphInkCenter(mMaskSymbol);
+
+			Point glyphPosition(maskBearing, mCharacters.front()->dimensions.position.y + maskShift);
 			glyphPosition.roundUp();
 
 			for(size_t i = 0; (i + 1) < mCharacters.size(); ++i)

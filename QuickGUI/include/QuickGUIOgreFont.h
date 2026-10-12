@@ -23,6 +23,7 @@ namespace QuickGUI
 		Size getGlyphBitmapSize(Ogre::UTFString::code_point cp) const;
 		float getGlyphBearing(Ogre::UTFString::code_point cp) const;
 		float getGlyphDesignAdvance(Ogre::UTFString::code_point cp) const;
+		float getGlyphInkCenter(Ogre::UTFString::code_point cp) const;
 		void saveTextureToFile(const Ogre::String& fileName) const;
 
 	protected:

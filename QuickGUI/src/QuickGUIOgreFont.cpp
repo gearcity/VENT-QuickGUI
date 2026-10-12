@@ -7,6 +7,8 @@
 #include "OgreTechnique.h"
 #include "OgreTextureManager.h"
 
+#include <vector>
+
 namespace QuickGUI
 {
 	OgreFont::OgreFont(Ogre::FontPtr fp) :
@@ -98,6 +100,50 @@ namespace QuickGUI
 		}
 
 		return advance;
+	}
+
+	float OgreFont::getGlyphInkCenter(Ogre::UTFString::code_point cp) const
+	{
+		Ogre::TexturePtr tp = getTexture();
+		UVRect uv = getGlyphUVCoords(cp);
+
+		const size_t left = static_cast<size_t>((uv.left * tp->getWidth()) + 0.5f);
+		const size_t top = static_cast<size_t>((uv.top * tp->getHeight()) + 0.5f);
+		const size_t width = static_cast<size_t>(((uv.right - uv.left) * tp->getWidth()) + 0.5f);
+		const size_t height = static_cast<size_t>(((uv.bottom - uv.top) * tp->getHeight()) + 0.5f);
+
+		if((width == 0) || (height == 0))
+		{
+			return height / 2.0f;
+		}
+
+		std::vector<unsigned char> pixels(width * height * 4);
+		Ogre::PixelBox box(width, height, 1, Ogre::PF_BYTE_RGBA, &pixels[0]);
+		tp->getBuffer()->blitToMemory(Ogre::Box(left, top, left + width, top + height), box);
+
+		size_t firstRow = height;
+		size_t lastRow = 0;
+		for(size_t y = 0; y < height; ++y)
+		{
+			for(size_t x = 0; x < width; ++x)
+			{
+				if(pixels[((y * width) + x) * 4 + 3] != 0)
+				{
+					if(y < firstRow)
+					{
+						firstRow = y;
+					}
+					lastRow = y;
+				}
+			}
+		}
+
+		if(firstRow == height)
+		{
+			return height / 2.0f;
+		}
+
+		return (firstRow + lastRow + 1) / 2.0f;
 	}
 
 	void OgreFont::saveTextureToFile(const Ogre::String& fileName) const

@@ -33,6 +33,8 @@ namespace QuickGUI
 		virtual float getGlyphBearing(Ogre::UTFString::code_point cp) const = 0;
 		/// Returns the pen advance in pixels the font gives a code point, before the whitespace rules of getGlyphAdvance.
 		virtual float getGlyphDesignAdvance(Ogre::UTFString::code_point cp) const = 0;
+		/// Returns the vertical center in pixels of the visible part of a glyph, from the top of its bitmap.
+		virtual float getGlyphInkCenter(Ogre::UTFString::code_point cp) const = 0;
 		/// Saves the texture that holds the glyph bitmaps to file.
 		virtual void saveTextureToFile(const Ogre::String& fileName) const = 0;
 
