@@ -5,7 +5,7 @@ namespace QuickGUI
 {
 	TextLine::TextLine()
 	{
-		mLargestFont.setNull();
+		mLargestFont = NULL;
 		mMaskText = false;
 	}
 
@@ -15,13 +15,11 @@ namespace QuickGUI
 
 	void TextLine::_verticallyAlignCharacters()
 	{
-		Ogre::TexturePtr largestFontTexture = Text::getFontTexture(mLargestFont);
-		float maxBaseLine = static_cast<float>(mLargestFont->getTrueTypeMaxBearingY());
+		float maxBaseLine = mLargestFont->getMaxBearingY();
 
 		for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 		{
-			Ogre::TexturePtr tp = Text::getFontTexture((*it)->fontPtr);
-			float baseLine = static_cast<float>((*it)->fontPtr->getTrueTypeMaxBearingY());
+			float baseLine = (*it)->font->getMaxBearingY();
 
 			(*it)->dimensions.position.y = maxBaseLine - baseLine;
 			(*it)->dimensions.position.roundUp();
@@ -40,15 +38,15 @@ namespace QuickGUI
 		c->setBaseline(baseline);
 		mCharacters.push_back(c);
 
-		if(mLargestFont.isNull() || Text::getFontHeight(c->fontPtr) > Text::getFontHeight(mLargestFont))
+		if((mLargestFont == NULL) || (c->font->getHeight() > mLargestFont->getHeight()))
 		{
-			mLargestFont = c->fontPtr;
+			mLargestFont = c->font;
 			_verticallyAlignCharacters();
 		}
 		else
 		{
-			float maxBaseLine = static_cast<float>(mLargestFont->getTrueTypeMaxBearingY());
-			float baseLine = static_cast<float>(c->fontPtr->getTrueTypeMaxBearingY());
+			float maxBaseLine = mLargestFont->getMaxBearingY();
+			float baseLine = c->font->getMaxBearingY();
 			c->dimensions.position.y = maxBaseLine - baseLine;
 		}
 
@@ -92,19 +90,17 @@ namespace QuickGUI
 			brush->endRectQueue();
 
 			// Set texture to largest font's texture
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
-			brush->setTexture(texturePtr);
+			brush->setTexture(mLargestFont->getTextureName());
 			if(!mCharacters.empty())
 				brush->setColor(mCharacters.front()->colorValue);
 
 			brush->beginRectQueue();
 
 			// Get the glyph's UV Coords
-			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
-			// Use UV Coords to Determine character dimensions
-			Size s(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
-			float maskAdvance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
-			float maskBearing = Text::getGlyphBearing(mLargestFont,mMaskSymbol);
+			UVRect uvCoords = mLargestFont->getGlyphUVCoords(mMaskSymbol);
+			Size s = mLargestFont->getGlyphBitmapSize(mMaskSymbol);
+			float maskAdvance = mLargestFont->getGlyphAdvance(mMaskSymbol);
+			float maskBearing = mLargestFont->getGlyphBearing(mMaskSymbol);
 
 			Point glyphPosition(maskBearing, mCharacters.front()->dimensions.position.y);
 			glyphPosition.roundUp();
@@ -121,11 +117,11 @@ namespace QuickGUI
 				if((*it)->isWhiteSpace())
 					continue;
 
-				if( currentTexture != (*it)->texturePtr->getName() )
+				if( currentTexture != (*it)->font->getTextureName() )
 				{
 					brush->endRectQueue();
 
-					currentTexture = (*it)->texturePtr->getName();
+					currentTexture = (*it)->font->getTextureName();
 					brush->setTexture(currentTexture);
 
 					brush->beginRectQueue();
@@ -165,7 +161,7 @@ namespace QuickGUI
 
 		if(mMaskText)
 		{
-			float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
+			float advance = mLargestFont->getGlyphAdvance(mMaskSymbol);
 			float charPos = 0;
 
 			for(size_t i = 0; i < mCharacters.size(); ++i)
@@ -205,10 +201,12 @@ namespace QuickGUI
 
 	float TextLine::getHeight()
 	{
-		if(mLargestFont.isNull())
+		if(mLargestFont == NULL)
+		{
 			return 0;
+		}
 
-		return Text::getFontHeight(mLargestFont);
+		return mLargestFont->getHeight();
 	}
 
 	int TextLine::getLength()
@@ -225,7 +223,7 @@ namespace QuickGUI
 		Point p;
 
 		if(mMaskText)
-			p.x = index * Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
+			p.x = index * mLargestFont->getGlyphAdvance(mMaskSymbol);
 		else
 			p.x = mCharacters[index]->getBaseline();
 
@@ -240,7 +238,7 @@ namespace QuickGUI
 		if(mMaskText)
 		{
 			float width = 0;
-			float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
+			float advance = mLargestFont->getGlyphAdvance(mMaskSymbol);
 
 			for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 			{

@@ -1,6 +1,7 @@
 #ifndef QUICKGUIBUTTON_H
 #define QUICKGUIBUTTON_H
 
+#include "QuickGUIFont.h"
 #include "QuickGUILabel.h"
 
 namespace QuickGUI
@@ -84,6 +85,8 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
+		void setText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.

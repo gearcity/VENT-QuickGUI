@@ -1,16 +1,29 @@
 #include "QuickGUICharacter.h"
 #include "QuickGUIText.h"
+#include "QuickGUIRoot.h"
 
 namespace QuickGUI
 {
-	Character::Character(Ogre::UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv) :
+	Character::Character(Ogre::UTFString::code_point cp, const Font& f, ColourValue cv) :
 		codePoint(cp),
 		colorValue(cv.r,cv.g,cv.b,cv.a),
+		font(&f),
 		mHighlighted(false),
 		mAdvance(0),
 		mBearing(0)
 	{
-		setFont(fp);
+		setFont(f);
+	}
+
+	Character::Character(Ogre::UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv) :
+		codePoint(cp),
+		colorValue(cv.r,cv.g,cv.b,cv.a),
+		font(&Root::getSingleton().getFont(fp->getName())),
+		mHighlighted(false),
+		mAdvance(0),
+		mBearing(0)
+	{
+		setFont(*font);
 	}
 
 	bool Character::getHighlighted()
@@ -38,28 +51,25 @@ namespace QuickGUI
 		dimensions.position.x = baseline + mBearing;
 	}
 
-	void Character::setFont(Ogre::FontPtr fp)
+	void Character::setFont(const Font& f)
 	{
 		float baseline = getBaseline();
 
-		fontPtr = fp;
-		texturePtr = Text::getFontTexture(fp);
+		font = &f;
+		fontPtr = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(f.getName()));
+		texturePtr = static_cast<Ogre::TexturePtr>(Ogre::TextureManager::getSingleton().getByName(f.getTextureName()));
 		mBearing = 0;
-		mAdvance = Text::getGlyphAdvance(fp,codePoint);
+		mAdvance = font->getGlyphAdvance(codePoint);
 
 		if(Text::isWhiteSpace(codePoint))
 		{
-			dimensions.size = Size(mAdvance,Text::getGlyphHeight(fp,'0'));
+			dimensions.size = Size(mAdvance,font->getGlyphHeight('0'));
 		}
 		else
 		{
-			// Get the glyph's UV Coords
-			uvCoords = Text::getGlyphUVCoords(fp,codePoint);
-
-			// Use UV Coords to Determine character dimensions
-			dimensions.size = Size(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
-
-			mBearing = Text::getGlyphBearing(fp,codePoint);
+			uvCoords = font->getGlyphUVCoords(codePoint);
+			dimensions.size = font->getGlyphBitmapSize(codePoint);
+			mBearing = font->getGlyphBearing(codePoint);
 		}
 
 		dimensions.size.roundUp();

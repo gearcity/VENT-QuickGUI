@@ -1,6 +1,7 @@
 #ifndef QUICKGUITEXTAREA_H
 #define QUICKGUITEXTAREA_H
 
+#include "QuickGUIFont.h"
 #include "QuickGUIText.h"
 #include "QuickGUITextCursor.h"
 #include "QuickGUITimerManager.h"
@@ -82,6 +83,8 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
+		void addText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
@@ -98,6 +101,8 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
+		void addTextLine(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void addTextLine(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
@@ -275,6 +280,8 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
+		void setText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the text for this object.
@@ -401,7 +408,7 @@ namespace QuickGUI
 		void keyDownTimerCallback();
 
 		/// Storing reference to font for quick use.
-		Ogre::FontPtr mCurrentFont;
+		const Font* mCurrentFont;
 
 		/// Timer that toggles cursor on and off.
 		Timer* mBlinkTimer;

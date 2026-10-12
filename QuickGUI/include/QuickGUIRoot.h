@@ -3,9 +3,9 @@
 
 #include "QuickGUIEventHandlerManager.h"
 #include "QuickGUIExportDLL.h"
+#include "QuickGUIFont.h"
 #include "QuickGUIManager.h"
 
-#include <OgreFontManager.h>
 #include "OgrePrerequisites.h"
 #include "OgreSingleton.h"
 
@@ -57,6 +57,14 @@ namespace QuickGUI
 		*/
 		Ogre::String getDefaultFontName();
 		/**
+		* Gets a font by the name it was registered with. Throws if there is no such font.
+		*/
+		const Font& getFont(const Ogre::String& fontName);
+		/**
+		* Gets the font that is used by widgets on initialization, see "getDefaultFontName".
+		*/
+		const Font& getDefaultFont();
+		/**
 		* Get the number of seconds the cursor has to idle over a widget
 		* before the ON_HOVER event is fired.
 		*/
@@ -88,7 +96,8 @@ namespace QuickGUI
 
 	protected:
 		ColourValue mDefaultColor;
-		Ogre::FontPtr mDefaultFont;
+		Ogre::String mDefaultFontName;
+		std::map<Ogre::String,Font*> mFonts;
 
 		int mGUIManagerCounter;
 

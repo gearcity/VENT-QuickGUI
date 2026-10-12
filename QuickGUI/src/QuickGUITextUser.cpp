@@ -46,16 +46,16 @@ namespace QuickGUI
 		mText = OGRE_NEW_T(Text,Ogre::MEMCATEGORY_GENERAL)(mDesc->textDesc);
 	}
 
-	void TextUser::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextUser::addText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->addText(s,fp,cv);
+		mText->addText(s,font,cv);
 
 		Redraw();
 	}
 
 	void TextUser::addText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
 	{
-		addText(s,Text::getFont(fontName),cv);
+		addText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
 	void TextUser::addText(Ogre::UTFString s)
@@ -204,9 +204,9 @@ namespace QuickGUI
 		Redraw();
 	}
 
-	void TextUser::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextUser::setText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->setText(s,fp,cv);
+		mText->setText(s,font,cv);
 
 		onTextChanged();
 
@@ -215,7 +215,7 @@ namespace QuickGUI
 
 	void TextUser::setText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
 	{
-		setText(s,Text::getFont(fontName),cv);
+		setText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
 	void TextUser::setText(Ogre::UTFString s)
@@ -301,5 +301,15 @@ namespace QuickGUI
 		onTextChanged();
 
 		Redraw();
+	}
+
+	void TextUser::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void TextUser::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

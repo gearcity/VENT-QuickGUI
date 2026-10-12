@@ -1,6 +1,7 @@
 #ifndef QUICKGUICONSOLE_H
 #define QUICKGUICONSOLE_H
 
+#include "QuickGUIFont.h"
 #include "QuickGUIConsoleEnums.h"
 #include "QuickGUIConsoleInputHandler.h"
 #include "QuickGUIComponentWidget.h"
@@ -82,6 +83,8 @@ namespace QuickGUI
 		/**
 		* Adds text to the output Display area.
 		*/
+		void addDisplayAreaText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void addDisplayAreaText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to the output Display area.
@@ -98,6 +101,8 @@ namespace QuickGUI
 		/**
 		* Adds text to this object.
 		*/
+		void addInputBoxText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void addInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
@@ -216,6 +221,8 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
+		void setInputBoxText(Ogre::UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
 		void setInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the Text using Text Segments.
