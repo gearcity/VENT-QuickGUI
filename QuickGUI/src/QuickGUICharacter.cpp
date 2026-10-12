@@ -44,23 +44,12 @@ namespace QuickGUI
 
 		fontPtr = fp;
 		texturePtr = Text::getFontTexture(fp);
-		mAdvance = 0;
 		mBearing = 0;
+		mAdvance = Text::getGlyphAdvance(fp,codePoint);
 
-		if(Text::isNewLine(codePoint))
+		if(Text::isWhiteSpace(codePoint))
 		{
-			dimensions.size.height = Text::getGlyphHeight(fp,'0');
-			dimensions.size.width = 0;
-		}
-		else if(Text::isSpace(codePoint) || Text::isTab(codePoint))
-		{
-			float height = Text::getGlyphHeight(fp,'0');
-			mAdvance = Text::getGlyphAdvance(fp,Text::UNICODE_ZERO);
-			if(mAdvance <= 0)
-				mAdvance = height;
-			if(Text::isTab(codePoint))
-				mAdvance *= 4;
-			dimensions.size = Size(mAdvance,height);
+			dimensions.size = Size(mAdvance,Text::getGlyphHeight(fp,'0'));
 		}
 		else
 		{
@@ -70,10 +59,7 @@ namespace QuickGUI
 			// Use UV Coords to Determine character dimensions
 			dimensions.size = Size(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
 
-			mAdvance = Text::getGlyphAdvance(fp,codePoint);
 			mBearing = Text::getGlyphBearing(fp,codePoint);
-			if(mAdvance <= 0)
-				mAdvance = dimensions.size.width;
 		}
 
 		dimensions.size.roundUp();

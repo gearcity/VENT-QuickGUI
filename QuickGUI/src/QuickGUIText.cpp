@@ -382,6 +382,17 @@ namespace QuickGUI
 
     float Text::getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
     {
+        if(isNewLine(cp))
+            return 0;
+
+        if(isSpace(cp) || isTab(cp))
+        {
+            float spaceAdvance = getGlyphAdvance(fp, Text::UNICODE_ZERO);
+            if(spaceAdvance <= 0)
+                spaceAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
+            return isTab(cp) ? (spaceAdvance * 4.0f) : spaceAdvance;
+        }
+
         Ogre::TexturePtr tp = getFontTexture(fp);
 
         const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
@@ -423,25 +434,7 @@ namespace QuickGUI
         float width = 0;
 
         for(Ogre::UTFString::iterator it = s.begin(); it != s.end(); ++it)
-        {
-            if(isNewLine((*it)))
-                continue;
-
-            if(isTab((*it)))
-            {
-                float spaceAdvance = getGlyphAdvance(fp, Text::UNICODE_ZERO);
-                if(spaceAdvance <= 0)
-                    spaceAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
-                width += (spaceAdvance * 4.0f);
-            }
-            else
-            {
-                float charAdvance = getGlyphAdvance(fp, isSpace((*it)) ? Text::UNICODE_ZERO : (*it));
-                if(charAdvance <= 0)
-                    charAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
-                width += charAdvance;
-            }
-        }
+            width += getGlyphAdvance(fp, (*it));
 
         return width;
     }

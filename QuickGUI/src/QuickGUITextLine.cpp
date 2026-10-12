@@ -101,8 +101,9 @@ namespace QuickGUI
 
 			// Get the glyph's UV Coords
 			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
-			Size s = Text::getGlyphSize(mLargestFont,mMaskSymbol);
-			float maskAdvance = getMaskAdvance();
+			// Use UV Coords to Determine character dimensions
+			Size s(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
+			float maskAdvance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 			float maskBearing = Text::getGlyphBearing(mLargestFont,mMaskSymbol);
 
 			Point glyphPosition(maskBearing, mCharacters.front()->dimensions.position.y);
@@ -164,7 +165,7 @@ namespace QuickGUI
 
 		if(mMaskText)
 		{
-			float advance = getMaskAdvance();
+			float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 			float charPos = 0;
 
 			for(size_t i = 0; i < mCharacters.size(); ++i)
@@ -224,20 +225,11 @@ namespace QuickGUI
 		Point p;
 
 		if(mMaskText)
-			p.x = index * getMaskAdvance();
+			p.x = index * Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 		else
 			p.x = mCharacters[index]->getBaseline();
 
 		return p;
-	}
-
-	float TextLine::getMaskAdvance()
-	{
-		float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
-		if(advance <= 0)
-			advance = Text::getGlyphSize(mLargestFont,mMaskSymbol).width;
-
-		return advance;
 	}
 
 	float TextLine::getWidth()
@@ -248,7 +240,7 @@ namespace QuickGUI
 		if(mMaskText)
 		{
 			float width = 0;
-			float advance = getMaskAdvance();
+			float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 
 			for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 			{
