@@ -1,3 +1,4 @@
+#include "QuickGUIRoot.h"
 #include "QuickGUITab.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUITabControl.h"
@@ -232,9 +233,9 @@ namespace QuickGUI
 		_adjustTabWidth();
 	}
 
-	void Tab::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Tab::setText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		Label::setText(s,fp,cv);
+		Label::setText(s,font,cv);
 
 		_adjustTabWidth();
 	}
@@ -267,5 +268,10 @@ namespace QuickGUI
 		mSkinElement = NULL;
 		if(mSkinType != NULL)
 			mSkinElement = mSkinType->getSkinElement(MAIN);
+	}
+
+	void Tab::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

@@ -80,7 +80,8 @@ namespace QuickGUI
 		mTextCursor(NULL),
 		mTextInputValidatorSlot(NULL),
 		mCursorIndex(0),
-		mBlinkTimer(NULL)
+		mBlinkTimer(NULL),
+		mCurrentFont(&Root::getSingleton().getDefaultFont())
 	{
 		addWidgetEventHandler(WIDGET_EVENT_CHARACTER_KEY,&TextBox::onCharEntered,this);
 		addWidgetEventHandler(WIDGET_EVENT_KEY_DOWN,&TextBox::onKeyDown,this);
@@ -149,7 +150,7 @@ namespace QuickGUI
 		mDesc->textbox_maxCharacters = td->textbox_maxCharacters;
 
 		// Set a really high width, we want everything on 1 line.
-		mDesc->textDesc.allottedWidth = mDesc->textbox_maxCharacters * Text::getGlyphWidth(mDesc->textbox_defaultFontName,'0')*Root::getSingletonPtr()->getGUIScale();
+		mDesc->textDesc.allottedWidth = mDesc->textbox_maxCharacters * Root::getSingleton().getFont(mDesc->textbox_defaultFontName).getGlyphAdvance('0')*Root::getSingletonPtr()->getGUIScale();
 			
 		mText = OGRE_NEW_T(Text,Ogre::MEMCATEGORY_GENERAL)(mDesc->textDesc);
 
@@ -177,20 +178,20 @@ namespace QuickGUI
 			if(!mTextInputValidatorSlot->isInputValid(cp,mCursorIndex,mText->getText()))
 				return;
 
-		mText->addCharacter(OGRE_NEW_T(Character,Ogre::MEMCATEGORY_GENERAL)(cp,mCurrentFont,mDesc->textbox_defaultColor),mCursorIndex);
+		mText->addCharacter(OGRE_NEW_T(Character,Ogre::MEMCATEGORY_GENERAL)(cp,*mCurrentFont,mDesc->textbox_defaultColor),mCursorIndex);
 		setCursorIndex(mCursorIndex+1);
 	}
 
-	void TextBox::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextBox::addText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->addText(s,fp,cv);
+		mText->addText(s,font,cv);
 
 		redraw();
 	}
 
 	void TextBox::addText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
 	{
-		addText(s,Text::getFont(fontName),cv);
+		addText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
 	void TextBox::addText(Ogre::UTFString s)
@@ -565,7 +566,7 @@ namespace QuickGUI
 	void TextBox::setDefaultFont(const Ogre::String& fontName)
 	{
 		mDesc->textbox_defaultFontName = fontName;
-		mCurrentFont = Text::getFont(fontName);
+		mCurrentFont = &Root::getSingleton().getFont(fontName);
 	}
 
 	void TextBox::setEnabled(bool enabled)
@@ -682,12 +683,12 @@ namespace QuickGUI
 
 	void TextBox::setText(Ogre::UTFString s)
 	{
-		setText(s,Text::getFont(mDesc->textbox_defaultFontName),mDesc->textbox_defaultColor);
+		setText(s,Root::getSingleton().getFont(mDesc->textbox_defaultFontName),mDesc->textbox_defaultColor);
 	}
 
-	void TextBox::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextBox::setText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->setText(s,fp,cv);
+		mText->setText(s,font,cv);
 
 		if(mTextCursor->getVisible())
 			setCursorIndex(mCursorIndex);
@@ -782,5 +783,15 @@ namespace QuickGUI
 			p.translate(mCursorPosition);
 			mTextCursor->setPosition(p);
 		}
+	}
+
+	void TextBox::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void TextBox::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

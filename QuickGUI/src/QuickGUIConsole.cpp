@@ -137,9 +137,9 @@ namespace QuickGUI
 		mInputBox->addWidgetEventHandler(WIDGET_EVENT_CHARACTER_KEY,function);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::addDisplayAreaText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mDisplayArea->addText(s,fp,cv);
+		mDisplayArea->addText(s,font,cv);
 	}
 
 	void Console::addDisplayAreaText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
@@ -157,14 +157,14 @@ namespace QuickGUI
 		mDisplayArea->addText(segments);
 	}
 
-	void Console::addInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::addInputBoxText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mInputBox->addText(s,fp,cv);
+		mInputBox->addText(s,font,cv);
 	}
 
 	void Console::addInputBoxText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
 	{
-		addInputBoxText(s,Text::getFont(fontName),cv);
+		addInputBoxText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
 	void Console::addInputBoxText(Ogre::UTFString s)
@@ -320,12 +320,12 @@ namespace QuickGUI
 
 	void Console::setInputBoxText(Ogre::UTFString s)
 	{
-		setInputBoxText(s,Text::getFont(mDesc->console_inputBoxDefaultFontName),mDesc->console_inputBoxDefaultColor);
+		setInputBoxText(s,Root::getSingleton().getFont(mDesc->console_inputBoxDefaultFontName),mDesc->console_inputBoxDefaultColor);
 	}
 
-	void Console::setInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::setInputBoxText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mInputBox->setText(s,fp,cv);
+		mInputBox->setText(s,font,cv);
 	}
 
 	void Console::setInputBoxText(std::vector<TextSegment> segments)
@@ -352,5 +352,20 @@ namespace QuickGUI
 		ComponentWidget::setSkinType(type);
 
 		_updateComponentDimensions();
+	}
+
+	void Console::addDisplayAreaText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addDisplayAreaText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void Console::addInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addInputBoxText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void Console::setInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setInputBoxText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

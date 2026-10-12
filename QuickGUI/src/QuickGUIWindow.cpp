@@ -121,7 +121,7 @@ namespace QuickGUI
 			tbd->widget_name = getName() + ".TitleBar";
 			tbd->widget_dimensions.size.width = mClientDimensions.size.width;
 			if(mDesc->textDesc.segments.empty())
-				tbd->widget_dimensions.size.height = Text::getFontHeight(Root::getSingleton().getDefaultFontName()) + 6;
+				tbd->widget_dimensions.size.height = Root::getSingleton().getDefaultFont().getHeight() + 6;
 			else
 				tbd->widget_dimensions.size.height = mDesc->textDesc.getTextHeight() + 6;
 
@@ -522,11 +522,11 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Window::setTitleBarText(Ogre::UTFString s, const Font& font, const ColourValue& cv)
 	{
 		if(mTitleBar != NULL)
 		{
-			mTitleBar->setText(s,fp,cv);
+			mTitleBar->setText(s,font,cv);
 			updateClientDimensions();
 
 			redraw();
@@ -535,7 +535,7 @@ namespace QuickGUI
 
 	void Window::setTitleBarText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
 	{
-		setTitleBarText(s,Text::getFont(fontName),cv);
+		setTitleBarText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
 	void Window::setTitleBarText(std::vector<TextSegment> segments)
@@ -774,5 +774,10 @@ namespace QuickGUI
 		}
 
 		redraw();
+	}
+
+	void Window::setTitleBarText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setTitleBarText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }
