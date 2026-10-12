@@ -2,6 +2,7 @@
 #define QUICKGUIBRUSH_H
 
 #include "QuickGUIBrushEnums.h"
+#include "QuickGUIDeprecated.h"
 #include "QuickGUIException.h"
 #include "QuickGUIExportDLL.h"
 #include "QuickGUIRect.h"
@@ -124,6 +125,7 @@ namespace QuickGUI
 		/**
 		* Gets the target currently being drawn to.
 		*/
+		QUICKGUI_DEPRECATED("Use pushRenderTarget and popRenderTarget to return to a render target.")
 		Ogre::Viewport* getRenderTarget();
 		/**
 		* Retrieves the current texture used for drawing operations.
@@ -149,6 +151,11 @@ namespace QuickGUI
 		* will have the same texture.
 		*/
 		void queueRect(Rect r, UVRect ur);
+
+		/// Remembers the current render target, so popRenderTarget can return to it.
+		void pushRenderTarget();
+		/// Returns to the render target that the matching pushRenderTarget remembered.
+		void popRenderTarget();
 
 		/**
 		* Restores rendering system configuration.  Called after all drawing operations
@@ -176,6 +183,8 @@ namespace QuickGUI
 		* Sets the opacity of future elements drawn on the render target.
 		*/
 		void setOpacity(float opacity);
+		/// Draws to the default viewport.
+		void setDefaultRenderTarget();
 		/**
 		* This function specifies where to draw to.
 		*/
@@ -184,6 +193,7 @@ namespace QuickGUI
 		* This function specifies where to draw to.  If NULL is passed in, the
 		* default viewport is written to.
 		*/
+		QUICKGUI_DEPRECATED("Use setDefaultRenderTarget. The GUIManager sets the default viewport with updateViewport.")
 		void setRenderTarget(Ogre::Viewport* vp);
 		/**
 		* Sets the current texture to draw with
@@ -214,6 +224,7 @@ namespace QuickGUI
 		Ogre::MaterialPtr mGUIMaterial;
 
 		Ogre::Viewport* mRenderTarget;
+		std::vector<Ogre::Viewport*> mRenderTargetStack;
 		float mTargetWidth;
 		float mTargetHeight;
 		
@@ -259,6 +270,8 @@ namespace QuickGUI
 		*/
 		void _declareVertexStructure();
 		void _destroyVertexBuffer();
+		/// Sets the viewport that is drawn to. NULL is the default viewport.
+		void _setViewport(Ogre::Viewport* vp);
 
 		// Vertex functions
 
@@ -276,6 +289,11 @@ namespace QuickGUI
         void _initialiseGpuPipeline();
         void _applyPassState();
         void _applyFixedFunctionDefaults();
+
+        class RenderStrategy;
+        class FixedFunctionStrategy;
+        class GlslStrategy;
+        RenderStrategy* mStrategy;
     };
 }
 
