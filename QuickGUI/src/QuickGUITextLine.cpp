@@ -16,12 +16,12 @@ namespace QuickGUI
 	void TextLine::_verticallyAlignCharacters()
 	{
 		Ogre::TexturePtr largestFontTexture = Text::getFontTexture(mLargestFont);
-		float maxBaseLine = (mLargestFont->getTrueTypeMaxBearingY() >> 6);
+		float maxBaseLine = static_cast<float>(mLargestFont->getTrueTypeMaxBearingY());
 
 		for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 		{
 			Ogre::TexturePtr tp = Text::getFontTexture((*it)->fontPtr);
-			float baseLine = ((*it)->fontPtr->getTrueTypeMaxBearingY() >> 6);
+			float baseLine = static_cast<float>((*it)->fontPtr->getTrueTypeMaxBearingY());
 
 			(*it)->dimensions.position.y = maxBaseLine - baseLine;
 			(*it)->dimensions.position.roundUp();
@@ -30,20 +30,16 @@ namespace QuickGUI
 
 	void TextLine::addCharacter(Character* c)
 	{
-		// Check if character can fit within the allotted width for this TextLine
-		float xCoord = 0;
+		float baseline = 0;
 		if(!mCharacters.empty())
 		{
 			Character* lastChar = mCharacters.back();
-			xCoord = lastChar->dimensions.position.x + lastChar->dimensions.size.width;
+			baseline = lastChar->getBaseline() + lastChar->getAdvance();
 		}
 		
-		// Add the character and set its position
+		c->setBaseline(baseline);
 		mCharacters.push_back(c);
 
-		c->dimensions.position.x += xCoord;
-
-		// Adjust Y position to match largest baseline
 		if(mLargestFont.isNull() || Text::getFontHeight(c->fontPtr) > Text::getFontHeight(mLargestFont))
 		{
 			mLargestFont = c->fontPtr;
@@ -51,10 +47,8 @@ namespace QuickGUI
 		}
 		else
 		{
-			Ogre::TexturePtr largestFontTexture = Text::getFontTexture(mLargestFont);
-			float maxBaseLine = (mLargestFont->getTrueTypeMaxBearingY() >> 6);
-			float baseLine = (c->fontPtr->getTrueTypeMaxBearingY() >> 6);
-
+			float maxBaseLine = static_cast<float>(mLargestFont->getTrueTypeMaxBearingY());
+			float baseLine = static_cast<float>(c->fontPtr->getTrueTypeMaxBearingY());
 			c->dimensions.position.y = maxBaseLine - baseLine;
 		}
 
@@ -85,7 +79,7 @@ namespace QuickGUI
 			if((*it)->getHighlighted())
 			{
 				brush->setColor((*it)->getHighlightColor());
-				brush->queueRect(Rect((*it)->dimensions.position + mPosition,(*it)->dimensions.size),(*it)->uvCoords);
+				brush->queueRect(Rect((*it)->getAdvanceRect().position + mPosition,(*it)->getAdvanceRect().size),(*it)->uvCoords);
 			}
 		}
 
@@ -100,7 +94,8 @@ namespace QuickGUI
 			// Set texture to largest font's texture
 			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
 			brush->setTexture(texturePtr);
-			brush->setColor(mCharacters.front()->colorValue);
+			if(!mCharacters.empty())
+				brush->setColor(mCharacters.front()->colorValue);
 
 			brush->beginRectQueue();
 
@@ -108,14 +103,15 @@ namespace QuickGUI
 			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
 			// Use UV Coords to Determine character dimensions
 			Size s(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
+			float maskAdvance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
+			float maskBearing = Text::getGlyphBearing(mLargestFont,mMaskSymbol);
 
-			Point p = mCharacters.front()->dimensions.position;
-			p.roundUp();
+			Point glyphPosition(maskBearing, mCharacters.front()->dimensions.position.y);
+			glyphPosition.roundUp();
 
-			for(std::vector<Character*>::iterator it = mCharacters.begin(); it != --(mCharacters.end()); ++it)
+			for(size_t i = 0; (i + 1) < mCharacters.size(); ++i)
 			{
-				brush->queueRect(Rect(p + mPosition,s),uvCoords);
-				p.x += s.width;
+				brush->queueRect(Rect(Point(glyphPosition.x + (i * maskAdvance),glyphPosition.y) + mPosition,s),uvCoords);
 			}
 		}
 		else
@@ -169,55 +165,42 @@ namespace QuickGUI
 
 		if(mMaskText)
 		{
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
-
-			// Get the glyph's UV Coords
-			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
-			// Use UV Coords to Determine character dimensions
-			Size s(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
-
-			// Simulated position - text is masked
+			float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 			float charPos = 0;
 
-			for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
+			for(size_t i = 0; i < mCharacters.size(); ++i)
 			{
-				// Determine if the position is to the left of a given character
 				if(p.x < charPos)
 				{
-					// If we make it here we know the position is to the left of this cursor.
-					// If there is previous character and the position is closer to the previous character, return its index.
-					if((index > 0) &&  (p.x < (charPos - (s.width / 2.0))))
+					if((index > 0) && (p.x < (charPos - (advance / 2.0f))))
 						return (index - 1);
 					else
 						return index;
 				}
 
-				charPos += s.width;
+				charPos += advance;
 				++index;
 			}
+
+			return index;
 		}
-		else
+
+		for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 		{
-			for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
-			{
-				// Determine if the position is to the left of a given character
-				if(p.x < (*it)->dimensions.position.x)
-				{
-					// If we make it here we know the position is to the left of this cursor.
-					// If there is previous character and the position is closer to the previous character, return its index.
-					if((index > 0) &&  (p.x < ((*it)->dimensions.position.x - (mCharacters[index - 1]->dimensions.size.width / 2.0))))
-						return (index - 1);
-					else
-						return index;
-				}
+			float left = (*it)->getBaseline();
 
-				++index;
+			if(p.x < left)
+			{
+				if((index > 0) && (p.x < (left - (mCharacters[index - 1]->getAdvance() / 2.0f))))
+					return (index - 1);
+				else
+					return index;
 			}
 
-			index -= 1;
+			++index;
 		}
 
-		return index;
+		return index - 1;
 	}
 
 	float TextLine::getHeight()
@@ -242,20 +225,9 @@ namespace QuickGUI
 		Point p;
 
 		if(mMaskText)
-		{
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
-
-			// Get the glyph's UV Coords
-			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
-			// Use UV Coords to Determine character dimensions
-			Size s(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
-
-			p.x = index * s.width;
-		}
+			p.x = index * Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 		else
-		{
-			p.x = mCharacters[index]->dimensions.position.x;
-		}
+			p.x = mCharacters[index]->getBaseline();
 
 		return p;
 	}
@@ -265,31 +237,41 @@ namespace QuickGUI
 		if(mCharacters.empty())
 			return 0;
 
-		float width = 0;
-
 		if(mMaskText)
 		{
-			Ogre::TexturePtr texturePtr = Text::getFontTexture(mLargestFont);
-		
-			// Get the glyph's UV Coords
-			UVRect uvCoords = Text::getGlyphUVCoords(mLargestFont,mMaskSymbol);
-			// Use UV Coords to Determine character dimensions
-			Size s(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
+			float width = 0;
+			float advance = Text::getGlyphAdvance(mLargestFont,mMaskSymbol);
 
 			for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
 			{
 				if(Text::isNullCharacter((*it)->codePoint))
 					continue;
 
-				width += s.width;
+				width += advance;
 			}
-		}
-		else
-		{
-			width = ((mCharacters.back()->dimensions.position.x + mCharacters.back()->dimensions.size.width) - mCharacters.front()->dimensions.position.x);
+
+			return width;
 		}
 
-		return width;
+		Character* firstCharacter = NULL;
+		Character* lastCharacter = NULL;
+
+		for(std::vector<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
+		{
+			Character* character = (*it);
+			if(Text::isNewLine(character->codePoint) || Text::isNullCharacter(character->codePoint))
+				continue;
+
+			if(firstCharacter == NULL)
+				firstCharacter = character;
+
+			lastCharacter = character;
+		}
+
+		if(firstCharacter == NULL || lastCharacter == NULL)
+			return 0;
+
+		return (lastCharacter->getBaseline() + lastCharacter->getAdvance()) - firstCharacter->getBaseline();
 	}
 
 	void TextLine::setMaskText(bool mask, Ogre::UTFString::code_point maskSymbol)

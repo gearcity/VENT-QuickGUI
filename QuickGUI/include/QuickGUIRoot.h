@@ -5,7 +5,7 @@
 #include "QuickGUIExportDLL.h"
 #include "QuickGUIManager.h"
 
-#include "Overlay/OgreFontManager.h"
+#include <OgreFontManager.h>
 #include "OgrePrerequisites.h"
 #include "OgreSingleton.h"
 

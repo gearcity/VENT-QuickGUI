@@ -9,6 +9,7 @@
 
 #include "OgreMaterial.h"
 #include "OgreTechnique.h"
+#include <OgreFont.h>
 
 namespace QuickGUI
 {
@@ -358,11 +359,8 @@ namespace QuickGUI
 
     Size Text::getGlyphSize(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
     {
-        Ogre::TexturePtr tp = getFontTexture(fp);
-
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
-        float width = ((uvRect.right - uvRect.left) * tp->getWidth());
-        float height = ((uvRect.bottom - uvRect.top) * tp->getHeight());
+        float height = getGlyphHeight(fp, cp);
+        float width = getGlyphAdvance(fp, cp);
 
         return Size(width,height);
     }
@@ -374,12 +372,56 @@ namespace QuickGUI
 
     float Text::getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
     {
+        return getGlyphAdvance(fp, cp);
+    }
+
+    float Text::getGlyphAdvance(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    {
+        return getGlyphAdvance(getFont(fontName),cp);
+    }
+
+    float Text::getGlyphAdvance(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        if(isNewLine(cp))
+            return 0;
+
+        if(isSpace(cp) || isTab(cp))
+        {
+            float spaceAdvance = getGlyphAdvance(fp, Text::UNICODE_ZERO);
+            if(spaceAdvance <= 0)
+                spaceAdvance = getGlyphHeight(fp, Text::UNICODE_ZERO);
+            return isTab(cp) ? (spaceAdvance * 4.0f) : spaceAdvance;
+        }
+
         Ogre::TexturePtr tp = getFontTexture(fp);
 
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
-        float width = ((uvRect.right - uvRect.left) * tp->getWidth());
+        const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
+        float fontHeight = (glyph.uvRect.bottom - glyph.uvRect.top) * tp->getHeight();
+        if(fontHeight == 0)
+            fontHeight = getGlyphHeight(fp, Text::UNICODE_ZERO);
+        float advance = Ogre::Math::Floor((glyph.advance * fontHeight) + 0.5f);
+        if(advance <= 0)
+        {
+            float width = (glyph.uvRect.right - glyph.uvRect.left) * tp->getWidth();
+            if(width > advance)
+                advance = width;
+        }
+        return advance;
+    }
 
-        return width;
+    float Text::getGlyphBearing(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    {
+        return getGlyphBearing(getFont(fontName),cp);
+    }
+
+    float Text::getGlyphBearing(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    {
+        Ogre::TexturePtr tp = getFontTexture(fp);
+        const Ogre::GlyphInfo& glyph = fp->getGlyphInfo(cp);
+        float fontHeight = (glyph.uvRect.bottom - glyph.uvRect.top) * tp->getHeight();
+        if(fontHeight == 0)
+            fontHeight = getGlyphHeight(fp, Text::UNICODE_ZERO);
+        return Ogre::Math::Floor((glyph.bearing * fontHeight) + 0.5f);
     }
 
     float Text::getTextWidth(const Ogre::String& fontName, Ogre::UTFString s)
@@ -390,27 +432,9 @@ namespace QuickGUI
     float Text::getTextWidth(Ogre::FontPtr fp, Ogre::UTFString s)
     {
         float width = 0;
-        float charWidth = 0;
-        Ogre::TexturePtr tp = getFontTexture(fp);
 
         for(Ogre::UTFString::iterator it = s.begin(); it != s.end(); ++it)
-        {
-            if(isSpace((*it)))
-            {
-                charWidth = getGlyphSize(fp,'0').width;
-            }
-            else if(isTab((*it)))
-            {
-                charWidth = (getGlyphSize(fp,'0').width * 4);
-            }
-            else
-            {
-                Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords((*it));
-                charWidth = ((uvRect.right - uvRect.left) * tp->getWidth());
-            }
-
-            width += charWidth;
-        }
+            width += getGlyphAdvance(fp, (*it));
 
         return width;
     }
@@ -500,7 +524,7 @@ namespace QuickGUI
                         float availableSpace = mTextDesc->allottedWidth - currentTextLine->getWidth();
 
                         // If the character doesn't fit on this TextLine, create a new TextLine and repeat the process
-                        if( (*cItr)->dimensions.size.width > availableSpace )
+                        if( (*cItr)->getAdvance() > availableSpace )
                         {
                             currentTextLine = OGRE_NEW_T(TextLine,Ogre::MEMCATEGORY_GENERAL)();
                             mTextLines.push_back(currentTextLine);
@@ -523,7 +547,7 @@ namespace QuickGUI
                     {
                         while( (endOfWord != mCharacters.end()) && !isWhiteSpace((*endOfWord)->codePoint) && (wordLength < availableSpace) )
                         {
-                            wordLength += (*endOfWord)->dimensions.size.width;
+                            wordLength += (*endOfWord)->getAdvance();
                             ++endOfWord;
                         }
 
@@ -538,7 +562,7 @@ namespace QuickGUI
                     {
                         while( (endOfWord != mCharacters.end()) && !isWhiteSpace((*endOfWord)->codePoint) )
                         {
-                            wordLength += (*endOfWord)->dimensions.size.width;
+                            wordLength += (*endOfWord)->getAdvance();
                             ++endOfWord;
                         }
 
@@ -840,7 +864,7 @@ namespace QuickGUI
 
         Character* c = getCharacter(index);
 
-        return Point(c->dimensions.position.x,height);
+        return Point(c->getBaseline(),height);
     }
 
     float Text::getCharacterYPosition(unsigned int index)
