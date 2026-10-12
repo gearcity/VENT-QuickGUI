@@ -23,11 +23,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "LabelDesc"; }
+		virtual std::string getClass() { return "LabelDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Label"; }
+		virtual std::string getWidgetClass() { return "Label"; }
 
 		/**
 		* Restore properties to default values
@@ -46,7 +46,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -61,7 +61,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the vertical alignment of text within this widget's client area.
 		*/
@@ -105,7 +105,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		Label(const Ogre::String& name);
+		Label(const std::string& name);
 		virtual ~Label();
 
 		// Pointer pointing to mWidgetDesc object, but casted for quick use.

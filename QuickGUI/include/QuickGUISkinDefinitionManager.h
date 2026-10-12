@@ -23,20 +23,20 @@ namespace QuickGUI
 		static SkinDefinitionManager& getSingleton(void);
 		static SkinDefinitionManager* getSingletonPtr(void);
 
-		SkinDefinition* getSkinDefinition(const Ogre::String& className);
+		SkinDefinition* getSkinDefinition(const std::string& className);
 
-		bool hasSkinDefinition(const Ogre::String& className);
+		bool hasSkinDefinition(const std::string& className);
 
-		void registerSkinDefinition(const Ogre::String& className, SkinDefinition* d);
+		void registerSkinDefinition(const std::string& className, SkinDefinition* d);
 
 	protected:
 		SkinDefinitionManager();
 		virtual ~SkinDefinitionManager();
 
 #if USEHASHMAPS
-	std::unordered_map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
+	std::unordered_map<std::string,SkinDefinition*> mWidgetSkinDefs;
 #else
-	std::map<Ogre::String,SkinDefinition*> mWidgetSkinDefs;
+	std::map<std::string,SkinDefinition*> mWidgetSkinDefs;
 #endif
 		
 	};

@@ -36,7 +36,7 @@ namespace QuickGUI
 		PropertyGridItemDesc::serialize(b);
 	}
 
-	PropertyGridComboBoxProperty::PropertyGridComboBoxProperty(const Ogre::String& name) :
+	PropertyGridComboBoxProperty::PropertyGridComboBoxProperty(const std::string& name) :
 		PropertyGridItem(name),
 		mComboBox(NULL)
 	{
@@ -65,7 +65,7 @@ namespace QuickGUI
 		mFieldWidget = mComboBox;
 	}
 
-	ListImageItem* PropertyGridComboBoxProperty::createImageItem(const Ogre::String& imageName, int index)
+	ListImageItem* PropertyGridComboBoxProperty::createImageItem(const std::string& imageName, int index)
 	{
 		return mComboBox->createImageItem(imageName,index);
 	}
@@ -75,7 +75,7 @@ namespace QuickGUI
 		return mComboBox->createImageItem(index);
 	}
 
-	ListTextItem* PropertyGridComboBoxProperty::createTextItem(const Ogre::UTFString& text, int index)
+	ListTextItem* PropertyGridComboBoxProperty::createTextItem(const UTFString& text, int index)
 	{
 		return mComboBox->createTextItem(text,index);
 	}
@@ -100,7 +100,7 @@ namespace QuickGUI
 		mComboBox->destroyItem(i);
 	}
 
-	Ogre::String PropertyGridComboBoxProperty::getClass()
+	std::string PropertyGridComboBoxProperty::getClass()
 	{
 		return "PropertyGridComboBoxProperty";
 	}

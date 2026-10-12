@@ -13,10 +13,10 @@ namespace QuickGUI
 	SkinDefinitionManager::~SkinDefinitionManager()
 	{
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
+	for(std::unordered_map<std::string,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinDefinition,Ogre::MEMCATEGORY_GENERAL);
 #else
-	for(std::map<Ogre::String,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
+	for(std::map<std::string,SkinDefinition*>::iterator it = mWidgetSkinDefs.begin(); it != mWidgetSkinDefs.end(); ++it)
 			OGRE_DELETE_T((*it).second,SkinDefinition,Ogre::MEMCATEGORY_GENERAL);
 #endif
 		
@@ -35,7 +35,7 @@ namespace QuickGUI
 		return ( *msSingleton );
 	}
 
-	SkinDefinition* SkinDefinitionManager::getSkinDefinition(const Ogre::String& className)
+	SkinDefinition* SkinDefinitionManager::getSkinDefinition(const std::string& className)
 	{
 		if(!hasSkinDefinition(className))
 			throw Exception(Exception::ERR_SKINNING,"SkinDefinition does not exist for class \"" + className + "\"!","SkinDefinitionManager::getSkinDefinition");
@@ -43,12 +43,12 @@ namespace QuickGUI
 		return mWidgetSkinDefs[className];
 	}
 
-	bool SkinDefinitionManager::hasSkinDefinition(const Ogre::String& className)
+	bool SkinDefinitionManager::hasSkinDefinition(const std::string& className)
 	{
 		return (mWidgetSkinDefs.find(className) != mWidgetSkinDefs.end());
 	}
 
-	void SkinDefinitionManager::registerSkinDefinition(const Ogre::String& className, SkinDefinition* d)
+	void SkinDefinitionManager::registerSkinDefinition(const std::string& className, SkinDefinition* d)
 	{
 		if(hasSkinDefinition(className))
 			throw Exception(Exception::ERR_SKINNING,"SkinDefinition already exists for class \"" + className + "\"!","SkinDefinition::registerSkinDefinition");

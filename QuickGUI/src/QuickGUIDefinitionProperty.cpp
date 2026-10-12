@@ -2,17 +2,17 @@
 
 namespace QuickGUI
 {
-	DefinitionProperty::DefinitionProperty(const Ogre::String& propertyName) :
+	DefinitionProperty::DefinitionProperty(const std::string& propertyName) :
 		mPropertyName(propertyName)
 	{
 	}
 
-	Ogre::String DefinitionProperty::getPropertyName()
+	std::string DefinitionProperty::getPropertyName()
 	{
 		return mPropertyName;
 	}
 
-	Ogre::StringVector DefinitionProperty::getValues()
+	std::vector<std::string> DefinitionProperty::getValues()
 	{
 		return mValues;
 	}

@@ -15,9 +15,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TreeView::BACKGROUND = "background";
-	const Ogre::String TreeView::EXPAND = "expand";
-	const Ogre::String TreeView::MINIMIZE = "minimize";
+	const std::string TreeView::BACKGROUND = "background";
+	const std::string TreeView::EXPAND = "expand";
+	const std::string TreeView::MINIMIZE = "minimize";
 
 	void TreeView::registerSkinDefinition()
 	{
@@ -79,7 +79,7 @@ namespace QuickGUI
 		}
 	}
 
-	TreeView::TreeView(const Ogre::String& name) :
+	TreeView::TreeView(const std::string& name) :
 		ContainerWidget(name),
 		mSelectedNode(NULL),
 		mAutoNameCounter(0),
@@ -159,7 +159,7 @@ namespace QuickGUI
 		updateNodes();
 	}
 
-	void TreeView::addUserDefinedTreeViewEventHandler(TreeViewEvent EVENT, const Ogre::String& handlerName)
+	void TreeView::addUserDefinedTreeViewEventHandler(TreeViewEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->treeview_userHandlers[EVENT] = handlerName;
 	}
@@ -197,7 +197,7 @@ namespace QuickGUI
 		return createNode("Node",index);
 	}
 
-	TreeViewNode* TreeView::createNode(const Ogre::UTFString& text, int index)
+	TreeViewNode* TreeView::createNode(const UTFString& text, int index)
 	{
 		TreeViewNodeDesc* d = DescManager::getSingletonPtr()->getDefaultTreeViewNodeDesc();
 		d->resetToDefault();
@@ -228,7 +228,7 @@ namespace QuickGUI
 		return createCheckBoxNode("CheckBoxNode",index);
 	}
 
-	TreeViewCheckBoxNode* TreeView::createCheckBoxNode(const Ogre::UTFString& text, int index)
+	TreeViewCheckBoxNode* TreeView::createCheckBoxNode(const UTFString& text, int index)
 	{
 		TreeViewCheckBoxNodeDesc* d = DescManager::getSingletonPtr()->getDefaultTreeViewCheckBoxNodeDesc();
 		d->resetToDefault();
@@ -259,7 +259,7 @@ namespace QuickGUI
 		return createRadioButtonNode("RadioButtonNode",index);
 	}
 
-	TreeViewRadioButtonNode* TreeView::createRadioButtonNode(const Ogre::UTFString& text, int index)
+	TreeViewRadioButtonNode* TreeView::createRadioButtonNode(const UTFString& text, int index)
 	{
 		TreeViewRadioButtonNodeDesc* d = DescManager::getSingletonPtr()->getDefaultTreeViewRadioButtonNodeDesc();
 		d->resetToDefault();
@@ -303,7 +303,7 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String TreeView::getClass()
+	std::string TreeView::getClass()
 	{
 		return "TreeView";
 	}
@@ -313,7 +313,7 @@ namespace QuickGUI
 		return mDesc->treeview_doubleClickToToggle;
 	}
 
-	Ogre::String TreeView::getExpandSkinTypeName()
+	std::string TreeView::getExpandSkinTypeName()
 	{
 		return mSkinType->getSkinReference(EXPAND)->typeName;
 	}
@@ -333,7 +333,7 @@ namespace QuickGUI
 		return static_cast<int>(mNodes.size());
 	}
 
-	Ogre::String TreeView::getMinimizeSkinTypeName()
+	std::string TreeView::getMinimizeSkinTypeName()
 	{
 		return mSkinType->getSkinReference(MINIMIZE)->typeName;
 	}

@@ -5,9 +5,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ProgressBar::BACKGROUND = "background";
-	const Ogre::String ProgressBar::BAR = "bar";
-	const Ogre::String ProgressBar::CLIPMAP = "clipmap";
+	const std::string ProgressBar::BACKGROUND = "background";
+	const std::string ProgressBar::BAR = "bar";
+	const std::string ProgressBar::CLIPMAP = "clipmap";
 
 	void ProgressBar::registerSkinDefinition()
 	{
@@ -79,7 +79,7 @@ namespace QuickGUI
 		}
 	}
 
-	ProgressBar::ProgressBar(const Ogre::String& name) :
+	ProgressBar::ProgressBar(const std::string& name) :
 		Widget(name),
 		TextUser()
 	{
@@ -96,7 +96,7 @@ namespace QuickGUI
 
 		if(!mOutputBarTexture.isNull())
 		{
-			Ogre::String textureName = mOutputBarTexture->getName();
+			std::string textureName = mOutputBarTexture->getName();
 			mOutputBarTexture.setNull();
 			Ogre::TextureManager::getSingletonPtr()->remove(textureName);
 		}
@@ -152,7 +152,7 @@ namespace QuickGUI
 		}
 	}
 
-	void ProgressBar::addUserDefinedProgressBarEventHandler(ProgressBarEvent EVENT, const Ogre::String& handlerName)
+	void ProgressBar::addUserDefinedProgressBarEventHandler(ProgressBarEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->progressbar_userHandlers[EVENT] = handlerName;
 	}
@@ -185,7 +185,7 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String ProgressBar::getClass()
+	std::string ProgressBar::getClass()
 	{
 		return "ProgressBar";
 	}
@@ -457,7 +457,7 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void ProgressBar::setSkinType(const Ogre::String type)
+	void ProgressBar::setSkinType(const std::string type)
 	{
 		Widget::setSkinType(type);
 
@@ -467,7 +467,7 @@ namespace QuickGUI
 		// Create Output Bar texture - If it already exists, destroy previous one
 		if(!mOutputBarTexture.isNull())
 		{
-			Ogre::String textureName = mOutputBarTexture->getName();
+			std::string textureName = mOutputBarTexture->getName();
 			mOutputBarTexture.setNull();
 			Ogre::TextureManager::getSingletonPtr()->remove(textureName);
 		}

@@ -8,9 +8,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ListItem::DEFAULT = "default";
-	const Ogre::String ListItem::OVER = "over";
-	const Ogre::String ListItem::SELECTED = "selected";
+	const std::string ListItem::DEFAULT = "default";
+	const std::string ListItem::OVER = "over";
+	const std::string ListItem::SELECTED = "selected";
 
 	ListItemDesc::ListItemDesc() :
 		ContainerWidgetDesc()
@@ -34,7 +34,7 @@ namespace QuickGUI
 		b->IO("Selected",&listitem_selected);
 	}
 
-	ListItem::ListItem(const Ogre::String& name) :
+	ListItem::ListItem(const std::string& name) :
 		ContainerWidget(name)
 	{
 		addWidgetEventHandler(WIDGET_EVENT_MOUSE_BUTTON_DOWN,&ListItem::onMouseButtonDown,this);
@@ -70,13 +70,13 @@ namespace QuickGUI
 
 		if(mParentWidget != NULL)
 		{
-			Ogre::String className = mParentWidget->getClass();
+			std::string className = mParentWidget->getClass();
 			if(className == "List")
 				dynamic_cast<List*>(mParentWidget)->destroyItem(this);
 			else if(className == "MenuPanel")
 			{
 				Widget* owner = dynamic_cast<MenuPanel*>(mParentWidget)->getOwner();
-				Ogre::String ownerClassName = owner->getClass();
+				std::string ownerClassName = owner->getClass();
 				if(ownerClassName == "ComboBox")
 					dynamic_cast<ComboBox*>(owner)->destroyItem(this);
 			}
@@ -222,12 +222,12 @@ namespace QuickGUI
 		return hiddenInt;
 	}
 
-	void ListItem::setHiddenString(Ogre::String str)
+	void ListItem::setHiddenString(std::string str)
 	{
 		hiddenString = str;
 	}
 
-	Ogre::String ListItem::getHiddenString()
+	std::string ListItem::getHiddenString()
 	{
 		return hiddenString;
 	}

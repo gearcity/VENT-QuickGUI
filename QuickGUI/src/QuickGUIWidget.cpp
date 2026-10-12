@@ -101,7 +101,7 @@ namespace QuickGUI
 		}
 	}
 
-	Widget::Widget(const Ogre::String& widget_name) :
+	Widget::Widget(const std::string& widget_name) :
 		Serializable(),
 		mBeingDragged(false),
 		mComponentOfAWidget(false),
@@ -244,7 +244,7 @@ namespace QuickGUI
 		setName(mWidgetDesc->widget_name);
 	}
 
-	void Widget::_setSkinType(const Ogre::String& type)
+	void Widget::_setSkinType(const std::string& type)
 	{
 		if(!SkinTypeManager::getSingleton().hasSkinType(getClass(),type))
 			throw Exception(Exception::ERR_SKINNING,"SkinType \"" + type + "\" does not exist!","Widget::_setSkinType");
@@ -260,7 +260,7 @@ namespace QuickGUI
 		fireWidgetEvent(WIDGET_EVENT_SKIN_CHANGED,wea);
 	}
 
-	void Widget::addUserDefinedWidgetEventHandler(WidgetEvent EVENT, const Ogre::String& handlerName)
+	void Widget::addUserDefinedWidgetEventHandler(WidgetEvent EVENT, const std::string& handlerName)
 	{
 		mWidgetDesc->widget_userHandlers[EVENT] = handlerName;
 	}
@@ -342,14 +342,14 @@ namespace QuickGUI
 		onDraw();
 	}
 
-	Widget* Widget::findFirstWidgetOfClass(const Ogre::String& className)
+	Widget* Widget::findFirstWidgetOfClass(const std::string& className)
 	{
 		if(getClass() == className)
 			return this;
 		return NULL;
 	}
 
-	Widget* Widget::findWidget(const Ogre::String& widget_name)
+	Widget* Widget::findWidget(const std::string& widget_name)
 	{
 		if(getName() == widget_name)
 			return this;
@@ -487,7 +487,7 @@ namespace QuickGUI
 		return mWidgetDesc->widget_consumeKeyboardEvents;
 	}
 
-	Ogre::String Widget::getContextMenuName()
+	std::string Widget::getContextMenuName()
 	{
 		return mWidgetDesc->widget_contextMenuName;
 	}
@@ -497,7 +497,7 @@ namespace QuickGUI
 		return mWidgetDesc->widget_dimensions;
 	}
 
-	Ogre::String Widget::getDisabledSkinType()
+	std::string Widget::getDisabledSkinType()
 	{
 		return mWidgetDesc->widget_disabledSkinType;
 	}
@@ -557,7 +557,7 @@ namespace QuickGUI
 		return mWidgetDesc->widget_moveBaseWidgetOnDrag;
 	}
 
-	Ogre::String Widget::getName()
+	std::string Widget::getName()
 	{
 		return mWidgetDesc->widget_name;
 	}
@@ -678,7 +678,7 @@ namespace QuickGUI
 		return mWidgetDesc->widget_visible;
 	}
 
-	Ogre::String Widget::getSkinTypeName()
+	std::string Widget::getSkinTypeName()
 	{
 		return mWidgetDesc->widget_skinTypeName;
 	}
@@ -921,7 +921,7 @@ namespace QuickGUI
 		mWidgetDesc->widget_consumeKeyboardEvents = consume;
 	}
 
-	void Widget::setContextMenuName(const Ogre::String& contextMenuName)
+	void Widget::setContextMenuName(const std::string& contextMenuName)
 	{
 		mWidgetDesc->widget_contextMenuName = contextMenuName;
 	}
@@ -932,7 +932,7 @@ namespace QuickGUI
 		setPosition(r.position);
 	}
 
-	void Widget::setDisabledSkinType(const Ogre::String& SkinTypeName)
+	void Widget::setDisabledSkinType(const std::string& SkinTypeName)
 	{
 		if((SkinTypeName != "") && (!SkinTypeManager::getSingleton().hasSkinType(getClass(),SkinTypeName)))
 			throw Exception(Exception::ERR_ITEM_NOT_FOUND,"Skin Type \"" + SkinTypeName + "\" does not exist for class \"" + getClass() + "\"!","Widget::setDisabledSkinType");
@@ -1025,7 +1025,7 @@ namespace QuickGUI
 		setSize(mWidgetDesc->widget_dimensions.size);
 	}
 
-	Ogre::String Widget::setName(const Ogre::String& name)
+	std::string Widget::setName(const std::string& name)
 	{
 		// If we are attached to a sheet, make sure our name is unique
 		if((mWidgetDesc->sheet != NULL) && !isComponentOfAWidget())
@@ -1219,7 +1219,7 @@ namespace QuickGUI
 		fireWidgetEvent(WIDGET_EVENT_SIZE_CHANGED,args);
 	}
 
-	void Widget::setSkinType(const Ogre::String type)
+	void Widget::setSkinType(const std::string type)
 	{
 		mWidgetDesc->widget_skinTypeName = type;
 

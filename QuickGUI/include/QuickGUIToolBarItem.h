@@ -84,7 +84,7 @@ namespace QuickGUI
 		virtual void setEnabled(bool enabled);
 
 	protected:
-		ToolBarItem(const Ogre::String& name);
+		ToolBarItem(const std::string& name);
 		virtual ~ToolBarItem();
 
 		/**

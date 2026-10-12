@@ -54,7 +54,7 @@ namespace QuickGUI
 		ListItemDesc::serialize(b);
 	}
 
-	ListPanelItem::ListPanelItem(const Ogre::String& name) :
+	ListPanelItem::ListPanelItem(const std::string& name) :
 		ListItem(name)
 	{
 	}
@@ -74,7 +74,7 @@ namespace QuickGUI
 		setSkinType(lpid->widget_skinTypeName);
 	}
 
-	Widget* ListPanelItem::createCustomWidget(const Ogre::String& className, WidgetDesc* d)
+	Widget* ListPanelItem::createCustomWidget(const std::string& className, WidgetDesc* d)
 	{
 		if((className == "TitleBar") || (className == "Window") || (className == "Sheet"))
 			throw Exception(Exception::ERR_UNSUPPORTED_WIDGET,"This widget does not support creation of widget's of class \"" + className + "\".","ListPanelItem::createCustomWidget");
@@ -123,7 +123,7 @@ namespace QuickGUI
 		return createButton(bd);
 	}
 
-	Button* ListPanelItem::createButton(const Ogre::UTFString& text, const Rect& dimensions)
+	Button* ListPanelItem::createButton(const UTFString& text, const Rect& dimensions)
 	{
 		ButtonDesc* bd = DescManager::getSingletonPtr()->getDefaultButtonDesc();
 		bd->resetToDefault();
@@ -408,7 +408,7 @@ namespace QuickGUI
 		return createLabel(ld);
 	}
 
-	Label* ListPanelItem::createLabel(const Ogre::UTFString& text, const Point& position)
+	Label* ListPanelItem::createLabel(const UTFString& text, const Point& position)
 	{
 		LabelDesc* ld = DescManager::getSingletonPtr()->getDefaultLabelDesc();
 		ld->resetToDefault();
@@ -430,7 +430,7 @@ namespace QuickGUI
 		return createLabel(ld);
 	}
 
-	Label* ListPanelItem::createLabel(const Ogre::UTFString& text, const Rect& dimensions)
+	Label* ListPanelItem::createLabel(const UTFString& text, const Rect& dimensions)
 	{
 		LabelDesc* ld = DescManager::getSingletonPtr()->getDefaultLabelDesc();
 		ld->resetToDefault();
@@ -859,7 +859,7 @@ namespace QuickGUI
 		return createVScrollBar(sd);
 	}
 
-	Ogre::String ListPanelItem::getClass()
+	std::string ListPanelItem::getClass()
 	{
 		return "ListPanelItem";
 	}

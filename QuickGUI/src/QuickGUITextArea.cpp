@@ -12,8 +12,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TextArea::BACKGROUND = "background";
-	const Ogre::String TextArea::TEXTOVERLAY = "textoverlay";
+	const std::string TextArea::BACKGROUND = "background";
+	const std::string TextArea::TEXTOVERLAY = "textoverlay";
 
 	void TextArea::registerSkinDefinition()
 	{
@@ -68,13 +68,14 @@ namespace QuickGUI
 		textDesc.serialize(b);
 	}
 
-	TextArea::TextArea(const Ogre::String& name) :
+	TextArea::TextArea(const std::string& name) :
 		ContainerWidget(name),
 		mText(NULL),
 		mDesc(NULL),
 		mTextCursor(NULL),
 		mCursorIndex(0),
-		mBlinkTimer(NULL)
+		mBlinkTimer(NULL),
+		mCurrentFont(&Root::getSingleton().getDefaultFont())
 	{
 		addWidgetEventHandler(WIDGET_EVENT_CHARACTER_KEY,&TextArea::onCharEntered,this);
 		addWidgetEventHandler(WIDGET_EVENT_KEY_DOWN,&TextArea::onKeyDown,this);
@@ -143,7 +144,7 @@ namespace QuickGUI
 
 		mDesc = dynamic_cast<TextAreaDesc*>(mWidgetDesc);
 
-		mTextCursor->setHeight(Text::getFontHeight(td->textarea_defaultFontName));
+		mTextCursor->setHeight(Root::getSingleton().getFont(td->textarea_defaultFontName).getHeight());
 		mTextCursor->setSkinType(td->textarea_textCursorDefaultSkinTypeName);
 
 		mDesc->widget_consumeKeyboardEvents = true;
@@ -212,18 +213,18 @@ namespace QuickGUI
 			(*it)->setScrollY(mDesc->containerwidget_yScrollOffset);
 	}
 
-	void TextArea::addCharacter(Ogre::UTFString::code_point cp)
+	void TextArea::addCharacter(UTFString::code_point cp)
 	{
-		mText->addCharacter(OGRE_NEW_T(Character,Ogre::MEMCATEGORY_GENERAL)(cp,mCurrentFont,mDesc->textarea_defaultColor),mCursorIndex);
+		mText->addCharacter(OGRE_NEW_T(Character,Ogre::MEMCATEGORY_GENERAL)(cp,*mCurrentFont,mDesc->textarea_defaultColor),mCursorIndex);
 
 		updateVirtualDimensions();
 		
 		setCursorIndex(mCursorIndex+1);
 	}
 
-	void TextArea::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextArea::addText(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->addText(s,fp,cv);
+		mText->addText(s,font,cv);
 
 		updateVirtualDimensions();
 
@@ -232,12 +233,12 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::addText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void TextArea::addText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
-		addText(s,Text::getFont(fontName),cv);
+		addText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
-	void TextArea::addText(Ogre::UTFString s)
+	void TextArea::addText(UTFString s)
 	{
 		addText(s,mDesc->textarea_defaultFontName,mDesc->textarea_defaultColor);
 	}
@@ -253,9 +254,9 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::addTextLine(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextArea::addTextLine(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->addTextLine(s,fp,cv);
+		mText->addTextLine(s,font,cv);
 
 		updateVirtualDimensions();
 
@@ -264,12 +265,12 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::addTextLine(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void TextArea::addTextLine(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
-		addTextLine(s,Text::getFont(fontName),cv);
+		addTextLine(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
-	void TextArea::addTextLine(Ogre::UTFString s)
+	void TextArea::addTextLine(UTFString s)
 	{
 		addTextLine(s,mDesc->textarea_defaultFontName,mDesc->textarea_defaultColor);
 	}
@@ -297,7 +298,7 @@ namespace QuickGUI
 		updateVirtualDimensions();
 	}
 
-	Ogre::String TextArea::getClass()
+	std::string TextArea::getClass()
 	{
 		return "TextArea";
 	}
@@ -315,7 +316,7 @@ namespace QuickGUI
 		return mDesc->textarea_defaultColor;
 	}
 
-	Ogre::String TextArea::getDefaultFont()
+	std::string TextArea::getDefaultFont()
 	{
 		return mDesc->textarea_defaultFontName;
 	}
@@ -345,7 +346,7 @@ namespace QuickGUI
 		return r;
 	}
 
-	Ogre::UTFString TextArea::getText()
+	UTFString TextArea::getText()
 	{
 		return mText->getText();
 	}
@@ -355,7 +356,7 @@ namespace QuickGUI
 		return mText->getBrushFilterMode();
 	}
 
-	Ogre::String TextArea::getTextCursorSkinType()
+	std::string TextArea::getTextCursorSkinType()
 	{
 		return mDesc->textarea_textCursorDefaultSkinTypeName;
 	}
@@ -694,9 +695,9 @@ namespace QuickGUI
 
 		// Update Cursor Height to match the font of the character to the left of cursor
 		if(index == 0)
-			mTextCursor->setHeight(Text::getFontHeight(mDesc->textarea_defaultFontName));
+			mTextCursor->setHeight(Root::getSingleton().getFont(mDesc->textarea_defaultFontName).getHeight());
 		else
-			mTextCursor->setHeight(Text::getFontHeight(mText->getCharacter(static_cast<unsigned int>(index - 1))->fontPtr));
+			mTextCursor->setHeight(mText->getCharacter(static_cast<unsigned int>(index - 1))->font->getHeight());
 
 		// Update CursorIndex
 		mCursorIndex = index;
@@ -732,13 +733,13 @@ namespace QuickGUI
 		mDesc->textarea_defaultColor = cv;
 	}
 
-	void TextArea::setDefaultFont(const Ogre::String& fontName)
+	void TextArea::setDefaultFont(const std::string& fontName)
 	{
 		mDesc->textarea_defaultFontName = fontName;
-		mCurrentFont = Text::getFont(fontName);
+		mCurrentFont = &Root::getSingleton().getFont(fontName);
 	}
 
-	void TextArea::setFont(const Ogre::String& fontName)
+	void TextArea::setFont(const std::string& fontName)
 	{
 		mDesc->textarea_defaultFontName = fontName;
 
@@ -747,28 +748,28 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::setFont(const Ogre::String& fontName, unsigned int index)
+	void TextArea::setFont(const std::string& fontName, unsigned int index)
 	{
 		mText->setFont(fontName,index);
 
 		redraw();
 	}
 
-	void TextArea::setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex)
+	void TextArea::setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex)
 	{
 		mText->setFont(fontName,startIndex,endIndex);
 
 		redraw();
 	}
 
-	void TextArea::setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences)
+	void TextArea::setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences)
 	{
 		mText->setFont(fontName,c,allOccurrences);
 
 		redraw();
 	}
 
-	void TextArea::setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences)
+	void TextArea::setFont(const std::string& fontName, UTFString s, bool allOccurrences)
 	{
 		mText->setFont(fontName,s,allOccurrences);
 
@@ -832,9 +833,9 @@ namespace QuickGUI
 
 		// Update components window reference via setParent
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 		{
 			(*it).second->setParent(this);
@@ -858,16 +859,16 @@ namespace QuickGUI
 		}
 	}
 
-	void TextArea::setTextCursorSkinType(const Ogre::String& skinTypeName)
+	void TextArea::setTextCursorSkinType(const std::string& skinTypeName)
 	{
 		mDesc->textarea_textCursorDefaultSkinTypeName = skinTypeName;
 
 		mTextCursor->setSkinType(skinTypeName);
 	}
 
-	void TextArea::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TextArea::setText(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mText->setText(s,fp,cv);
+		mText->setText(s,font,cv);
 
 		updateVirtualDimensions();
 
@@ -876,12 +877,12 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::setText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void TextArea::setText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
-		setText(s,Text::getFont(fontName),cv);
+		setText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
-	void TextArea::setText(Ogre::UTFString s)
+	void TextArea::setText(UTFString s)
 	{
 		setText(s,mDesc->textarea_defaultFontName,mDesc->textarea_defaultColor);
 	}
@@ -925,14 +926,14 @@ namespace QuickGUI
 		redraw();
 	}
 
-	void TextArea::setTextColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences)
+	void TextArea::setTextColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences)
 	{
 		mText->setColor(cv,c,allOccurrences);
 
 		redraw();
 	}
 
-	void TextArea::setTextColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences)
+	void TextArea::setTextColor(const ColourValue& cv, UTFString s, bool allOccurrences)
 	{
 		mText->setColor(cv,s,allOccurrences);
 
@@ -1006,5 +1007,20 @@ namespace QuickGUI
 		_setScrollY(mVScrollBar->getPercentage());
 
 		_determineScrollBarVisibility();
+	}
+
+	void TextArea::addText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void TextArea::addTextLine(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addTextLine(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void TextArea::setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

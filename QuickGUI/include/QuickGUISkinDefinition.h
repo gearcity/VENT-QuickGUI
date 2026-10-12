@@ -23,18 +23,18 @@ namespace QuickGUI
 	class _QuickGUIExport SkinDefinition
 	{
 	public:
-		SkinDefinition(const Ogre::String& className);
+		SkinDefinition(const std::string& className);
 
 		/**
 		* Adds a component entry to this Skin definition.  Components
 		* can only be defined while the definition has not been completed.
 		*/
-		void defineComponent(const Ogre::String& componentName);
+		void defineComponent(const std::string& componentName);
 		/**
 		* Adds a Skin Element entry to this Skin definition. Skin Elements
 		* can only be defined while the definition has not been completed.
 		*/
-		void defineSkinElement(const Ogre::String& elementName);
+		void defineSkinElement(const std::string& elementName);
 		/**
 		* Locks the definition of this Widget Skin interface, allowing
 		* types to be defined.  All types must have the same interface.
@@ -54,13 +54,13 @@ namespace QuickGUI
 		bool validateSkinType(SkinType* t);
 
 	protected:
-		Ogre::String mClassName;
+		std::string mClassName;
 
 		// If this is true, we cannot define any more SkinElements or ComponentTypes to this definition
 		bool mDefinitionCompleted;
 
-		std::set<Ogre::String> mDefinedElements;
-		std::set<Ogre::String> mDefinedComponents;
+		std::set<std::string> mDefinedElements;
+		std::set<std::string> mDefinedComponents;
 	};
 }
 

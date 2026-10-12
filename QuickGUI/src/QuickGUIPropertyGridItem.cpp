@@ -5,9 +5,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String PropertyGridItem::BACKGROUND = "background";
-	const Ogre::String PropertyGridItem::ICON = "icon";
-	const Ogre::String PropertyGridItem::SELECTED = "selected";
+	const std::string PropertyGridItem::BACKGROUND = "background";
+	const std::string PropertyGridItem::ICON = "icon";
+	const std::string PropertyGridItem::SELECTED = "selected";
 
 	PropertyGridItemDesc::PropertyGridItemDesc() :
 		ContainerWidgetDesc(),
@@ -39,7 +39,7 @@ namespace QuickGUI
 		TextUserDesc::serialize(b);
 	}
 
-	PropertyGridItem::PropertyGridItem(const Ogre::String& name) :
+	PropertyGridItem::PropertyGridItem(const std::string& name) :
 		ContainerWidget(name),
 		TextUser(),
 		mFieldWidget(NULL),
@@ -95,9 +95,9 @@ namespace QuickGUI
 	Widget* PropertyGridItem::findWidgetAtPoint(const Point& p, bool ignoreDisabled)
 	{
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);

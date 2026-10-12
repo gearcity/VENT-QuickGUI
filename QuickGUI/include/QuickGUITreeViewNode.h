@@ -34,11 +34,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TreeViewNodeDesc"; }
+		virtual std::string getClass() { return "TreeViewNodeDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TreeViewNode"; }
+		virtual std::string getWidgetClass() { return "TreeViewNode"; }
 
 		/**
 		* Restore properties to default values
@@ -57,9 +57,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String ICON;
-		static const Ogre::String SELECTED;
+		static const std::string BACKGROUND;
+		static const std::string ICON;
+		static const std::string SELECTED;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -79,21 +79,21 @@ namespace QuickGUI
 		* NOTE: if the index is not valid, the ListItem is added to the end of the list.
 		*/
 		TreeViewNode* createNode(int index = -1);
-		TreeViewNode* createNode(const Ogre::UTFString& text, int index = -1);
+		TreeViewNode* createNode(const UTFString& text, int index = -1);
 		TreeViewNode* createNode(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Adds a TreeViewCheckBoxNode to the List at the index given.
 		* NOTE: if the index is not valid, the ListItem is added to the end of the list.
 		*/
 		TreeViewCheckBoxNode* createCheckBoxNode(int index = -1);
-		TreeViewCheckBoxNode* createCheckBoxNode(const Ogre::UTFString& text, int index = -1);
+		TreeViewCheckBoxNode* createCheckBoxNode(const UTFString& text, int index = -1);
 		TreeViewCheckBoxNode* createCheckBoxNode(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Adds a TreeViewCheckBoxNode to the List at the index given.
 		* NOTE: if the index is not valid, the ListItem is added to the end of the list.
 		*/
 		TreeViewRadioButtonNode* createRadioButtonNode(int index = -1);
-		TreeViewRadioButtonNode* createRadioButtonNode(const Ogre::UTFString& text, int index = -1);
+		TreeViewRadioButtonNode* createRadioButtonNode(const UTFString& text, int index = -1);
 		TreeViewRadioButtonNode* createRadioButtonNode(std::vector<TextSegment> segments, int index = -1);
 
 		/**
@@ -117,7 +117,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the index of this node.
 		*/
@@ -195,7 +195,7 @@ namespace QuickGUI
 		void updateNodes();
 
 	protected:
-		TreeViewNode(const Ogre::String& name);
+		TreeViewNode(const std::string& name);
 		virtual ~TreeViewNode();
 
 		TreeViewNodeDesc* mDesc;

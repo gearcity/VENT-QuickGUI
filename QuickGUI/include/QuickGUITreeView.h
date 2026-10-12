@@ -28,16 +28,16 @@ namespace QuickGUI
 		bool treeview_doubleClickToToggle;
 		bool treeview_keyNavigation;
 		float treeview_nodeHeight;
-		Ogre::String treeview_userHandlers[TREEVIEW_EVENT_COUNT];
+		std::string treeview_userHandlers[TREEVIEW_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TreeViewDesc"; }
+		virtual std::string getClass() { return "TreeViewDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TreeView"; }
+		virtual std::string getWidgetClass() { return "TreeView"; }
 
 		/**
 		* Restore properties to default values
@@ -56,9 +56,9 @@ namespace QuickGUI
 	public:
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String EXPAND;
-		static const Ogre::String MINIMIZE;
+		static const std::string BACKGROUND;
+		static const std::string EXPAND;
+		static const std::string MINIMIZE;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -78,7 +78,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedTreeViewEventHandler(TreeViewEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedTreeViewEventHandler(TreeViewEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WIDGET_EVENT_SIZE_CHANGED, WIDGET_EVENT_MOUSE_WHEEL, etc.
@@ -110,21 +110,21 @@ namespace QuickGUI
 		* NOTE: if the index is not valid, the ListItem is added to the end of the list.
 		*/
 		TreeViewNode* createNode(int index = -1);
-		TreeViewNode* createNode(const Ogre::UTFString& text, int index = -1);
+		TreeViewNode* createNode(const UTFString& text, int index = -1);
 		TreeViewNode* createNode(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Adds a TreeViewCheckBoxNode to the List at the index given.
 		* NOTE: if the index is not valid, the ListItem is added to the end of the list.
 		*/
 		TreeViewCheckBoxNode* createCheckBoxNode(int index = -1);
-		TreeViewCheckBoxNode* createCheckBoxNode(const Ogre::UTFString& text, int index = -1);
+		TreeViewCheckBoxNode* createCheckBoxNode(const UTFString& text, int index = -1);
 		TreeViewCheckBoxNode* createCheckBoxNode(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Adds a TreeViewCheckBoxNode to the List at the index given.
 		* NOTE: if the index is not valid, the ListItem is added to the end of the list.
 		*/
 		TreeViewRadioButtonNode* createRadioButtonNode(int index = -1);
-		TreeViewRadioButtonNode* createRadioButtonNode(const Ogre::UTFString& text, int index = -1);
+		TreeViewRadioButtonNode* createRadioButtonNode(const UTFString& text, int index = -1);
 		TreeViewRadioButtonNode* createRadioButtonNode(std::vector<TextSegment> segments, int index = -1);
 
 		/**
@@ -136,7 +136,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns true if double clicking on a node will toggle its state, false otherwise.
 		*/
@@ -144,7 +144,7 @@ namespace QuickGUI
 		/**
 		* Returns the name of the skinType used to draw nodes in expanded form.
 		*/
-		Ogre::String getExpandSkinTypeName();
+		std::string getExpandSkinTypeName();
 		/**
 		* Returns true if up/down keys will select previous/next node and left/right expands/minimizes node, false otherwise.
 		*/
@@ -152,7 +152,7 @@ namespace QuickGUI
 		/**
 		* Returns the name of the skinType used to draw nodes in minimized form.
 		*/
-		Ogre::String getMinimizeSkinTypeName();
+		std::string getMinimizeSkinTypeName();
 		/**
 		* Gets the height of every created or existing Node in this TreeView.
 		*/
@@ -228,7 +228,7 @@ namespace QuickGUI
 		using ContainerWidget::setClipChildrenToDimensions;		
 
 	protected:
-		TreeView(const Ogre::String& name);
+		TreeView(const std::string& name);
 		virtual ~TreeView();
 
 		TreeViewDesc* mDesc;

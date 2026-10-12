@@ -16,16 +16,16 @@ namespace QuickGUI
 	public:
 
 		bool checkbox_checked;
-		Ogre::String checkbox_userHandlers[CHECKBOX_EVENT_COUNT];
+		std::string checkbox_userHandlers[CHECKBOX_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "CheckBoxDesc"; }
+		virtual std::string getClass() { return "CheckBoxDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "CheckBox"; }
+		virtual std::string getWidgetClass() { return "CheckBox"; }
 
 		/**
 		* Restore properties to default values
@@ -43,12 +43,12 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String CHECKED;
-		static const Ogre::String CHECKED_DOWN;
-		static const Ogre::String CHECKED_OVER;
-		static const Ogre::String UNCHECKED;
-		static const Ogre::String UNCHECKED_DOWN;
-		static const Ogre::String UNCHECKED_OVER;
+		static const std::string CHECKED;
+		static const std::string CHECKED_DOWN;
+		static const std::string CHECKED_OVER;
+		static const std::string UNCHECKED;
+		static const std::string UNCHECKED_DOWN;
+		static const std::string UNCHECKED_OVER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -68,7 +68,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedCheckBoxEventHandler(CheckBoxEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedCheckBoxEventHandler(CheckBoxEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WIDGET_EVENT_SIZE_CHANGED, WIDGET_EVENT_MOUSE_WHEEL, etc.
@@ -109,7 +109,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 
 		/**
 		* Sets whether this checkbox is checked or not.
@@ -144,7 +144,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		CheckBox(const Ogre::String& name);
+		CheckBox(const std::string& name);
 		virtual ~CheckBox();
 
 		CheckBoxDesc* mDesc;

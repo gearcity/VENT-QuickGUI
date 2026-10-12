@@ -44,10 +44,10 @@ namespace QuickGUI
 		ColourValue	widget_baseColor;
 		BrushFilterMode		widget_brushFilterMode;
 		bool				widget_consumeKeyboardEvents;
-		Ogre::String		widget_contextMenuName;
+		std::string		widget_contextMenuName;
 		bool				widget_enabled;
 		Rect				widget_dimensions;
-		Ogre::String		widget_disabledSkinType;
+		std::string		widget_disabledSkinType;
 		bool				widget_dragable;
 		HorizontalAnchor	widget_horizontalAnchor;
 		float				widget_hoverTime;
@@ -55,7 +55,7 @@ namespace QuickGUI
 		Size				widget_maxSize;
 		Size				widget_minSize;
 		bool				widget_moveBaseWidgetOnDrag;
-		Ogre::String		widget_name;
+		std::string		widget_name;
 		float				widget_relativeOpacity;
 		bool				widget_positionRelativeToParentClientDimensions;
 		bool				widget_resizeFromBottom;
@@ -64,9 +64,9 @@ namespace QuickGUI
 		bool				widget_resizeFromTop;
 		bool				widget_scrollable;
 		bool				widget_serialize;
-		Ogre::String		widget_skinTypeName;
+		std::string		widget_skinTypeName;
 		bool				widget_transparencyPicking;
-		Ogre::String		widget_userHandlers[WIDGET_EVENT_COUNT];
+		std::string		widget_userHandlers[WIDGET_EVENT_COUNT];
 		VerticalAnchor		widget_verticalAnchor;
 		bool				widget_visible;
 
@@ -76,11 +76,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "WidgetDesc"; }
+		virtual std::string getClass() { return "WidgetDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Widget"; }
+		virtual std::string getWidgetClass() { return "Widget"; }
 
 		/**
 		* Restore properties to default values
@@ -148,7 +148,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedWidgetEventHandler(WidgetEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedWidgetEventHandler(WidgetEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WIDGET_EVENT_SIZE_CHANGED, WIDGET_EVENT_MOUSE_WHEEL, etc.
@@ -185,12 +185,12 @@ namespace QuickGUI
 		/**
 		* Recursively searches through children and returns the first widget found of the class given.
 		*/
-		virtual Widget* findFirstWidgetOfClass(const Ogre::String& className);
+		virtual Widget* findFirstWidgetOfClass(const std::string& className);
 		/**
 		* Recursively searches through children and returns first widget found with widget_name given.
 		* NULL is returned if the widget is not found.
 		*/
-		virtual Widget* findWidget(const Ogre::String& widget_name);
+		virtual Widget* findWidget(const std::string& widget_name);
 		/**
 		* Checks if point p is within this widget's widget_dimensions.
 		* NULL is returned if the point is outside widget_dimensions.
@@ -234,7 +234,7 @@ namespace QuickGUI
 		/**
 		* Returns the class widget_name of the widget, ie "Button", "Window", etc.
 		*/
-		virtual Ogre::String getClass() = 0;
+		virtual std::string getClass() = 0;
 		/**
 		* Returns the rectangle inside the borders of the widget, if borders exist.
 		*/
@@ -248,7 +248,7 @@ namespace QuickGUI
 		* Returns the name of the context menu for this widget.  If this widget does not have
 		* a context menu, empty string is returned. ("")
 		*/
-		Ogre::String getContextMenuName();
+		std::string getContextMenuName();
 		/*
 		* Gets the position and size of this widget.
 		* NOTE: Position is relative to its parent.
@@ -258,7 +258,7 @@ namespace QuickGUI
 		* Returns the widget_name of the SkinType applied when the widget is disabled.
 		* NOTE: "" is returned if the widget's appearance does not change when disabled.
 		*/
-		Ogre::String getDisabledSkinType();
+		std::string getDisabledSkinType();
 		/**
 		* Returns true if this widget can be dragged, false otherwise.
 		*/
@@ -310,7 +310,7 @@ namespace QuickGUI
 		/**
 		* Returns the widget_name of the Widget.
 		*/
-		Ogre::String getName();
+		std::string getName();
 		/**
 		* Returns the parent of this widget, or NULL if this widget has no parent.
 		*/
@@ -404,7 +404,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		Ogre::String getSkinTypeName();
+		std::string getSkinTypeName();
 		/**
 		* Returns the width in pixels of this widget.
 		*/
@@ -496,12 +496,12 @@ namespace QuickGUI
 		* Sets the context menu displayed when the right mouse button goes up over this widget.
 		* NOTE: Empty string is valid, and removes any context menu associated with this widget.
 		*/
-		void setContextMenuName(const Ogre::String& contextMenuName);
+		void setContextMenuName(const std::string& contextMenuName);
 		/**
 		* Sets the widget_name of the SkinType applied when the widget is disabled.
 		* NOTE: Use "" to prevent the widget's apperance from changing when disabled.
 		*/
-		void setDisabledSkinType(const Ogre::String& SkinTypeName);
+		void setDisabledSkinType(const std::string& SkinTypeName);
 		/**
 		* Enabled Widgets receive mouse and keyboard events via injections to the GUIManager.
 		* Disabled Widgets can only receive these events if they are manually fired.
@@ -526,7 +526,7 @@ namespace QuickGUI
 		* Sets the name of the Widget.  If the name is already taken, it will be resolved,
 		* with a different name.  The resolved name is returned by the function.
 		*/
-		virtual Ogre::String setName(const Ogre::String& name);
+		virtual std::string setName(const std::string& name);
 		/**
 		* Sets the opacity of this widget.  Values will be curbed within the range [0,1]
 		* NOTE: Widgets will always inherit the opacity of their owner Window or Sheet,
@@ -550,7 +550,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 
 		/**
 		* Recalculate Client widget_dimensions, relative to Widget's actual widget_dimensions.
@@ -680,11 +680,11 @@ namespace QuickGUI
 		virtual void setWidth(float pixelWidth);
 
 	protected:
-		Widget(const Ogre::String& widget_name);
+		Widget(const std::string& widget_name);
 		virtual ~Widget();
 
 		// Used mainly for serialization
-		Ogre::String mName;
+		std::string mName;
 
 		bool mNameRegisteredWithSheet;
 
@@ -707,7 +707,7 @@ namespace QuickGUI
 
 		// Event handlers! One List per event per widget
 		std::vector<EventHandlerSlot*> mWidgetEventHandlers[WIDGET_EVENT_COUNT];
-		Ogre::String mUserDefinedHandlers[WIDGET_EVENT_COUNT];
+		std::string mUserDefinedHandlers[WIDGET_EVENT_COUNT];
 
 		// Area for child widgets, inside borders if they exist.
 		Rect mClientDimensions;
@@ -716,7 +716,7 @@ namespace QuickGUI
 		Point mTexturePosition;
 
 		// Internal function that sets the SkinType without modifying the desc's property (allows enable/disable skin)
-		void _setSkinType(const Ogre::String& skinName);
+		void _setSkinType(const std::string& skinName);
 		// The skin currently used to draw the widget
 		SkinType* mSkinType;
 		// The skin element to use for border detection and client area calculations.

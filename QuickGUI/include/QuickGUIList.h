@@ -29,16 +29,16 @@ namespace QuickGUI
 
 		float			list_itemHeight;
 		bool			list_supportMultiSelect;
-		Ogre::String	list_userHandlers[LIST_EVENT_COUNT];
+		std::string	list_userHandlers[LIST_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ListDesc"; }
+		virtual std::string getClass() { return "ListDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "List"; }
+		virtual std::string getWidgetClass() { return "List"; }
 
 		/**
 		* Restore properties to default values
@@ -58,8 +58,8 @@ namespace QuickGUI
 		friend class ListItem;
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String LISTITEM;
+		static const std::string BACKGROUND;
+		static const std::string LISTITEM;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -79,7 +79,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedListEventHandler(ListEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedListEventHandler(ListEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: BUTTON_EVENT_STATE_CHANGED, etc.
@@ -121,7 +121,7 @@ namespace QuickGUI
 		/**
 		* Adds a ListImageItem to the end of the List.
 		*/
-		ListImageItem* createImageItem(const Ogre::String& imageName, int index = -1);
+		ListImageItem* createImageItem(const std::string& imageName, int index = -1);
 		ListImageItem* createImageItem(int index = -1);
 		/**
 		* Adds a ListPanelItem to the end of the List.
@@ -130,7 +130,7 @@ namespace QuickGUI
 		/**
 		* Adds a ListTextItem to the end of the List.
 		*/
-		ListTextItem* createTextItem(const Ogre::UTFString& text, int index = -1);
+		ListTextItem* createTextItem(const UTFString& text, int index = -1);
 		ListTextItem* createTextItem(std::vector<TextSegment> segments, int index = -1);
 		ListTextItem* createTextItem(int index = -1);
 
@@ -153,7 +153,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the ListItem at the index given.  If the index is invalid,
 		* NULL is returned.
@@ -201,7 +201,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 
 		/**
 		* Recalculate Client widget_dimensions, relative to Widget's actual widget_dimensions.
@@ -242,7 +242,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		List(const Ogre::String& name);
+		List(const std::string& name);
 		virtual ~List();
 
 		ListDesc* mDesc;

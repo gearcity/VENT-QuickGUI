@@ -1,46 +1,29 @@
 #include "QuickGUICharacter.h"
 #include "QuickGUIText.h"
+#include "QuickGUIRoot.h"
 
 namespace QuickGUI
 {
-	Character::Character(Ogre::UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv) :
-		codePoint(cp), 
-		fontPtr(fp),
+	Character::Character(UTFString::code_point cp, const Font& f, ColourValue cv) :
+		codePoint(cp),
 		colorValue(cv.r,cv.g,cv.b,cv.a),
-		mHighlighted(false)
+		font(&f),
+		mHighlighted(false),
+		mAdvance(0),
+		mBearing(0)
 	{
-		texturePtr = Text::getFontTexture(fp);
+		setFont(f);
+	}
 
-		if(Text::isNewLine(cp))
-		{
-			mWhiteSpace = true;
-			dimensions.size.height = Text::getGlyphHeight(fp,'0');
-			dimensions.size.width = 0;
-		}
-		else if(Text::isSpace(cp))
-		{
-			mWhiteSpace = true;
-			dimensions.size = Text::getGlyphSize(fp,'0');
-		}
-		else if(Text::isTab(cp))
-		{
-			mWhiteSpace = true;
-			dimensions.size = Text::getGlyphSize(fp,'0');
-			dimensions.size.width *= 4;
-		}
-		else
-		{
-			mWhiteSpace = false;
-
-			// Get the glyph's UV Coords
-			UVRect uvCoords = Text::getGlyphUVCoords(fp,cp);
-			this->uvCoords = uvCoords;
-
-			// Use UV Coords to Determine character dimensions
-			dimensions.size = Size(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
-		}
-
-		dimensions.size.roundUp();
+	Character::Character(UTFString::code_point cp, Ogre::FontPtr fp, ColourValue cv) :
+		codePoint(cp),
+		colorValue(cv.r,cv.g,cv.b,cv.a),
+		font(&Root::getSingleton().getFont(fp->getName())),
+		mHighlighted(false),
+		mAdvance(0),
+		mBearing(0)
+	{
+		setFont(*font);
 	}
 
 	bool Character::getHighlighted()
@@ -60,32 +43,37 @@ namespace QuickGUI
 
 	bool Character::isWhiteSpace()
 	{
-		return mWhiteSpace;
+		return Text::isWhiteSpace(codePoint);
 	}
 
-	void Character::setFont(Ogre::FontPtr fp)
+	void Character::setBaseline(float baseline)
 	{
-		fontPtr = fp;
-		texturePtr = Text::getFontTexture(fp);
+		dimensions.position.x = baseline + mBearing;
+	}
 
-		if(Text::isSpace(codePoint))
+	void Character::setFont(const Font& f)
+	{
+		float baseline = getBaseline();
+
+		font = &f;
+		fontPtr = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(f.getName()));
+		texturePtr = static_cast<Ogre::TexturePtr>(Ogre::TextureManager::getSingleton().getByName(f.getTextureName()));
+		mBearing = 0;
+		mAdvance = font->getGlyphAdvance(codePoint);
+
+		if(Text::isWhiteSpace(codePoint))
 		{
-			dimensions.size = Text::getGlyphSize(fp,'0');
-		}
-		else if(Text::isTab(codePoint))
-		{
-			dimensions.size = Text::getGlyphSize(fp,'0');
-			dimensions.size.width *= 4;
+			dimensions.size = Size(mAdvance,font->getGlyphHeight('0'));
 		}
 		else
 		{
-			// Get the glyph's UV Coords
-			UVRect uvCoords = Text::getGlyphUVCoords(fp,codePoint);
-			this->uvCoords = uvCoords;
-
-			// Use UV Coords to Determine character dimensions
-			dimensions.size = Size(((uvCoords.right - uvCoords.left) * texturePtr->getWidth()),((uvCoords.bottom - uvCoords.top) * texturePtr->getHeight()));
+			uvCoords = font->getGlyphUVCoords(codePoint);
+			dimensions.size = font->getGlyphBitmapSize(codePoint);
+			mBearing = font->getGlyphBearing(codePoint);
 		}
+
+		dimensions.size.roundUp();
+		setBaseline(baseline);
 	}
 
 	void Character::setHighlighted(bool highlighted)

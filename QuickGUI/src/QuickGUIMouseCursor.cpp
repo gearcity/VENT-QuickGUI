@@ -12,7 +12,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String MouseCursor::TEXTURE = "texture";
+	const std::string MouseCursor::TEXTURE = "texture";
 
 	MouseCursorDesc::MouseCursorDesc()
 	{
@@ -67,7 +67,7 @@ namespace QuickGUI
 		}
 	}
 
-	void MouseCursor::_setSkinType(const Ogre::String type)
+	void MouseCursor::_setSkinType(const std::string type)
 	{
 		if(mSkinType == type)
 			return;
@@ -80,7 +80,7 @@ namespace QuickGUI
 		setSize(i.getWidth(),i.getHeight());
 	}
 
-	void MouseCursor::addUserDefinedMouseCursorEventHandler(MouseCursorEvent EVENT, const Ogre::String& handlerName)
+	void MouseCursor::addUserDefinedMouseCursorEventHandler(MouseCursorEvent EVENT, const std::string& handlerName)
 	{
 		mMouseCursorDesc.userHandlers[EVENT] = handlerName;
 	}
@@ -145,7 +145,7 @@ namespace QuickGUI
 		return Point(mDimensions.position.x + (mDimensions.size.width/2.0),mDimensions.position.y + (mDimensions.size.height/2.0));
 	}
 
-	Ogre::String MouseCursor::getSkinTypeName()
+	std::string MouseCursor::getSkinTypeName()
 	{
 		return mDefaultSkinType;
 	}
@@ -305,7 +305,7 @@ namespace QuickGUI
 		mDimensions.position.y = currentPosition.y - (mDimensions.size.height/2.0);
 	}
 
-	void MouseCursor::setSkinType(const Ogre::String type)
+	void MouseCursor::setSkinType(const std::string type)
 	{
 		mSkinType = type;
 		mDefaultSkinType = type;

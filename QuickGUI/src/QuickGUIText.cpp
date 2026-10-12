@@ -19,21 +19,21 @@ namespace QuickGUI
     {
     }
 
-    TextSegment::TextSegment(const Ogre::String FontName, const ColourValue& Color, const Ogre::UTFString& Text) :
+    TextSegment::TextSegment(const std::string FontName, const ColourValue& Color, const UTFString& Text) :
         fontName(FontName),
         color(Color.r,Color.g,Color.b,Color.a),
         text(Text)
     {
     }
 
-    TextSegment::TextSegment(const ColourValue& Color, const Ogre::UTFString& Text) :
+    TextSegment::TextSegment(const ColourValue& Color, const UTFString& Text) :
         fontName(Root::getSingleton().getDefaultFontName()),
         color(Color.r,Color.g,Color.b,Color.a),
         text(Text)
     {
     }
 
-    TextSegment::TextSegment(const Ogre::UTFString& Text) :
+    TextSegment::TextSegment(const UTFString& Text) :
         fontName(Root::getSingleton().getDefaultFontName()),
         color(Root::getSingleton().getDefaultColor()),
         text(Text)
@@ -53,7 +53,7 @@ namespace QuickGUI
         float height;
         for(int index = 0; index < static_cast<int>(segments.size()); ++index)
         {
-            height = Text::getFontHeight(segments[index].fontName);
+            height = Root::getSingleton().getFont(segments[index].fontName).getHeight();
             if(height > maxHeight)
                 maxHeight = height;
         }
@@ -76,7 +76,7 @@ namespace QuickGUI
         float width = 0;
         for(int index = 0; index < static_cast<int>(segments.size()); ++index)
         {
-            width += Text::getTextWidth(segments[index].fontName,segments[index].text);
+            width += Root::getSingleton().getFont(segments[index].fontName).getTextWidth(segments[index].text);
         }
 
         return width;
@@ -106,7 +106,7 @@ namespace QuickGUI
             std::list<DefinitionProperty*> propList = b->getCurrentDefinition()->getProperties();
             for(std::list<DefinitionProperty*>::iterator it = propList.begin(); it != propList.end(); ++it)
             {
-                Ogre::StringVector sv = (*it)->getValues();
+                std::vector<std::string> sv = (*it)->getValues();
 
 
 
@@ -147,7 +147,7 @@ namespace QuickGUI
 
             for(int index = 0; index < static_cast<int>(segments.size()); ++index)
             {
-                Ogre::String propName = "Segment" + Ogre::StringConverter::toString(index);
+                std::string propName = "Segment" + Ogre::StringConverter::toString(index);
                 DefinitionProperty* prop = OGRE_NEW_T(DefinitionProperty, Ogre::MEMCATEGORY_GENERAL)(propName);
 
                 TextSegment& s = segments[index];
@@ -159,7 +159,7 @@ namespace QuickGUI
                 prop->mValues.push_back(Ogre::StringConverter::toString(s.color.g));
                 prop->mValues.push_back(Ogre::StringConverter::toString(s.color.r));
 
-                prop->mValues.push_back(s.text);
+                prop->mValues.push_back(s.text.asUTF8());
 
                 b->getCurrentDefinition()->mProperties[propName] = prop;
             }
@@ -207,48 +207,48 @@ namespace QuickGUI
             OGRE_DELETE_T((*it),Character,Ogre::MEMCATEGORY_GENERAL);
     }
 // STATIC FUNCTIONS
-    void Text::convertWhitespaceToText(Ogre::UTFString& s)
+    void Text::convertWhitespaceToText(UTFString& s)
     {
-        Ogre::String::size_type index = s.find('\t');
-        while(index != Ogre::UTFString::npos)
+        std::string::size_type index = s.find('\t');
+        while(index != UTFString::npos)
         {
             s.replace(index,1,"\\t");
             index = s.find('\t');
         }
 
         index = s.find('\n');
-        while(index != Ogre::UTFString::npos)
+        while(index != UTFString::npos)
         {
             s.replace(index,1,"\\n");
             index = s.find('\n');
         }
 
         index = s.find('\r');
-        while(index != Ogre::UTFString::npos)
+        while(index != UTFString::npos)
         {
             s.replace(index,1,"\\n");
             index = s.find('\r');
         }
     }
 
-    void Text::convertTextToWhiteSpace(Ogre::UTFString& s)
+    void Text::convertTextToWhiteSpace(UTFString& s)
     {
-        Ogre::String::size_type index = s.find("\\t");
-        while(index != Ogre::UTFString::npos)
+        std::string::size_type index = s.find("\\t");
+        while(index != UTFString::npos)
         {
             s.replace(index,2,"\t");
             index = s.find("\\t");
         }
 
         index = s.find("\\n");
-        while(index != Ogre::UTFString::npos)
+        while(index != UTFString::npos)
         {
             s.replace(index,2,"\n");
             index = s.find("\\n");
         }
 
         index = s.find("\\r");
-        while(index != Ogre::UTFString::npos)
+        while(index != UTFString::npos)
         {
             s.replace(index,2,"\n");
             index = s.find("\\r");
@@ -257,12 +257,10 @@ namespace QuickGUI
 
     Ogre::FontPtr Text::getFirstAvailableFont()
     {
-        /*Ogre::ResourceManager::ResourceMapIterator rmi = Ogre::FontManager::getSingleton().getResourceIterator();
-        return static_cast<Ogre::FontPtr>(rmi.getNext());*/
         return Ogre::FontManager::getSingleton().getResourceIterator().getNext().staticCast<Ogre::Font>();
     }
 
-    Ogre::FontPtr Text::getFont(const Ogre::String& fontName)
+    Ogre::FontPtr Text::getFont(const std::string& fontName)
     {
         Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
         // Make sure the font is loaded
@@ -271,177 +269,116 @@ namespace QuickGUI
         return fp;
     }
 
-    float Text::getFontHeight(const Ogre::String& fontName)
+    float Text::getFontHeight(const std::string& fontName)
     {
-        return getFontHeight(getFont(fontName));
+        return Root::getSingleton().getFont(fontName).getHeight();
     }
 
     float Text::getFontHeight(Ogre::FontPtr fp)
     {
-        Ogre::TexturePtr tp = getFontTexture(fp);
-
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords('0');
-        float height = ((uvRect.bottom - uvRect.top) * tp->getHeight());
-
-        return height;
+        return Root::getSingleton().getFont(fp->getName()).getHeight();
     }
 
-    Ogre::TexturePtr Text::getFontTexture(const Ogre::String& fontName)
+    Ogre::TexturePtr Text::getFontTexture(const std::string& fontName)
     {
-        return getFontTexture(getFont(fontName));
+        return static_cast<Ogre::TexturePtr>(Ogre::TextureManager::getSingleton().getByName(Root::getSingleton().getFont(fontName).getTextureName()));
     }
 
     Ogre::TexturePtr Text::getFontTexture(Ogre::FontPtr fp)
     {
-        // Make sure the font is loaded
-        fp->load();
-
-        return
-            static_cast<Ogre::TexturePtr>
-            (
-                Ogre::TextureManager::getSingleton().getByName(fp->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName())
-            );
+        return static_cast<Ogre::TexturePtr>(Ogre::TextureManager::getSingleton().getByName(Root::getSingleton().getFont(fp->getName()).getTextureName()));
     }
 
-    Ogre::String Text::getFontTextureName(const Ogre::String& fontName)
+    std::string Text::getFontTextureName(const std::string& fontName)
     {
-        return getFontTextureName(getFont(fontName));
+        return Root::getSingleton().getFont(fontName).getTextureName();
     }
 
-    Ogre::String Text::getFontTextureName(Ogre::FontPtr fp)
+    std::string Text::getFontTextureName(Ogre::FontPtr fp)
     {
-        // Make sure the font is loaded
-        fp->load();
-
-        return fp->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName();
+        return Root::getSingleton().getFont(fp->getName()).getTextureName();
     }
 
-    float Text::getGlyphHeight(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    float Text::getGlyphHeight(const std::string& fontName, UTFString::code_point cp)
     {
-        return getGlyphHeight(getFont(fontName),cp);
+        return Root::getSingleton().getFont(fontName).getGlyphHeight(cp);
     }
 
-    float Text::getGlyphHeight(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    float Text::getGlyphHeight(Ogre::FontPtr fp, UTFString::code_point cp)
     {
-        Ogre::TexturePtr tp = getFontTexture(fp);
-
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
-
-        return ((uvRect.bottom - uvRect.top) * tp->getHeight());
+        return Root::getSingleton().getFont(fp->getName()).getGlyphHeight(cp);
     }
 
-    UVRect Text::getGlyphUVCoords(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    UVRect Text::getGlyphUVCoords(const std::string& fontName, UTFString::code_point cp)
     {
-        return getGlyphUVCoords(getFont(fontName),cp);
+        return Root::getSingleton().getFont(fontName).getGlyphUVCoords(cp);
     }
 
-    UVRect Text::getGlyphUVCoords(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    UVRect Text::getGlyphUVCoords(Ogre::FontPtr fp, UTFString::code_point cp)
     {
-        // Make sure the font is loaded
-        fp->load();
-
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
-
-        UVRect retVal;
-        retVal.left = uvRect.left;
-        retVal.top = uvRect.top;
-        retVal.right = uvRect.right;
-        retVal.bottom = uvRect.bottom;
-
-        return retVal;
+        return Root::getSingleton().getFont(fp->getName()).getGlyphUVCoords(cp);
     }
 
-    Size Text::getGlyphSize(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    Size Text::getGlyphSize(const std::string& fontName, UTFString::code_point cp)
     {
-        return getGlyphSize(getFont(fontName),cp);
+        const Font& font = Root::getSingleton().getFont(fontName);
+        return Size(font.getGlyphAdvance(cp),font.getGlyphHeight(cp));
     }
 
-    Size Text::getGlyphSize(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    Size Text::getGlyphSize(Ogre::FontPtr fp, UTFString::code_point cp)
     {
-        Ogre::TexturePtr tp = getFontTexture(fp);
-
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
-        float width = ((uvRect.right - uvRect.left) * tp->getWidth());
-        float height = ((uvRect.bottom - uvRect.top) * tp->getHeight());
-
-        return Size(width,height);
+        const Font& font = Root::getSingleton().getFont(fp->getName());
+        return Size(font.getGlyphAdvance(cp),font.getGlyphHeight(cp));
     }
 
-    float Text::getGlyphWidth(const Ogre::String& fontName, Ogre::UTFString::code_point cp)
+    float Text::getGlyphWidth(const std::string& fontName, UTFString::code_point cp)
     {
-        return getGlyphWidth(getFont(fontName),cp);
+        return Root::getSingleton().getFont(fontName).getGlyphAdvance(cp);
     }
 
-    float Text::getGlyphWidth(Ogre::FontPtr fp, Ogre::UTFString::code_point cp)
+    float Text::getGlyphWidth(Ogre::FontPtr fp, UTFString::code_point cp)
     {
-        Ogre::TexturePtr tp = getFontTexture(fp);
-
-        Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords(cp);
-        float width = ((uvRect.right - uvRect.left) * tp->getWidth());
-
-        return width;
+        return Root::getSingleton().getFont(fp->getName()).getGlyphAdvance(cp);
     }
 
-    float Text::getTextWidth(const Ogre::String& fontName, Ogre::UTFString s)
+    float Text::getGlyphAdvance(const std::string& fontName, UTFString::code_point cp)
     {
-        return getTextWidth(getFont(fontName),s);
+        return Root::getSingleton().getFont(fontName).getGlyphAdvance(cp);
     }
 
-    float Text::getTextWidth(Ogre::FontPtr fp, Ogre::UTFString s)
+    float Text::getGlyphAdvance(Ogre::FontPtr fp, UTFString::code_point cp)
     {
-        float width = 0;
-        float charWidth = 0;
-        Ogre::TexturePtr tp = getFontTexture(fp);
-
-        for(Ogre::UTFString::iterator it = s.begin(); it != s.end(); ++it)
-        {
-            if(isSpace((*it)))
-            {
-                charWidth = getGlyphSize(fp,'0').width;
-            }
-            else if(isTab((*it)))
-            {
-                charWidth = (getGlyphSize(fp,'0').width * 4);
-            }
-            else
-            {
-                Ogre::Font::UVRect uvRect = fp->getGlyphTexCoords((*it));
-                charWidth = ((uvRect.right - uvRect.left) * tp->getWidth());
-            }
-
-            width += charWidth;
-        }
-
-        return width;
+        return Root::getSingleton().getFont(fp->getName()).getGlyphAdvance(cp);
     }
 
-    void Text::saveFontTextureToFile(const Ogre::String& fontName, const Ogre::String& fileName)
+    float Text::getGlyphBearing(const std::string& fontName, UTFString::code_point cp)
     {
-        saveFontTextureToFile(getFont(fontName),fileName);
+        return Root::getSingleton().getFont(fontName).getGlyphBearing(cp);
     }
 
-    void Text::saveFontTextureToFile(Ogre::FontPtr fp, const Ogre::String& fileName)
+    float Text::getGlyphBearing(Ogre::FontPtr fp, UTFString::code_point cp)
     {
-        Ogre::TexturePtr tp = getFontTexture(fp);
+        return Root::getSingleton().getFont(fp->getName()).getGlyphBearing(cp);
+    }
 
-        // Declare buffer
-        const size_t buffSize = (tp->getWidth() * tp->getHeight() * 4);
-        unsigned char *data = OGRE_ALLOC_T(unsigned char,buffSize,Ogre::MEMCATEGORY_GENERAL);
+    float Text::getTextWidth(const std::string& fontName, UTFString s)
+    {
+        return Root::getSingleton().getFont(fontName).getTextWidth(s);
+    }
 
-        // Clear buffer
-        memset(data, 0, buffSize);
+    float Text::getTextWidth(Ogre::FontPtr fp, UTFString s)
+    {
+        return Root::getSingleton().getFont(fp->getName()).getTextWidth(s);
+    }
 
-        // Setup Image with correct settings
-        Ogre::Image i;
-        i.loadDynamicImage(data, tp->getWidth(), tp->getHeight(), 1, Ogre::PF_R8G8B8A8, true);
+    void Text::saveFontTextureToFile(const std::string& fontName, const std::string& fileName)
+    {
+        Root::getSingleton().getFont(fontName).saveTextureToFile(fileName);
+    }
 
-        // Copy Texture buffer contents to image buffer
-        Ogre::HardwarePixelBufferSharedPtr buf = tp->getBuffer();
-        const Ogre::PixelBox destBox = i.getPixelBox();
-        buf->blitToMemory(destBox);
-
-        // Save to disk!
-        i.save(fileName);
+    void Text::saveFontTextureToFile(Ogre::FontPtr fp, const std::string& fileName)
+    {
+        Root::getSingleton().getFont(fp->getName()).saveTextureToFile(fileName);
     }
 
 // END STATIC FUNCTIONS
@@ -484,7 +421,7 @@ namespace QuickGUI
                 if(Text::isNullCharacter((*cItr)->codePoint))
                     break;
 
-                if(isWhiteSpace((*cItr)->codePoint) || Ogre::StringUtil::startsWith((*cItr)->fontPtr->getName(),"Ja",false) || Ogre::StringUtil::startsWith((*cItr)->fontPtr->getName(),"Chinese",false))
+                if(isWhiteSpace((*cItr)->codePoint) || Ogre::StringUtil::startsWith((*cItr)->font->getName(),"Ja",false) || Ogre::StringUtil::startsWith((*cItr)->font->getName(),"Chinese",false))
                 {
                     // If its a newline we can add it to the TextLine, since they have a width of 0.
                     // We also want to create a New TextLine object.
@@ -500,7 +437,7 @@ namespace QuickGUI
                         float availableSpace = mTextDesc->allottedWidth - currentTextLine->getWidth();
 
                         // If the character doesn't fit on this TextLine, create a new TextLine and repeat the process
-                        if( (*cItr)->dimensions.size.width > availableSpace )
+                        if( (*cItr)->getAdvance() > availableSpace )
                         {
                             currentTextLine = OGRE_NEW_T(TextLine,Ogre::MEMCATEGORY_GENERAL)();
                             mTextLines.push_back(currentTextLine);
@@ -523,7 +460,7 @@ namespace QuickGUI
                     {
                         while( (endOfWord != mCharacters.end()) && !isWhiteSpace((*endOfWord)->codePoint) && (wordLength < availableSpace) )
                         {
-                            wordLength += (*endOfWord)->dimensions.size.width;
+                            wordLength += (*endOfWord)->getAdvance();
                             ++endOfWord;
                         }
 
@@ -538,7 +475,7 @@ namespace QuickGUI
                     {
                         while( (endOfWord != mCharacters.end()) && !isWhiteSpace((*endOfWord)->codePoint) )
                         {
-                            wordLength += (*endOfWord)->dimensions.size.width;
+                            wordLength += (*endOfWord)->getAdvance();
                             ++endOfWord;
                         }
 
@@ -649,7 +586,7 @@ namespace QuickGUI
         addCharacter(c,getLength());
     }
 
-    void Text::addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+    void Text::addText(UTFString s, const Font& font, const ColourValue& cv)
     {
         // Remove Null Character from List
         Character* nullChar = mCharacters.back();
@@ -661,7 +598,7 @@ namespace QuickGUI
         {
             // append character to mText
             mText.push_back(s[index]);
-            mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(s[index],fp,cv));
+            mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(s[index],font,cv));
 
             ++index;
         }
@@ -681,12 +618,13 @@ namespace QuickGUI
         for(int index = 0; index < static_cast<int>(segments.size()); ++index)
         {
             TextSegment s = segments[index];
+            const Font& font = Root::getSingleton().getFont(s.fontName);
 
-            for(Ogre::UTFString::iterator it2 = s.text.begin(); it2 != s.text.end(); ++it2)
+            for(UTFString::iterator it2 = s.text.begin(); it2 != s.text.end(); ++it2)
             {
                 // append character to mText
                 mText.push_back((*it2));
-                mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)((*it2),static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(s.fontName)),s.color));
+                mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)((*it2),font,s.color));
             }
         }
 
@@ -697,11 +635,11 @@ namespace QuickGUI
         mTextLinesDirty = true;
     }
 
-    void Text::addTextLine(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+    void Text::addTextLine(UTFString s, const Font& font, const ColourValue& cv)
     {
         if(empty())
         {
-            addText(s,fp,cv);
+            addText(s,font,cv);
             return;
         }
 
@@ -709,12 +647,12 @@ namespace QuickGUI
         Character* nullChar = mCharacters.back();
         mCharacters.pop_back();
 
-        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(UNICODE_CR,fp,cv));
+        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(UNICODE_CR,font,cv));
 
         // Add Null Character to List
         mCharacters.push_back(nullChar);
 
-        addText(s,fp,cv);
+        addText(s,font,cv);
     }
 
     void Text::addTextLine(std::vector<TextSegment> segments)
@@ -730,7 +668,7 @@ namespace QuickGUI
         mCharacters.pop_back();
 
         mText.push_back('\n');
-        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(UNICODE_CR,getFont(Root::getSingleton().getDefaultFontName()),ColourValue::White));
+        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(UNICODE_CR,Root::getSingleton().getDefaultFont(),ColourValue::White));
 
         // Add Null Character to List
         mCharacters.push_back(nullChar);
@@ -770,7 +708,7 @@ namespace QuickGUI
         mCharacters.clear();
 
         // Add Null Character to End
-        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(Text::UNICODE_NEL,Text::getFont(Root::getSingleton().getDefaultFontName()),ColourValue::ZERO));
+        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(Text::UNICODE_NEL,Root::getSingleton().getDefaultFont(),ColourValue::ZERO));
 
         // Clear UTFString representing plain text
         mText.clear();
@@ -840,7 +778,7 @@ namespace QuickGUI
 
         Character* c = getCharacter(index);
 
-        return Point(c->dimensions.position.x,height);
+        return Point(c->getBaseline(),height);
     }
 
     float Text::getCharacterYPosition(unsigned int index)
@@ -1075,7 +1013,7 @@ namespace QuickGUI
         return Size(maxWidth,height);
     }
 
-    Ogre::UTFString Text::getText()
+    UTFString Text::getText()
     {
         return mText;
     }
@@ -1168,12 +1106,12 @@ namespace QuickGUI
     {
         std::vector<TextSegment> segments;
 
-        Ogre::String currentFont;
+        std::string currentFont;
         ColourValue currentColor;
-        Ogre::UTFString text;
+        UTFString text;
 
         // initialize segment properties
-        currentFont = mCharacters.front()->fontPtr->getName();
+        currentFont = mCharacters.front()->font->getName();
         currentColor = mCharacters.front()->colorValue;
         text = "";
 
@@ -1181,7 +1119,7 @@ namespace QuickGUI
         for(std::list<Character*>::iterator it = mCharacters.begin(); it != --(mCharacters.end()); ++it)
         {
             // If this character has a different color or font, write out the previous text segment.
-            if(((*it)->fontPtr->getName() != currentFont) || ((*it)->colorValue != currentColor))
+            if(((*it)->font->getName() != currentFont) || ((*it)->colorValue != currentColor))
             {
                 Text::convertWhitespaceToText(text);
 
@@ -1191,7 +1129,7 @@ namespace QuickGUI
                 s.text = text;
                 segments.push_back(s);
 
-                currentFont = (*it)->fontPtr->getName();
+                currentFont = (*it)->font->getName();
                 currentColor = (*it)->colorValue;
                 text.clear();
             }
@@ -1263,19 +1201,19 @@ namespace QuickGUI
         }
     }
 
-    void Text::highlight(Ogre::UTFString::code_point c, bool allOccurrences)
+    void Text::highlight(UTFString::code_point c, bool allOccurrences)
     {
-        Ogre::UTFString::size_type index = mText.find(c);
+        UTFString::size_type index = mText.find(c);
         if(!allOccurrences)
         {
-            if(index != Ogre::UTFString::npos)
+            if(index != UTFString::npos)
                 highlight(static_cast<int>(index));
         }
         else
         {
             int count = 0;
             std::list<Character*>::iterator it = mCharacters.begin();
-            while((index != Ogre::UTFString::npos) && (it != mCharacters.end()))
+            while((index != UTFString::npos) && (it != mCharacters.end()))
             {
                 if(count == index)
                 {
@@ -1289,12 +1227,12 @@ namespace QuickGUI
         }
     }
 
-    void Text::highlight(Ogre::UTFString s, bool allOccurrences)
+    void Text::highlight(UTFString s, bool allOccurrences)
     {
-        Ogre::UTFString::size_type index = mText.find(s);
+        UTFString::size_type index = mText.find(s);
         if(!allOccurrences)
         {
-            if(index != Ogre::UTFString::npos)
+            if(index != UTFString::npos)
                 highlight(static_cast<unsigned int>(index),static_cast<unsigned int>(index) + static_cast<unsigned int>(s.length()));
         }
         else
@@ -1305,7 +1243,7 @@ namespace QuickGUI
             int temp = 0;
             std::list<Character*>::iterator it = mCharacters.begin();
 
-            while((index != Ogre::UTFString::npos) && (it != mCharacters.end()))
+            while((index != UTFString::npos) && (it != mCharacters.end()))
             {
                 // If we have passed start of instance s and have not colored wordLength characters,
                 // color character.
@@ -1423,19 +1361,19 @@ namespace QuickGUI
         mTextLinesDirty = true;
     }
 
-    void Text::setColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences)
+    void Text::setColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences)
     {
-        Ogre::UTFString::size_type index = mText.find(c);
+        UTFString::size_type index = mText.find(c);
         if(!allOccurrences)
         {
-            if(index != Ogre::UTFString::npos)
+            if(index != UTFString::npos)
                 setColor(cv,static_cast<int>(index));
         }
         else
         {
             int count = 0;
             std::list<Character*>::iterator it = mCharacters.begin();
-            while((index != Ogre::UTFString::npos) && (it != mCharacters.end()))
+            while((index != UTFString::npos) && (it != mCharacters.end()))
             {
                 if(count == index)
                 {
@@ -1451,12 +1389,12 @@ namespace QuickGUI
         mTextLinesDirty = true;
     }
 
-    void Text::setColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences)
+    void Text::setColor(const ColourValue& cv, UTFString s, bool allOccurrences)
     {
-        Ogre::UTFString::size_type index = mText.find(s);
+        UTFString::size_type index = mText.find(s);
         if(!allOccurrences)
         {
-            if(index != Ogre::UTFString::npos)
+            if(index != UTFString::npos)
                 setColor(cv,static_cast<unsigned int>(index),static_cast<unsigned int>(index) + static_cast<int>(s.length()));
         }
         else
@@ -1467,7 +1405,7 @@ namespace QuickGUI
             int temp = 0;
             std::list<Character*>::iterator it = mCharacters.begin();
 
-            while((index != Ogre::UTFString::npos) && (it != mCharacters.end()))
+            while((index != UTFString::npos) && (it != mCharacters.end()))
             {
                 // If we have passed start of instance s and have not colored wordLength characters,
                 // color character.
@@ -1492,31 +1430,31 @@ namespace QuickGUI
         mTextLinesDirty = true;
     }
 
-    void Text::setFont(const Ogre::String& fontName)
+    void Text::setFont(const std::string& fontName)
     {
-        Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
+        const Font& font = Root::getSingleton().getFont(fontName);
 
         for(std::list<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
-            (*it)->setFont(fp);
+            (*it)->setFont(font);
 
         mTextLinesDirty = true;
     }
 
-    void Text::setFont(const Ogre::String& fontName, unsigned int index)
+    void Text::setFont(const std::string& fontName, unsigned int index)
     {
         if(mText.empty() || (index < 0) || (static_cast<int>(index) >= getLength()))
             throw Exception(Exception::ERR_TEXT,
                     "Index out of bounds! index=" + Ogre::StringConverter::toString(index) + " Text Length=" + Ogre::StringConverter::toString(getLength()),
                     "Text::setFont");
 
-        Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
+        const Font& font = Root::getSingleton().getFont(fontName);
 
         int count = 0;
         for(std::list<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
         {
             if(count == index)
             {
-                (*it)->setFont(fp);
+                (*it)->setFont(font);
                 break;
             }
 
@@ -1526,7 +1464,7 @@ namespace QuickGUI
         mTextLinesDirty = true;
     }
 
-    void Text::setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex)
+    void Text::setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex)
     {
         if(mText.empty())
             throw Exception(Exception::ERR_TEXT,"Indexes are out of bounds, text is empty!","Text::setFont");
@@ -1536,7 +1474,7 @@ namespace QuickGUI
                     "Invalid Indices! Start=" + Ogre::StringConverter::toString(startIndex) + " End=" + Ogre::StringConverter::toString(startIndex) + " Text Length=" + Ogre::StringConverter::toString(getLength()),
                     "Text::setFont");
 
-        Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
+        const Font& font = Root::getSingleton().getFont(fontName);
 
         unsigned int count = 0;
         for(std::list<Character*>::iterator it = mCharacters.begin(); it != mCharacters.end(); ++it)
@@ -1545,7 +1483,7 @@ namespace QuickGUI
                 break;
 
             if(count >= startIndex)
-                (*it)->setFont(fp);
+                (*it)->setFont(font);
 
             ++count;
         }
@@ -1553,25 +1491,25 @@ namespace QuickGUI
         mTextLinesDirty = true;
     }
 
-    void Text::setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences)
+    void Text::setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences)
     {
-        Ogre::UTFString::size_type index = mText.find(c);
+        UTFString::size_type index = mText.find(c);
         if(!allOccurrences)
         {
-            if(index != Ogre::UTFString::npos)
+            if(index != UTFString::npos)
                 setFont(fontName,static_cast<int>(index));
         }
         else
         {
-            Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
+            const Font& font = Root::getSingleton().getFont(fontName);
 
             int count = 0;
             std::list<Character*>::iterator it = mCharacters.begin();
-            while((index != Ogre::UTFString::npos) && (it != mCharacters.end()))
+            while((index != UTFString::npos) && (it != mCharacters.end()))
             {
                 if(count == index)
                 {
-                    (*it)->setFont(fp);
+                    (*it)->setFont(font);
                     index = mText.find(c,count + 1);
                 }
 
@@ -1583,17 +1521,17 @@ namespace QuickGUI
         }
     }
 
-    void Text::setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences)
+    void Text::setFont(const std::string& fontName, UTFString s, bool allOccurrences)
     {
-        Ogre::UTFString::size_type index = mText.find(s);
+        UTFString::size_type index = mText.find(s);
         if(!allOccurrences)
         {
-            if(index != Ogre::UTFString::npos)
+            if(index != UTFString::npos)
                 setFont(fontName,static_cast<unsigned int>(index),static_cast<unsigned int>(index) + static_cast<unsigned int>(s.length()));
         }
         else
         {
-            Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(fontName));
+            const Font& font = Root::getSingleton().getFont(fontName);
 
             int count = 0;
             int wordLength = static_cast<int>(s.length());
@@ -1601,13 +1539,13 @@ namespace QuickGUI
             int temp = 0;
             std::list<Character*>::iterator it = mCharacters.begin();
 
-            while((index != Ogre::UTFString::npos) && (it != mCharacters.end()))
+            while((index != UTFString::npos) && (it != mCharacters.end()))
             {
                 // If we have passed start of instance s and have not colored wordLength characters,
                 // color character.
                 if((count >= static_cast<int>(index)) && (temp < wordLength))
                 {
-                    (*it)->setFont(fp);
+                    (*it)->setFont(font);
                     ++temp;
                 }
 
@@ -1626,7 +1564,7 @@ namespace QuickGUI
         }
     }
 
-    void Text::setMaskText(bool mask, Ogre::UTFString::code_point maskSymbol)
+    void Text::setMaskText(bool mask, UTFString::code_point maskSymbol)
     {
         mMaskText = mask;
         mMaskSymbol = maskSymbol;
@@ -1634,7 +1572,7 @@ namespace QuickGUI
         _checkTextLines();
     }
 
-    void Text::setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+    void Text::setText(UTFString s, const Font& font, const ColourValue& cv)
     {
         // set mText to s
         mText = s;
@@ -1648,13 +1586,13 @@ namespace QuickGUI
         int length = static_cast<int>(mText.length());
         while(index < length)
         {
-            mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(mText[index],fp,cv));
+            mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(mText[index],font,cv));
 
             ++index;
         }
 
         // Add Null Character to List
-        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(Text::UNICODE_NEL,fp,cv));
+        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(Text::UNICODE_NEL,font,cv));
 
         mTextLinesDirty = true;
     }
@@ -1675,18 +1613,16 @@ namespace QuickGUI
             mTextDesc->segments.push_back(s);
             mText.append(s.text);
 
-            Ogre::FontPtr fp = static_cast<Ogre::FontPtr>(Ogre::FontManager::getSingleton().getByName(s.fontName));
-            if(fp.isNull())
-                throw new Exception(Exception::ERR_ITEM_NOT_FOUND,"No font with name \"" + s.fontName + "\" exists!","Text::setText");
+            const Font& font = Root::getSingleton().getFont(s.fontName);
 
-            for(Ogre::UTFString::iterator it2 = s.text.begin(); it2 != s.text.end(); ++it2)
+            for(UTFString::iterator it2 = s.text.begin(); it2 != s.text.end(); ++it2)
             {
-                mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)((*it2),fp,s.color));
+                mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)((*it2),font,s.color));
             }
         }
 
         // Add Null Character to List
-        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(Text::UNICODE_NEL,Text::getFont(Root::getSingleton().getDefaultFontName()),ColourValue::ZERO));
+        mCharacters.push_back(OGRE_NEW_T(Character, Ogre::MEMCATEGORY_GENERAL)(Text::UNICODE_NEL,Root::getSingleton().getDefaultFont(),ColourValue::ZERO));
 
         // Toggle rebuilding of TextLines
         mTextLinesDirty = true;
@@ -1708,4 +1644,19 @@ namespace QuickGUI
     {
         _checkTextLines();
     }
+
+	void Text::addText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void Text::addTextLine(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addTextLine(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void Text::setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
 }

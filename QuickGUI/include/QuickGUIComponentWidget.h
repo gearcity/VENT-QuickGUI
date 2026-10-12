@@ -80,7 +80,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 
 		/**
 		* Recalculate Client dimensions, relative to Widget's actual dimensions.
@@ -107,18 +107,18 @@ namespace QuickGUI
 		virtual void setMoveBaseWidgetOnDrag(bool moveBaseWidget);
 
 	protected:
-		ComponentWidget(const Ogre::String& name);
+		ComponentWidget(const std::string& name);
 		virtual ~ComponentWidget();
 
 #if USEHASHMAPS
-        std::unordered_map<Ogre::String,Widget*> mComponents;
+        std::unordered_map<std::string,Widget*> mComponents;
 #else
-		std::map<Ogre::String,Widget*> mComponents;
+		std::map<std::string,Widget*> mComponents;
 #endif
 		/**
 		* Adds a component to this widget.
 		*/
-		void addComponent(const Ogre::String& alias, Widget* w);
+		void addComponent(const std::string& alias, Widget* w);
 
 		/**
 		* Internal function used to apply anchor to a widget, after its parent has changed in size.

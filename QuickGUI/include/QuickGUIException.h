@@ -38,7 +38,7 @@ namespace QuickGUI
 			ERR_NOT_IMPLEMENTED
 */        };
 
-		Exception( int number, const Ogre::String& description, const Ogre::String& source );
+		Exception( int number, const std::string& description, const std::string& source );
 
 	protected:
 	private:

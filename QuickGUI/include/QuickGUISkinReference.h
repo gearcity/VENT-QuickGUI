@@ -12,14 +12,14 @@ namespace QuickGUI
 		public Serializable
 	{
 	public:
-		SkinReference(const Ogre::String& alias);
+		SkinReference(const std::string& alias);
 
 		// Class of the Widget
-		Ogre::String className;
+		std::string className;
 		// Name reference for skin
-		Ogre::String skinAlias;
+		std::string skinAlias;
 		// Name of the Type for this Component Widget
-		Ogre::String typeName;
+		std::string typeName;
 
 		/**
 		* Builds the SkinReference from a ScriptDefinition or Writes the widget to a ScriptDefinition.

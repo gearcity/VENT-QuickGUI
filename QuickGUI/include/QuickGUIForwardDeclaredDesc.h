@@ -21,11 +21,11 @@ namespace QuickGUI
 		virtual ~PanelDesc() {}
 	public:
 
-		virtual Ogre::String getClass() { return "PanelDesc"; }
+		virtual std::string getClass() { return "PanelDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "Panel"; }
+		virtual std::string getWidgetClass() { return "Panel"; }
 
 		/**
 		* Restore properties to default values
@@ -53,18 +53,18 @@ namespace QuickGUI
 
 		/// width in pixels of the front edge of the tab.
 		float					tabpage_tabFrontWidth;
-		Ogre::String			tabpage_tabImageName;
+		std::string			tabpage_tabImageName;
 
 		int						tabpage_index;
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TabPageDesc"; }
+		virtual std::string getClass() { return "TabPageDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TabPage"; }
+		virtual std::string getWidgetClass() { return "TabPage"; }
 
 		/**
 		* Restore properties to default values
@@ -94,16 +94,16 @@ namespace QuickGUI
 		float			tabcontrol_tabHeight;
 		/// Determines whether tabs can be reordered using click and drag
 		bool			tabcontrol_tabReordering;
-		Ogre::String	tabcontrol_userHandlers[TABCONTROL_EVENT_COUNT];
+		std::string	tabcontrol_userHandlers[TABCONTROL_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TabControlDesc"; }
+		virtual std::string getClass() { return "TabControlDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TabControl"; }
+		virtual std::string getWidgetClass() { return "TabControl"; }
 
 		/**
 		* Restore properties to default values

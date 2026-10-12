@@ -36,7 +36,7 @@ namespace QuickGUI
 		PropertyGridItemDesc::serialize(b);
 	}
 
-	PropertyGridBoolProperty::PropertyGridBoolProperty(const Ogre::String& name) :
+	PropertyGridBoolProperty::PropertyGridBoolProperty(const std::string& name) :
 		PropertyGridItem(name),
 		mComboBox(NULL)
 	{
@@ -76,7 +76,7 @@ namespace QuickGUI
 		mFieldWidget = mComboBox;
 	}
 
-	Ogre::String PropertyGridBoolProperty::getClass()
+	std::string PropertyGridBoolProperty::getClass()
 	{
 		return "PropertyGridBoolProperty";
 	}

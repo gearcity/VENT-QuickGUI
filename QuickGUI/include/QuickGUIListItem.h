@@ -21,11 +21,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ListItemDesc"; }
+		virtual std::string getClass() { return "ListItemDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "List"; }
+		virtual std::string getWidgetClass() { return "List"; }
 
 		/**
 		* Restore properties to default values
@@ -43,9 +43,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String DEFAULT;
-		static const Ogre::String OVER;
-		static const Ogre::String SELECTED;
+		static const std::string DEFAULT;
+		static const std::string OVER;
+		static const std::string SELECTED;
 
 		using Widget::setScrollable;		
 
@@ -102,11 +102,11 @@ namespace QuickGUI
 		virtual void setHiddenID(int ID);
 		virtual int getHiddenID();
 
-		virtual void setHiddenString(Ogre::String str);
-		virtual Ogre::String getHiddenString();
+		virtual void setHiddenString(std::string str);
+		virtual std::string getHiddenString();
 
 	protected:
-		ListItem(const Ogre::String& name);
+		ListItem(const std::string& name);
 		virtual ~ListItem();
 
 		ListItemDesc* mDesc;
@@ -130,7 +130,7 @@ namespace QuickGUI
 
 	private:
 		int hiddenInt;
-		Ogre::String hiddenString;
+		std::string hiddenString;
 	};
 }
 

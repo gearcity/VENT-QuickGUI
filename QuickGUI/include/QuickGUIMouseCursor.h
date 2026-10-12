@@ -29,10 +29,10 @@ namespace QuickGUI
 		bool clipOnEdges;
 		bool enabled;
 		float opacity;
-		Ogre::String skin;
+		std::string skin;
 		// This will be set by the GUIManager creating the MouseCursor.
 		GUIManager* guiManager;
-		Ogre::String userHandlers[MOUSE_CURSOR_EVENT_COUNT];
+		std::string userHandlers[MOUSE_CURSOR_EVENT_COUNT];
 		bool visible;
 	};
 
@@ -42,7 +42,7 @@ namespace QuickGUI
 		friend class GUIManager;
 	public:
 		// Skin Constants
-		static const Ogre::String TEXTURE;
+		static const std::string TEXTURE;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -55,7 +55,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedMouseCursorEventHandler(MouseCursorEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedMouseCursorEventHandler(MouseCursorEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler
 			@param
 				EVENT Defined events, for example: MOUSE_CUSSOR_EVENT_ENABLED_CHANGED, MOUSE_CURSOR_EVENT_BORDER_LEAVE, etc.
@@ -109,7 +109,7 @@ namespace QuickGUI
 		/**
 		* Returns the name of the skin type used by the cursor.
 		*/
-		Ogre::String getSkinTypeName();
+		std::string getSkinTypeName();
 		/**
 		* Returns true if the cursor is drawn on the screen, false otherwise.
 		*/
@@ -136,7 +136,7 @@ namespace QuickGUI
 		* can change between several types: "default", "hresize", "diag1resize", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		void setSkinType(const Ogre::String type);
+		void setSkinType(const std::string type);
 		/**
 		* Sets whether the cursor will be drawn on the screen.
 		*/
@@ -151,9 +151,9 @@ namespace QuickGUI
 		Rect mDimensions;
 
 		// Current Skin type of the cursor (for example changing the cursor directly, ie resizing)
-		Ogre::String mSkinType;
+		std::string mSkinType;
 		// Last Skin type as set by a user (for example restoring the cursor)
-		Ogre::String mDefaultSkinType;
+		std::string mDefaultSkinType;
 
 		SkinTypeManager* mSkinTypeManager;
 
@@ -173,7 +173,7 @@ namespace QuickGUI
 		* NOTE: The type property determines what is drawn to the screen.
 		* NOTE: This does not update the default skin type of the cursor, and is for internal use only.
 		*/
-		void _setSkinType(const Ogre::String type);
+		void _setSkinType(const std::string type);
 
 		/**
 		* Updates the cursor so that it is drawn at the position given.

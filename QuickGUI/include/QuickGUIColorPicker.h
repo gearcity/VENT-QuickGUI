@@ -20,11 +20,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ColorPickerDesc"; }
+		virtual std::string getClass() { return "ColorPickerDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ColorPicker"; }
+		virtual std::string getWidgetClass() { return "ColorPicker"; }
 
 		/**
 		* Restore properties to default values
@@ -42,10 +42,10 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String COLORSOURCE;
-		static const Ogre::String TRANSPARENCYBACKGROUND;
-		static const Ogre::String TRANSPARENCYSLIDER;
+		static const std::string BACKGROUND;
+		static const std::string COLORSOURCE;
+		static const std::string TRANSPARENCYBACKGROUND;
+		static const std::string TRANSPARENCYSLIDER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -60,10 +60,10 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 
 	protected:
-		ColorPicker(const Ogre::String& name);
+		ColorPicker(const std::string& name);
 		virtual ~ColorPicker();
 
 		ColorPickerDesc* mDesc;

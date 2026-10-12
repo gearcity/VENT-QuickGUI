@@ -29,11 +29,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "PropertyGridItemDesc"; }
+		virtual std::string getClass() { return "PropertyGridItemDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "PropertyGridItem"; }
+		virtual std::string getWidgetClass() { return "PropertyGridItem"; }
 
 		/**
 		* Restore properties to default values
@@ -52,9 +52,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String ICON;
-		static const Ogre::String SELECTED;
+		static const std::string BACKGROUND;
+		static const std::string ICON;
+		static const std::string SELECTED;
 	public:
 		// PropertyGrid has to set positions, toggle visibility to manage ListItems
 		friend class PropertyGrid;
@@ -130,7 +130,7 @@ namespace QuickGUI
 		void select();
 
 	protected:
-		PropertyGridItem(const Ogre::String& name);
+		PropertyGridItem(const std::string& name);
 		virtual ~PropertyGridItem();
 
 		PropertyGridItemDesc* mDesc;

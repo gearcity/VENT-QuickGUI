@@ -31,16 +31,16 @@ namespace QuickGUI
 		float vscrollbar_sliderHeight;
 		/// Position of the slider as a percentage. 0 is at the top, 100 is at the bottom. (as far down as it can go)
 		float vscrollbar_sliderPercentage;
-		Ogre::String vscrollbar_userHandlers[SCROLLBAR_EVENT_COUNT];
+		std::string vscrollbar_userHandlers[SCROLLBAR_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "VScrollBarDesc"; }
+		virtual std::string getClass() { return "VScrollBarDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "VScrollBar"; }
+		virtual std::string getWidgetClass() { return "VScrollBar"; }
 
 		/**
 		* Restore properties to default values
@@ -58,12 +58,12 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BAR;
-		static const Ogre::String UP1;
-		static const Ogre::String UP2;
-		static const Ogre::String DOWN1;
-		static const Ogre::String DOWN2;
-		static const Ogre::String SLIDER;
+		static const std::string BAR;
+		static const std::string UP1;
+		static const std::string UP2;
+		static const std::string DOWN1;
+		static const std::string DOWN2;
+		static const std::string SLIDER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -83,7 +83,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedScrollBarEventHandler(ScrollBarEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedScrollBarEventHandler(ScrollBarEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WINDOW_EVENT_FOCUS_LOST, WINDOW_EVENT_FOCUS_GAINED, etc.
@@ -132,7 +132,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Gets the position of the slider relative to the bar bounds. 0 percent is at the top, 100 at the bottom.
 		*/
@@ -176,7 +176,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 		/**
 		* Sets the height of the slider.  Disabled ScrollBar from being Live.
 		*/
@@ -218,7 +218,7 @@ namespace QuickGUI
 		using ComponentWidget::setWidth;
 
 	protected:
-		VScrollBar(const Ogre::String& name);
+		VScrollBar(const std::string& name);
 		virtual ~VScrollBar();
 
 		VScrollBarDesc* mDesc;

@@ -2,7 +2,7 @@
 
 namespace QuickGUI
 {
-	ScriptDefinition::ScriptDefinition(const Ogre::String& type, const Ogre::String& id) :
+	ScriptDefinition::ScriptDefinition(const std::string& type, const std::string& id) :
 		mType(type),
 		mID(id),
 		mParentDefinition(NULL)
@@ -12,15 +12,15 @@ namespace QuickGUI
 	ScriptDefinition::~ScriptDefinition()
 	{
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
+	for(std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #else
-	for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
+	for(std::map<std::string, std::map<std::string,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #endif
 		{
 #if USEHASHMAPS
-			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<std::string,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
-			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::map<std::string,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif
 			{
 				OGRE_DELETE_T((*it2).second,ScriptDefinition,Ogre::MEMCATEGORY_GENERAL);
@@ -28,29 +28,29 @@ namespace QuickGUI
 		}
 
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
+		for(std::unordered_map<std::string, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
 #else
-		for(std::map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
+		for(std::map<std::string, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
 #endif
 			OGRE_DELETE_T((*it).second,DefinitionProperty,Ogre::MEMCATEGORY_GENERAL);
 	}
 
-	ScriptDefinition* ScriptDefinition::findDefinition(const Ogre::String& type, const Ogre::String& id)
+	ScriptDefinition* ScriptDefinition::findDefinition(const std::string& type, const std::string& id)
 	{
 		if((mType == type) && (mID == id))
 			return this;
 
 		ScriptDefinition* d = NULL;
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
+	for(std::unordered_map<std::string, std::unordered_map<std::string,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #else
-	for(std::map<Ogre::String, std::map<Ogre::String,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
+	for(std::map<std::string, std::map<std::string,ScriptDefinition*> >::iterator it1 = mSubDefinitions.begin(); it1 != mSubDefinitions.end(); ++it1)		
 #endif
 		{
 			#if USEHASHMAPS
-			for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<std::string,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #else
-			for(std::map<Ogre::String,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::map<std::string,ScriptDefinition*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 #endif
 			{
 				d = (*it2).second->findDefinition(type,id);
@@ -69,7 +69,7 @@ namespace QuickGUI
 		return defList;
 	}
 
-	std::list<ScriptDefinition*> ScriptDefinition::getDefinitions(const Ogre::String& type)
+	std::list<ScriptDefinition*> ScriptDefinition::getDefinitions(const std::string& type)
 	{
 		if(mSubDefinitions.find(type) == mSubDefinitions.end())
 		{
@@ -79,16 +79,16 @@ namespace QuickGUI
 
 		std::list<ScriptDefinition*> defList;
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
+		for(std::unordered_map<std::string,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
 			defList.push_back((*it).second);
 #else
-		for(std::map<Ogre::String,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
+		for(std::map<std::string,ScriptDefinition*>::iterator it = mSubDefinitions[type].begin(); it != mSubDefinitions[type].end(); ++it)
 			defList.push_back((*it).second);
 #endif
 		return defList;
 	}
 
-	ScriptDefinition* ScriptDefinition::getDefinition(const Ogre::String& type, const Ogre::String& id)
+	ScriptDefinition* ScriptDefinition::getDefinition(const std::string& type, const std::string& id)
 	{
 		if(mSubDefinitions.find(type) == mSubDefinitions.end())
 		{
@@ -105,17 +105,17 @@ namespace QuickGUI
 		return mSubDefinitions[type][id];
 	}
 
-	Ogre::String ScriptDefinition::getID()
+	std::string ScriptDefinition::getID()
 	{
 		return mID;
 	}
 
-	Ogre::String ScriptDefinition::getType()
+	std::string ScriptDefinition::getType()
 	{
 		return mType;
 	}
 
-	DefinitionProperty* ScriptDefinition::getProperty(const Ogre::String& propertyName)
+	DefinitionProperty* ScriptDefinition::getProperty(const std::string& propertyName)
 	{
 		if(mProperties.find(propertyName) == mProperties.end())
 			return NULL;
@@ -128,10 +128,10 @@ namespace QuickGUI
 		std::list<DefinitionProperty*> propList;
 
 #if USEHASHMAPS
-        for(std::unordered_map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
+        for(std::unordered_map<std::string, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
             propList.push_back((*it).second);
 #else
-		for(std::map<Ogre::String, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
+		for(std::map<std::string, DefinitionProperty*>::iterator it = mProperties.begin(); it != mProperties.end(); ++it)
 			propList.push_back((*it).second);
 #endif
 	

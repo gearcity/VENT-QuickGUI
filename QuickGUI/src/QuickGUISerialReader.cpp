@@ -26,7 +26,7 @@ namespace QuickGUI
 		return ( *msSingleton ); 
 	}
 
-	bool SerialReader::begin(const Ogre::String& definitionType, const Ogre::String& definitionID)
+	bool SerialReader::begin(const std::string& definitionType, const std::string& definitionID)
 	{
 		ScriptDefinition* d = NULL;
 
@@ -48,7 +48,7 @@ namespace QuickGUI
 		mCurrentDefinition = mCurrentDefinition->mParentDefinition;
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, unsigned short* member)
+	void SerialReader::IO(const std::string& propertyName, unsigned short* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -59,7 +59,7 @@ namespace QuickGUI
 			(*member) = 0;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = 0;
@@ -68,7 +68,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, BrushFilterMode* member)
+	void SerialReader::IO(const std::string& propertyName, BrushFilterMode* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -79,7 +79,7 @@ namespace QuickGUI
 			(*member) = BRUSHFILTER_LINEAR;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = BRUSHFILTER_LINEAR;
@@ -88,7 +88,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, ConsoleLayout* member)
+	void SerialReader::IO(const std::string& propertyName, ConsoleLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -99,7 +99,7 @@ namespace QuickGUI
 			(*member) = CONSOLE_LAYOUT_TEXT_INPUT_BOTTOM;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = CONSOLE_LAYOUT_TEXT_INPUT_BOTTOM;
@@ -108,7 +108,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, int* member)
+	void SerialReader::IO(const std::string& propertyName, int* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -119,7 +119,7 @@ namespace QuickGUI
 			(*member) = 0;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = 0;
@@ -128,7 +128,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, unsigned int* member)
+	void SerialReader::IO(const std::string& propertyName, unsigned int* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -139,7 +139,7 @@ namespace QuickGUI
 			(*member) = 0;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = 0;
@@ -148,7 +148,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, ColourValue* member)
+	void SerialReader::IO(const std::string& propertyName, ColourValue* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -164,7 +164,7 @@ namespace QuickGUI
 		}
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 			{
@@ -183,7 +183,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, VScrollBarButtonLayout* member)
+	void SerialReader::IO(const std::string& propertyName, VScrollBarButtonLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -194,7 +194,7 @@ namespace QuickGUI
 			(*member) = VSCROLL_BAR_BUTTON_LAYOUT_OPPOSITE;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) =  VSCROLL_BAR_BUTTON_LAYOUT_OPPOSITE;
@@ -203,7 +203,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, HScrollBarButtonLayout* member)
+	void SerialReader::IO(const std::string& propertyName, HScrollBarButtonLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -214,7 +214,7 @@ namespace QuickGUI
 			(*member) = HSCROLL_BAR_BUTTON_LAYOUT_OPPOSITE;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) =  HSCROLL_BAR_BUTTON_LAYOUT_OPPOSITE;
@@ -223,7 +223,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, ToolBarItemLayout* member)
+	void SerialReader::IO(const std::string& propertyName, ToolBarItemLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -234,7 +234,7 @@ namespace QuickGUI
 			(*member) = TOOLBAR_ITEM_LAYOUT_POSITIVE_TO_NEGATIVE;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = TOOLBAR_ITEM_LAYOUT_POSITIVE_TO_NEGATIVE;
@@ -243,7 +243,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, Ogre::String* member)
+	void SerialReader::IO(const std::string& propertyName, std::string* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -254,13 +254,13 @@ namespace QuickGUI
 			(*member) = "";
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = "";
 			else
 			{
-				Ogre::String s = sv[0];
+				std::string s = sv[0];
 				int count = 1;
 				while(count < static_cast<int>(sv.size()))
 				{
@@ -273,7 +273,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, bool* member)
+	void SerialReader::IO(const std::string& propertyName, bool* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -284,7 +284,7 @@ namespace QuickGUI
 			(*member) = false;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = false;
@@ -293,7 +293,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, float* member)
+	void SerialReader::IO(const std::string& propertyName, float* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -304,7 +304,7 @@ namespace QuickGUI
 			(*member) = 0.0;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = 0.0;
@@ -313,7 +313,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, Point* member)
+	void SerialReader::IO(const std::string& propertyName, Point* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -324,7 +324,7 @@ namespace QuickGUI
 			(*member) = Point::ZERO;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 			
 			if(sv.empty())
 				(*member) = Point::ZERO;
@@ -337,7 +337,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, ProgressBarFillDirection* member)
+	void SerialReader::IO(const std::string& propertyName, ProgressBarFillDirection* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -348,7 +348,7 @@ namespace QuickGUI
 			(*member) = PROGRESSBAR_FILLS_NEGATIVE_TO_POSITIVE;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 			
 			if(sv.empty())
 				(*member) = PROGRESSBAR_FILLS_NEGATIVE_TO_POSITIVE;
@@ -357,7 +357,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, ProgressBarLayout* member)
+	void SerialReader::IO(const std::string& propertyName, ProgressBarLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -368,7 +368,7 @@ namespace QuickGUI
 			(*member) = PROGRESSBAR_LAYOUT_HORIZONTAL;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 			
 			if(sv.empty())
 				(*member) = PROGRESSBAR_LAYOUT_HORIZONTAL;
@@ -377,7 +377,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, ProgressBarClippingEdge* member)
+	void SerialReader::IO(const std::string& propertyName, ProgressBarClippingEdge* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -388,7 +388,7 @@ namespace QuickGUI
 			(*member) = PROGRESSBAR_CLIP_LEFT_BOTTOM;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 			
 			if(sv.empty())
 				(*member) = PROGRESSBAR_CLIP_LEFT_BOTTOM;
@@ -397,7 +397,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, Rect* member)
+	void SerialReader::IO(const std::string& propertyName, Rect* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -408,7 +408,7 @@ namespace QuickGUI
 			(*member) = Rect(0,0,0,0);
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 			
 			if(sv.empty())
 				(*member) = Rect(0,0,0,0);
@@ -423,7 +423,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, Size* member)
+	void SerialReader::IO(const std::string& propertyName, Size* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -434,7 +434,7 @@ namespace QuickGUI
 			(*member) = Size::ZERO;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = Size::ZERO;
@@ -447,7 +447,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, HorizontalTextAlignment* member)
+	void SerialReader::IO(const std::string& propertyName, HorizontalTextAlignment* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -458,7 +458,7 @@ namespace QuickGUI
 			(*member) = TEXT_ALIGNMENT_HORIZONTAL_CENTER;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = TEXT_ALIGNMENT_HORIZONTAL_CENTER;
@@ -467,7 +467,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, HorizontalAnchor* member)
+	void SerialReader::IO(const std::string& propertyName, HorizontalAnchor* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -478,7 +478,7 @@ namespace QuickGUI
 			(*member) = ANCHOR_HORIZONTAL_LEFT;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = ANCHOR_HORIZONTAL_LEFT;
@@ -487,7 +487,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, VerticalAnchor* member)
+	void SerialReader::IO(const std::string& propertyName, VerticalAnchor* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -498,7 +498,7 @@ namespace QuickGUI
 			(*member) = ANCHOR_VERTICAL_TOP;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = ANCHOR_VERTICAL_TOP;
@@ -507,7 +507,7 @@ namespace QuickGUI
 		}
 	}
 
-	void SerialReader::IO(const Ogre::String& propertyName, VerticalTextAlignment* member)
+	void SerialReader::IO(const std::string& propertyName, VerticalTextAlignment* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialReader has not been correctly setup to retrieve properties. (Missing call to SerialReader::begin?)","SerialReader::IO");
@@ -518,7 +518,7 @@ namespace QuickGUI
 			(*member) = TEXT_ALIGNMENT_VERTICAL_CENTER;
 		else
 		{
-			Ogre::StringVector sv = prop->getValues();
+			std::vector<std::string> sv = prop->getValues();
 
 			if(sv.empty())
 				(*member) = TEXT_ALIGNMENT_VERTICAL_CENTER;

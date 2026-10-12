@@ -40,7 +40,7 @@ namespace QuickGUI
 		TextUserDesc::serialize(b);
 	}
 
-	ListTextItem::ListTextItem(const Ogre::String& name) :
+	ListTextItem::ListTextItem(const std::string& name) :
 		ListItem(name),
 		TextUser()
 	{
@@ -69,7 +69,7 @@ namespace QuickGUI
 		TextUser::_initialize(this,mDesc);
 	}
 
-	Ogre::String ListTextItem::getClass()
+	std::string ListTextItem::getClass()
 	{
 		return "ListTextItem";
 	}

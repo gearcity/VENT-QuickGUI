@@ -14,7 +14,7 @@
 #define QUICKGUIEVENTARGS_H
 
 #include "OgrePrerequisites.h"
-#include "OgreUTFString.h"
+#include "QuickGUIUTFString.h"
 
 #include "QuickGUIKeyCode.h"
 #include "QuickGUIMouseButtonID.h"
@@ -131,7 +131,7 @@ namespace QuickGUI
 		}
 
 		// codepoint for the key (only used for Character inputs).
-		Ogre::UTFString::unicode_char	codepoint;		
+		UTFString::unicode_char	codepoint;		
 		// Scan code of key that caused event (only used for key up & down inputs.
 		KeyCode							scancode;
 		// holds the bit mask storing buttons that are currently pressed.

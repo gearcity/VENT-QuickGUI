@@ -24,43 +24,43 @@ namespace QuickGUI
 		public Serializable
 	{
 	public:
-		SkinType(const Ogre::String& className, const Ogre::String& typeName);
+		SkinType(const std::string& className, const std::string& typeName);
 		~SkinType();
 
 		/**
 		* Adds a component Type to the definition.
 		*/
-		void addSkinReference(const Ogre::String& componentAlias, SkinReference* t);
+		void addSkinReference(const std::string& componentAlias, SkinReference* t);
 		/**
 		* Adds a Skin Element to the definition.
 		*/
-		void addSkinElement(const Ogre::String& elementName, SkinElement* e);
+		void addSkinElement(const std::string& elementName, SkinElement* e);
 
 		/**
 		* Returns the name of the class this SkinType is intended for.
 		*/
-		Ogre::String getClassName();
+		std::string getClassName();
 		/**
 		* Gets a component Type from the definition.
 		*/
-		SkinReference* getSkinReference(const Ogre::String& componentAlias);
+		SkinReference* getSkinReference(const std::string& componentAlias);
 		/**
 		* Returns the name of this Type.
 		*/
-		Ogre::String getName();
+		std::string getName();
 		/**
 		* Gets a Skin Element from the definition.
 		*/
-		SkinElement* getSkinElement(const Ogre::String& elementName);
+		SkinElement* getSkinElement(const std::string& elementName);
 
 		/**
 		* Returns true if this Type definition has a listing for the component alias, false otherwise.
 		*/
-		bool hasSkinReference(const Ogre::String& componentAlias);
+		bool hasSkinReference(const std::string& componentAlias);
 		/**
 		* Returns true if this Type definition has a listing for the element name, false otherwise.
 		*/
-		bool hasSkinElement(const Ogre::String& elementName);
+		bool hasSkinElement(const std::string& elementName);
 
 		/**
 		* Builds the SkinElement from a ScriptDefinition or Writes the widget to a ScriptDefinition.
@@ -68,19 +68,19 @@ namespace QuickGUI
 		virtual void serialize(SerialBase* b);
 
 	protected:
-		Ogre::String mName;
-		Ogre::String mClassName;
+		std::string mName;
+		std::string mClassName;
 
 #if USEHASHMAPS
 	// Element Alias/SkinElement pair
-		std::unordered_map<Ogre::String,SkinElement*> mSkinElements;
+		std::unordered_map<std::string,SkinElement*> mSkinElements;
 		// ComponentName/SkinReference pair
-		std::unordered_map<Ogre::String,SkinReference*> mSkinReferences;
+		std::unordered_map<std::string,SkinReference*> mSkinReferences;
 #else
 	// Element Alias/SkinElement pair
-		std::map<Ogre::String,SkinElement*> mSkinElements;
+		std::map<std::string,SkinElement*> mSkinElements;
 		// ComponentName/SkinReference pair
-		std::map<Ogre::String,SkinReference*> mSkinReferences;
+		std::map<std::string,SkinReference*> mSkinReferences;
 #endif
 		
 	};

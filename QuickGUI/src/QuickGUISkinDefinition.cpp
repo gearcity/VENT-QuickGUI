@@ -2,13 +2,13 @@
 
 namespace QuickGUI
 {
-	SkinDefinition::SkinDefinition(const Ogre::String& className) :
+	SkinDefinition::SkinDefinition(const std::string& className) :
 		mClassName(className),
 		mDefinitionCompleted(false)
 	{
 	}
 
-	void SkinDefinition::defineComponent(const Ogre::String& componentName)
+	void SkinDefinition::defineComponent(const std::string& componentName)
 	{
 		if(mDefinitionCompleted)
 			throw Exception(Exception::ERR_SKINNING,"SkinDefinition has already been finalized, cannot add more references!","SkinDefinition::defineComponent");
@@ -19,7 +19,7 @@ namespace QuickGUI
 		mDefinedComponents.insert(componentName);
 	}
 
-	void SkinDefinition::defineSkinElement(const Ogre::String& elementName)
+	void SkinDefinition::defineSkinElement(const std::string& elementName)
 	{
 		if(mDefinitionCompleted)
 			throw Exception(Exception::ERR_SKINNING,"SkinDefinition has already been finalized, cannot add more references!","SkinDefinition::defineSkinElement");
@@ -42,13 +42,13 @@ namespace QuickGUI
 
 	bool SkinDefinition::validateSkinType(SkinType* t)
 	{
-		for(std::set<Ogre::String>::iterator it = mDefinedElements.begin(); it != mDefinedElements.end(); ++it)
+		for(std::set<std::string>::iterator it = mDefinedElements.begin(); it != mDefinedElements.end(); ++it)
 		{
 			if(!t->hasSkinElement((*it)))
 				return false;
 		}
 
-		for(std::set<Ogre::String>::iterator it = mDefinedComponents.begin(); it != mDefinedComponents.end(); ++it)
+		for(std::set<std::string>::iterator it = mDefinedComponents.begin(); it != mDefinedComponents.end(); ++it)
 		{
 			if(!t->hasSkinReference((*it)))
 				return false;

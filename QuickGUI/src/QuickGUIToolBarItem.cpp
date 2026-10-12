@@ -25,7 +25,7 @@ namespace QuickGUI
 		b->IO("Index",&index);
 	}
 
-	ToolBarItem::ToolBarItem(const Ogre::String& name) :
+	ToolBarItem::ToolBarItem(const std::string& name) :
 		ContainerWidget(name)
 	{
 	}

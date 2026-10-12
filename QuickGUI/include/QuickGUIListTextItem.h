@@ -24,11 +24,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ListTextItemDesc"; }
+		virtual std::string getClass() { return "ListTextItemDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ListTextItem"; }
+		virtual std::string getWidgetClass() { return "ListTextItem"; }
 
 		/**
 		* Restore properties to default values
@@ -63,10 +63,10 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 
 	protected:
-		ListTextItem(const Ogre::String& name);
+		ListTextItem(const std::string& name);
 		virtual ~ListTextItem();
 
 		ListTextItemDesc* mDesc;

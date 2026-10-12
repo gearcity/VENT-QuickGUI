@@ -15,8 +15,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Window::BACKGROUND = "background";
-	const Ogre::String Window::TITLEBAR = "titlebar";
+	const std::string Window::BACKGROUND = "background";
+	const std::string Window::TITLEBAR = "titlebar";
 
 	void Window::registerSkinDefinition()
 	{
@@ -72,7 +72,7 @@ namespace QuickGUI
 		textDesc.serialize(b);
 	}
 
-	Window::Window(const Ogre::String& name) :
+	Window::Window(const std::string& name) :
 		Panel(name),
 		mTitleBar(0),
 		mDirty(true)
@@ -92,7 +92,7 @@ namespace QuickGUI
 
 		if(!mTexture.isNull())
 		{
-			Ogre::String texName = mTexture->getName();
+			std::string texName = mTexture->getName();
 			mTexture.setNull();
 			Ogre::TextureManager::getSingleton().remove(texName);
 		}
@@ -121,7 +121,7 @@ namespace QuickGUI
 			tbd->widget_name = getName() + ".TitleBar";
 			tbd->widget_dimensions.size.width = mClientDimensions.size.width;
 			if(mDesc->textDesc.segments.empty())
-				tbd->widget_dimensions.size.height = Text::getFontHeight(Root::getSingleton().getDefaultFontName()) + 6;
+				tbd->widget_dimensions.size.height = Root::getSingleton().getDefaultFont().getHeight() + 6;
 			else
 				tbd->widget_dimensions.size.height = mDesc->textDesc.getTextHeight() + 6;
 
@@ -157,7 +157,7 @@ namespace QuickGUI
 
 		// Create texture
 
-		Ogre::String texName = getName() + ".RenderTarget";
+		std::string texName = getName() + ".RenderTarget";
 
 		// Its possible to have multiple GUIManagers with multiple Windows of the same name.
 		// Lets make sure our texture name is unique
@@ -228,7 +228,7 @@ namespace QuickGUI
 		return true;
 	}
 
-	Ogre::String Window::getClass()
+	std::string Window::getClass()
 	{
 		return "Window";
 	}
@@ -304,7 +304,7 @@ namespace QuickGUI
 		return mDesc->window_titleBarDragable;
 	}
 
-	Ogre::UTFString Window::getTitleBarText()
+	UTFString Window::getTitleBarText()
 	{
 		if(mTitleBar != NULL)
 			return mTitleBar->getText();
@@ -408,7 +408,7 @@ namespace QuickGUI
 
 		// Get name of old texture
 
-		Ogre::String texName = mTexture->getName();
+		std::string texName = mTexture->getName();
 
 		// Destroy existing texture
 
@@ -436,7 +436,7 @@ namespace QuickGUI
                 log->setMinLogLevel(level);
 	}
 
-	void Window::saveTextureToFile(const Ogre::String& filename)
+	void Window::saveTextureToFile(const std::string& filename)
 	{
 		// Declare buffer
 		const size_t buffSize = mWidgetDesc->widget_dimensions.size.width * mWidgetDesc->widget_dimensions.size.height * 4;
@@ -464,7 +464,7 @@ namespace QuickGUI
 			mDesc->sheet->sendToBack(this);
 	}
 
-	Ogre::String Window::setName(const Ogre::String& name)
+	std::string Window::setName(const std::string& name)
 	{
 		// If we are attached to a sheet, make sure our name is unique
 		if(mWidgetDesc->sheet != NULL)
@@ -483,7 +483,7 @@ namespace QuickGUI
 		// Rename Texture to match new name
 		if(!mTexture.isNull())
 		{
-			Ogre::String texName = mTexture->getName();
+			std::string texName = mTexture->getName();
 			mTexture.setNull();
 			Ogre::TextureManager::getSingleton().remove(texName);
 
@@ -494,7 +494,7 @@ namespace QuickGUI
 		return mWidgetDesc->widget_name;
 	}
 
-	void Window::setSkinType(const Ogre::String type)
+	void Window::setSkinType(const std::string type)
 	{
 		mWidgetDesc->widget_skinTypeName = type;
 
@@ -511,7 +511,7 @@ namespace QuickGUI
 			mTitleBar->setDragable(dragable);
 	}
 
-	void Window::setTitleBarText(Ogre::UTFString s)
+	void Window::setTitleBarText(UTFString s)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -522,20 +522,20 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Window::setTitleBarText(UTFString s, const Font& font, const ColourValue& cv)
 	{
 		if(mTitleBar != NULL)
 		{
-			mTitleBar->setText(s,fp,cv);
+			mTitleBar->setText(s,font,cv);
 			updateClientDimensions();
 
 			redraw();
 		}
 	}
 
-	void Window::setTitleBarText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void Window::setTitleBarText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
-		setTitleBarText(s,Text::getFont(fontName),cv);
+		setTitleBarText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
 	void Window::setTitleBarText(std::vector<TextSegment> segments)
@@ -584,7 +584,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences)
+	void Window::setTitleBarTextColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -593,7 +593,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences)
+	void Window::setTitleBarTextColor(const ColourValue& cv, UTFString s, bool allOccurrences)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -602,7 +602,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextFont(const Ogre::String& fontName)
+	void Window::setTitleBarTextFont(const std::string& fontName)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -611,7 +611,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextFont(const Ogre::String& fontName, unsigned int index)
+	void Window::setTitleBarTextFont(const std::string& fontName, unsigned int index)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -620,7 +620,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex)
+	void Window::setTitleBarTextFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -629,7 +629,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences)
+	void Window::setTitleBarTextFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -638,7 +638,7 @@ namespace QuickGUI
 		}
 	}
 
-	void Window::setTitleBarTextFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences)
+	void Window::setTitleBarTextFont(const std::string& fontName, UTFString s, bool allOccurrences)
 	{
 		if(mTitleBar != NULL)
 		{
@@ -715,9 +715,9 @@ namespace QuickGUI
 
 		// Handle anchoring for Components
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 		{
 			if((*it).second == mHScrollBar)
@@ -759,9 +759,9 @@ namespace QuickGUI
 
 		// Update component screen dimensions, must be done after client and screen rect have been calculated
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 		{
 			(*it).second->updateTexturePosition();
@@ -774,5 +774,10 @@ namespace QuickGUI
 		}
 
 		redraw();
+	}
+
+	void Window::setTitleBarText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setTitleBarText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

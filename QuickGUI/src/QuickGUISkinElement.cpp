@@ -8,7 +8,7 @@
 
 namespace QuickGUI
 {
-	SkinElement::SkinElement(const Ogre::String& elementName) :
+	SkinElement::SkinElement(const std::string& elementName) :
 		mName(elementName),
 		mTextureName(""),
 		mDirty(true),
@@ -138,7 +138,7 @@ namespace QuickGUI
 		return static_cast<int>(mTexture.getHeight());
 	}
 
-	Ogre::String SkinElement::getName()
+	std::string SkinElement::getName()
 	{
 		return mName;
 	}
@@ -150,7 +150,7 @@ namespace QuickGUI
 		return mTexture;
 	}
 
-	Ogre::String SkinElement::getTextureName()
+	std::string SkinElement::getTextureName()
 	{
 		return mTextureName;
 	}
@@ -256,7 +256,7 @@ namespace QuickGUI
 		mDirty = true;
 	}
 
-	void SkinElement::setTextureName(const Ogre::String& textureName)
+	void SkinElement::setTextureName(const std::string& textureName)
 	{
 		mTextureName = textureName;
 

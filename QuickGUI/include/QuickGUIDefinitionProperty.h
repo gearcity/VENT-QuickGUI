@@ -19,14 +19,14 @@ namespace QuickGUI
 		friend class SerialWriter;
 		friend class TextDesc;
 	public:
-		Ogre::String getPropertyName();
-		Ogre::StringVector getValues();
+		std::string getPropertyName();
+		std::vector<std::string> getValues();
 
 	protected:
-		DefinitionProperty(const Ogre::String& propertyName);
+		DefinitionProperty(const std::string& propertyName);
 
-		Ogre::String mPropertyName;
-		Ogre::StringVector mValues;
+		std::string mPropertyName;
+		std::vector<std::string> mValues;
 
 	private:
 	};

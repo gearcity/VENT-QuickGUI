@@ -21,7 +21,7 @@ namespace QuickGUI
 		return ( *msSingleton ); 
 	}
 
-	bool SerialWriter::begin(const Ogre::String& definitionType, const Ogre::String& definitionID)
+	bool SerialWriter::begin(const std::string& definitionType, const std::string& definitionID)
 	{
 		ScriptDefinition* newDef = OGRE_NEW_T(ScriptDefinition,Ogre::MEMCATEGORY_GENERAL)(definitionType,definitionID);
 		newDef->mParentDefinition = mCurrentDefinition;
@@ -48,7 +48,7 @@ namespace QuickGUI
 		mCurrentDefinition = mCurrentDefinition->mParentDefinition;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, unsigned short* member)
+	void SerialWriter::IO(const std::string& propertyName, unsigned short* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -62,7 +62,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, BrushFilterMode* member)
+	void SerialWriter::IO(const std::string& propertyName, BrushFilterMode* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -76,7 +76,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, ConsoleLayout* member)
+	void SerialWriter::IO(const std::string& propertyName, ConsoleLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -90,7 +90,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, int* member)
+	void SerialWriter::IO(const std::string& propertyName, int* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -104,7 +104,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, unsigned int* member)
+	void SerialWriter::IO(const std::string& propertyName, unsigned int* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -118,7 +118,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, ColourValue* member)
+	void SerialWriter::IO(const std::string& propertyName, ColourValue* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -135,7 +135,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, VScrollBarButtonLayout* member)
+	void SerialWriter::IO(const std::string& propertyName, VScrollBarButtonLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -149,7 +149,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, HScrollBarButtonLayout* member)
+	void SerialWriter::IO(const std::string& propertyName, HScrollBarButtonLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -163,7 +163,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, ToolBarItemLayout* member)
+	void SerialWriter::IO(const std::string& propertyName, ToolBarItemLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -177,7 +177,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, Ogre::String* member)
+	void SerialWriter::IO(const std::string& propertyName, std::string* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -191,7 +191,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, bool* member)
+	void SerialWriter::IO(const std::string& propertyName, bool* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -205,7 +205,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, float* member)
+	void SerialWriter::IO(const std::string& propertyName, float* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -219,7 +219,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, Point* member)
+	void SerialWriter::IO(const std::string& propertyName, Point* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -234,7 +234,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, ProgressBarFillDirection* member)
+	void SerialWriter::IO(const std::string& propertyName, ProgressBarFillDirection* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -248,7 +248,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, ProgressBarLayout* member)
+	void SerialWriter::IO(const std::string& propertyName, ProgressBarLayout* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -262,7 +262,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, ProgressBarClippingEdge* member)
+	void SerialWriter::IO(const std::string& propertyName, ProgressBarClippingEdge* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -276,7 +276,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, Rect* member)
+	void SerialWriter::IO(const std::string& propertyName, Rect* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -293,7 +293,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, Size* member)
+	void SerialWriter::IO(const std::string& propertyName, Size* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -308,7 +308,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, HorizontalTextAlignment* member)
+	void SerialWriter::IO(const std::string& propertyName, HorizontalTextAlignment* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -322,7 +322,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, HorizontalAnchor* member)
+	void SerialWriter::IO(const std::string& propertyName, HorizontalAnchor* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -336,7 +336,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, VerticalAnchor* member)
+	void SerialWriter::IO(const std::string& propertyName, VerticalAnchor* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");
@@ -350,7 +350,7 @@ namespace QuickGUI
 			mCurrentDefinition->mProperties[propertyName] = newProp;
 	}
 
-	void SerialWriter::IO(const Ogre::String& propertyName, VerticalTextAlignment* member)
+	void SerialWriter::IO(const std::string& propertyName, VerticalTextAlignment* member)
 	{
 		if(mCurrentDefinition == NULL)
 			throw Exception(Exception::ERR_SERIALIZATION,"SerialWriter not setup to write!  Did you miss a call to SerialWriter::begin()?","SerialWriter::IO");

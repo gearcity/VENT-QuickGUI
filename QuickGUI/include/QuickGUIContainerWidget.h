@@ -57,8 +57,8 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String HSCROLLBAR;
-		static const Ogre::String VSCROLLBAR;
+		static const std::string HSCROLLBAR;
+		static const std::string VSCROLLBAR;
 	public:
 		friend class GUIManager;
 		friend class SerialReader;
@@ -82,12 +82,12 @@ namespace QuickGUI
 		/**
 		* Recursively searches through children and returns the first widget found of the class given.
 		*/
-		virtual Widget* findFirstWidgetOfClass(const Ogre::String& className);
+		virtual Widget* findFirstWidgetOfClass(const std::string& className);
 		/**
 		* Recursively searches through children and returns first widget found with name given.
 		* NULL is returned if the widget is not found.
 		*/
-		virtual Widget* findWidget(const Ogre::String& name);
+		virtual Widget* findWidget(const std::string& name);
 		/**
 		* Checks if point p is within this widget's dimensions.
 		* NULL is returned if the point is outside dimensions.
@@ -139,7 +139,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 		/**
 		* Sets the amount of Scroll occuring when the vertical bar is pressed.
 		*/
@@ -188,7 +188,7 @@ namespace QuickGUI
 		void setDrawChildrenWhenNotVisible(bool draw);
 
 	protected:
-		ContainerWidget(const Ogre::String& name);
+		ContainerWidget(const std::string& name);
 		virtual ~ContainerWidget();
 
 		std::vector<Widget*> mChildren;

@@ -21,11 +21,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ModalWindowDesc"; }
+		virtual std::string getClass() { return "ModalWindowDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ModalWindow"; }
+		virtual std::string getWidgetClass() { return "ModalWindow"; }
 
 		/**
 		* Outlines how the desc class is written to XML and read from XML.
@@ -39,7 +39,7 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
+		static const std::string BACKGROUND;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -57,7 +57,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 
 	public:
 		// Here we have to call out any protected Widget set accesors we want to expose
@@ -86,7 +86,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		ModalWindow(const Ogre::String& name);
+		ModalWindow(const std::string& name);
 		virtual ~ModalWindow();
 
 	private:

@@ -59,7 +59,7 @@ namespace QuickGUI
 		b->IO("SubMenuOverlap",&contextmenu_subMenuOverlap);
 	}
 
-	ContextMenu::ContextMenu(const Ogre::String& name) :
+	ContextMenu::ContextMenu(const std::string& name) :
 		Window(name),
 		mAutoNameCounter(0)
 	{
@@ -118,7 +118,7 @@ namespace QuickGUI
 		}
 	}
 
-	Ogre::String ContextMenu::getClass()
+	std::string ContextMenu::getClass()
 	{
 		return "ContextMenu";
 	}
@@ -227,7 +227,7 @@ namespace QuickGUI
 		return i;
 	}
 
-	MenuImageItem* ContextMenu::createImageItem(const Ogre::String& skin, int index)
+	MenuImageItem* ContextMenu::createImageItem(const std::string& skin, int index)
 	{
 		MenuImageItemDesc* d = DescManager::getSingletonPtr()->getDefaultMenuImageItemDesc();
 		d->resetToDefault();
@@ -264,7 +264,7 @@ namespace QuickGUI
 		return newMenuItem;
 	}
 
-	MenuTextItem* ContextMenu::createTextItem(const Ogre::UTFString& text, int index)
+	MenuTextItem* ContextMenu::createTextItem(const UTFString& text, int index)
 	{
 		MenuTextItemDesc* d = DescManager::getSingletonPtr()->getDefaultMenuTextItemDesc();
 		d->resetToDefault();
@@ -295,7 +295,7 @@ namespace QuickGUI
 		return createTextItem("MenuTextItem",index);
 	}
 
-	Menu* ContextMenu::createSubMenu(const Ogre::UTFString& text, int index)
+	Menu* ContextMenu::createSubMenu(const UTFString& text, int index)
 	{
 		MenuDesc* d = DescManager::getSingletonPtr()->getDefaultMenuDesc();
 		d->resetToDefault();

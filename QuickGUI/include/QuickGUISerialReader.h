@@ -22,32 +22,32 @@ namespace QuickGUI
 		static SerialReader& getSingleton(void); 
 		static SerialReader* getSingletonPtr(void);
 
-		virtual bool begin(const Ogre::String& definitionType, const Ogre::String& definitionID);
+		virtual bool begin(const std::string& definitionType, const std::string& definitionID);
 
 		virtual void end();
 
-		virtual void IO(const Ogre::String& propertyName, unsigned short* member);
-		virtual void IO(const Ogre::String& propertyName, BrushFilterMode* member);
-		virtual void IO(const Ogre::String& propertyName, ConsoleLayout* member);
-		virtual void IO(const Ogre::String& propertyName, int* member);
-		virtual void IO(const Ogre::String& propertyName, unsigned int* member);
-		virtual void IO(const Ogre::String& propertyName, ColourValue* member);
-		virtual void IO(const Ogre::String& propertyName, ToolBarItemLayout* member);
-		virtual void IO(const Ogre::String& propertyName, Ogre::String* member);
-		virtual void IO(const Ogre::String& propertyName, bool* member);
-		virtual void IO(const Ogre::String& propertyName, float* member);
-		virtual void IO(const Ogre::String& propertyName, Point* member);
-		virtual void IO(const Ogre::String& propertyName, ProgressBarFillDirection* member);
-		virtual void IO(const Ogre::String& propertyName, ProgressBarLayout* member);
-		virtual void IO(const Ogre::String& propertyName, ProgressBarClippingEdge* member);
-		virtual void IO(const Ogre::String& propertyName, Rect* member);
-		virtual void IO(const Ogre::String& propertyName, VScrollBarButtonLayout* member);
-		virtual void IO(const Ogre::String& propertyName, HScrollBarButtonLayout* member);
-		virtual void IO(const Ogre::String& propertyName, Size* member);
-		virtual void IO(const Ogre::String& propertyName, HorizontalTextAlignment* member);
-		virtual void IO(const Ogre::String& propertyName, HorizontalAnchor* member);
-		virtual void IO(const Ogre::String& propertyName, VerticalAnchor* member);
-		virtual void IO(const Ogre::String& propertyName, VerticalTextAlignment* member);
+		virtual void IO(const std::string& propertyName, unsigned short* member);
+		virtual void IO(const std::string& propertyName, BrushFilterMode* member);
+		virtual void IO(const std::string& propertyName, ConsoleLayout* member);
+		virtual void IO(const std::string& propertyName, int* member);
+		virtual void IO(const std::string& propertyName, unsigned int* member);
+		virtual void IO(const std::string& propertyName, ColourValue* member);
+		virtual void IO(const std::string& propertyName, ToolBarItemLayout* member);
+		virtual void IO(const std::string& propertyName, std::string* member);
+		virtual void IO(const std::string& propertyName, bool* member);
+		virtual void IO(const std::string& propertyName, float* member);
+		virtual void IO(const std::string& propertyName, Point* member);
+		virtual void IO(const std::string& propertyName, ProgressBarFillDirection* member);
+		virtual void IO(const std::string& propertyName, ProgressBarLayout* member);
+		virtual void IO(const std::string& propertyName, ProgressBarClippingEdge* member);
+		virtual void IO(const std::string& propertyName, Rect* member);
+		virtual void IO(const std::string& propertyName, VScrollBarButtonLayout* member);
+		virtual void IO(const std::string& propertyName, HScrollBarButtonLayout* member);
+		virtual void IO(const std::string& propertyName, Size* member);
+		virtual void IO(const std::string& propertyName, HorizontalTextAlignment* member);
+		virtual void IO(const std::string& propertyName, HorizontalAnchor* member);
+		virtual void IO(const std::string& propertyName, VerticalAnchor* member);
+		virtual void IO(const std::string& propertyName, VerticalTextAlignment* member);
 		bool isSerialWriter();
 		bool isSerialReader();
 

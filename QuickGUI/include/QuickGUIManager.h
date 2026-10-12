@@ -29,7 +29,7 @@ namespace QuickGUI
 		GUIManagerDesc();
 
 		// If name is "", name will automatically be generated.
-		Ogre::String name;
+		std::string name;
 		// If NULL, first found viewport is used for rendering.
 		Ogre::Viewport* viewport;
 		// required to hook into the RenderQueue. If NULL, first found scene manager is used.
@@ -39,7 +39,7 @@ namespace QuickGUI
 		// Description used to create mouseCursor
 		MouseCursorDesc mouseCursorDesc;
 		// range of supported codepoints used for injectChar function.
-		std::set<Ogre::UTFString::code_point> supportedCodePoints;
+		std::set<UTFString::code_point> supportedCodePoints;
 		// manager will detect single, double, and triple clicks by default
 		bool determineClickEvents;
 		// Maximum number of milliseconds a click can be performed in. (mouse down to mouse up)
@@ -124,7 +124,7 @@ namespace QuickGUI
 		* Returns the mouse cursor object associated with this gui manager.
 		*/
 		MouseCursor* getMouseCursor();
-		Ogre::String getName();
+		std::string getName();
 		/**
 		* Returns true if NumLock is set to on state, false if set to off state.
 		*/
@@ -146,7 +146,7 @@ namespace QuickGUI
 		/**
 		* Useful for Text Input Widgets, like the TextBox
 		*/
-		bool injectChar(Ogre::UTFString::unicode_char c);
+		bool injectChar(UTFString::unicode_char c);
 		bool injectKeyDown(const KeyCode& kc);
 		bool injectKeyUp(const KeyCode& kc);
 
@@ -157,7 +157,7 @@ namespace QuickGUI
 		bool injectMouseTripleClick(const MouseButtonID& button);
 		bool injectMousePosition(const int& xPixelPosition, const int& yPixelPosition);
 		bool injectMouseWheelChange(float delta);
-		bool isSupportedCodePoint(Ogre::UTFString::unicode_char c);
+		bool isSupportedCodePoint(UTFString::unicode_char c);
 
 		void notifyViewportDimensionsChanged();
 
@@ -205,7 +205,7 @@ namespace QuickGUI
 		* Set the list of code points that will be accepted by the injectChar function.  English code points 9,32-166
 		* are supported by default.
 		*/
-		void setSupportedCodePoints(const std::set<Ogre::UTFString::code_point>& list);
+		void setSupportedCodePoints(const std::set<UTFString::code_point>& list);
 		/**
 		* Sets the length of time that elapses before AutoRepeat functionality executes.
 		* NOTE: Nothing will happen if AutoRepeat is disabled

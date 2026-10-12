@@ -17,8 +17,8 @@
 
 namespace QuickGUI
 {
-	const Ogre::String List::BACKGROUND = "background";
-	const Ogre::String List::LISTITEM = "listitem";
+	const std::string List::BACKGROUND = "background";
+	const std::string List::LISTITEM = "listitem";
 
 	void List::registerSkinDefinition()
 	{
@@ -77,7 +77,7 @@ namespace QuickGUI
 		}
 	}
 
-	List::List(const Ogre::String& name) :
+	List::List(const std::string& name) :
 		ContainerWidget(name),
 		mPrevSelectedIndex(0),
 		mAutoNameCounter(0)
@@ -205,7 +205,7 @@ namespace QuickGUI
 		ContainerWidget::addChild(w);
 	}
 
-	void List::addUserDefinedListEventHandler(ListEvent EVENT, const Ogre::String& handlerName)
+	void List::addUserDefinedListEventHandler(ListEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->list_userHandlers[EVENT] = handlerName;
 	}
@@ -263,7 +263,7 @@ namespace QuickGUI
 		return newListItem;
 	}
 
-	ListImageItem* List::createImageItem(const Ogre::String& imageName, int index)
+	ListImageItem* List::createImageItem(const std::string& imageName, int index)
 	{
 		ListImageItemDesc* d = DescManager::getSingletonPtr()->getDefaultListImageItemDesc();
 		d->resetToDefault();
@@ -289,7 +289,7 @@ namespace QuickGUI
 		return i;
 	}
 
-	ListTextItem* List::createTextItem(const Ogre::UTFString& text, int index)
+	ListTextItem* List::createTextItem(const UTFString& text, int index)
 	{
 		ListTextItemDesc* d = DescManager::getSingletonPtr()->getDefaultListTextItemDesc();
 		d->resetToDefault();
@@ -425,7 +425,7 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String List::getClass()
+	std::string List::getClass()
 	{
 		return "List";
 	}
@@ -714,7 +714,7 @@ namespace QuickGUI
 		}
 	}
 
-	void List::setSkinType(const Ogre::String type)
+	void List::setSkinType(const std::string type)
 	{
 		ContainerWidget::setSkinType(type);
 

@@ -38,7 +38,7 @@ namespace QuickGUI
 		PropertyGridItemDesc::serialize(b);
 	}
 
-	PropertyGridSection::PropertyGridSection(const Ogre::String& name) :
+	PropertyGridSection::PropertyGridSection(const std::string& name) :
 		PropertyGridItem(name),
 		mStateButton(NULL),
 		mExpanded(false),
@@ -194,7 +194,7 @@ namespace QuickGUI
 		return newItem;
 	}
 
-	PropertyGridTextProperty* PropertyGridSection::createTextProperty(const Ogre::UTFString& text, int index)
+	PropertyGridTextProperty* PropertyGridSection::createTextProperty(const UTFString& text, int index)
 	{
 		PropertyGridTextPropertyDesc* d = DescManager::getSingletonPtr()->getDefaultPropertyGridTextPropertyDesc();
 		d->resetToDefault();
@@ -221,7 +221,7 @@ namespace QuickGUI
 		return createTextProperty("TextProperty",index);
 	}
 
-	PropertyGridBoolProperty* PropertyGridSection::createBoolProperty(const Ogre::UTFString& text, int index)
+	PropertyGridBoolProperty* PropertyGridSection::createBoolProperty(const UTFString& text, int index)
 	{
 		PropertyGridBoolPropertyDesc* d = DescManager::getSingletonPtr()->getDefaultPropertyGridBoolPropertyDesc();
 		d->resetToDefault();
@@ -248,7 +248,7 @@ namespace QuickGUI
 		return createBoolProperty("BoolProperty",index);
 	}
 
-	PropertyGridComboBoxProperty* PropertyGridSection::createComboBoxProperty(const Ogre::UTFString& text, int index)
+	PropertyGridComboBoxProperty* PropertyGridSection::createComboBoxProperty(const UTFString& text, int index)
 	{
 		PropertyGridComboBoxPropertyDesc* d = DescManager::getSingletonPtr()->getDefaultPropertyGridComboBoxPropertyDesc();
 		d->resetToDefault();
@@ -275,7 +275,7 @@ namespace QuickGUI
 		return createComboBoxProperty("ComboBoxProperty",index);
 	}
 
-	PropertyGridSection* PropertyGridSection::createSection(const Ogre::UTFString& text, int index)
+	PropertyGridSection* PropertyGridSection::createSection(const UTFString& text, int index)
 	{
 		PropertyGridSectionDesc* d = DescManager::getSingletonPtr()->getDefaultPropertyGridSectionDesc();
 		d->resetToDefault();
@@ -351,7 +351,7 @@ namespace QuickGUI
 		return height;
 	}
 
-	Ogre::String PropertyGridSection::getClass()
+	std::string PropertyGridSection::getClass()
 	{
 		return "PropertyGridSection";
 	}

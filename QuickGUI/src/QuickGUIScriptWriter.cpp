@@ -45,7 +45,7 @@ namespace QuickGUI
 		mDefinitions.push_back(d);
 	}
 
-	void ScriptWriter::begin(const Ogre::String& fileName)
+	void ScriptWriter::begin(const std::string& fileName)
 	{
 		if(mWritingToFile)
 			throw Exception(Exception::ERR_SCRIPT_WRITING,"ScriptWriter already in the process of writing to a file!","ScriptWriter::begin");
@@ -84,8 +84,8 @@ namespace QuickGUI
 			DefinitionProperty* p = (*it);
 			stream << getSpaces((level + 1) * mNumSpacesPerLevel) + p->getPropertyName();
 
-			Ogre::StringVector sv = p->getValues();
-			for(Ogre::StringVector::iterator propertyIter = sv.begin(); propertyIter != sv.end(); ++propertyIter)
+			std::vector<std::string> sv = p->getValues();
+			for(std::vector<std::string>::iterator propertyIter = sv.begin(); propertyIter != sv.end(); ++propertyIter)
 			{
 				stream << " " + (*propertyIter);
 			}
@@ -109,9 +109,9 @@ namespace QuickGUI
 		stream << getSpaces(level * mNumSpacesPerLevel) + "}" << std::endl;
 	}
 
-	Ogre::String ScriptWriter::getSpaces(unsigned int numberOfSpaces)
+	std::string ScriptWriter::getSpaces(unsigned int numberOfSpaces)
 	{
-		Ogre::String s = "";
+		std::string s = "";
 		s.append(numberOfSpaces, ' ');
 		return s;
 	}

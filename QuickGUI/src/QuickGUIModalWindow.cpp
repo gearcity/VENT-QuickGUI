@@ -4,7 +4,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String ModalWindow::BACKGROUND = "background";
+	const std::string ModalWindow::BACKGROUND = "background";
 
 	void ModalWindow::registerSkinDefinition()
 	{
@@ -20,7 +20,7 @@ namespace QuickGUI
 	{
 	}
 
-	ModalWindow::ModalWindow(const Ogre::String& name) :
+	ModalWindow::ModalWindow(const std::string& name) :
 		Window(name)
 	{
 	}
@@ -36,7 +36,7 @@ namespace QuickGUI
 		setSkinType(d->widget_skinTypeName);
 	}
 
-	Ogre::String ModalWindow::getClass()
+	std::string ModalWindow::getClass()
 	{
 		return "ModalWindow";
 	}

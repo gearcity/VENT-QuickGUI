@@ -1,3 +1,4 @@
+#include "QuickGUIRoot.h"
 #include "QuickGUITabPage.h"
 #include "QuickGUISkinDefinitionManager.h"
 #include "QuickGUITabControl.h"
@@ -11,11 +12,11 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TabPage::TAB = "tab";
-	const Ogre::String TabPage::TAB_DISABLED = "tab_disabled";
-	const Ogre::String TabPage::TAB_OVER = "tab_over";
-	const Ogre::String TabPage::TAB_SELECTED = "tab_selected";
-	const Ogre::String TabPage::PAGE = "page";
+	const std::string TabPage::TAB = "tab";
+	const std::string TabPage::TAB_DISABLED = "tab_disabled";
+	const std::string TabPage::TAB_OVER = "tab_over";
+	const std::string TabPage::TAB_SELECTED = "tab_selected";
+	const std::string TabPage::PAGE = "page";
 
 	void TabPage::registerSkinDefinition()
 	{
@@ -29,7 +30,7 @@ namespace QuickGUI
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("TabPage",d);
 	}
 
-	TabPage::TabPage(const Ogre::String& name) :
+	TabPage::TabPage(const std::string& name) :
 		Panel(name),
 		mTab(NULL),
 		mPage(NULL),
@@ -150,9 +151,9 @@ namespace QuickGUI
 
 		// draw components
 #if USEHASHMAPS
-	for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-	for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+	for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 			(*it).second->draw();
 
@@ -190,7 +191,7 @@ namespace QuickGUI
 		return BORDER_NONE;
 	}
 
-	Ogre::String TabPage::getClass()
+	std::string TabPage::getClass()
 	{
 		return "TabPage";
 	}
@@ -385,7 +386,7 @@ namespace QuickGUI
 			dynamic_cast<TabControl*>(parent)->selectTabPage(this);
 	}
 
-	void TabPage::setSkinType(const Ogre::String type)
+	void TabPage::setSkinType(const std::string type)
 	{
 		Widget::setSkinType(type);
 		
@@ -395,27 +396,27 @@ namespace QuickGUI
 		}
 	}
 
-	void TabPage::setTabFont(const Ogre::String& fontName)
+	void TabPage::setTabFont(const std::string& fontName)
 	{
 		mTab->setFont(fontName);
 	}
 
-	void TabPage::setTabFont(const Ogre::String& fontName, unsigned int index)
+	void TabPage::setTabFont(const std::string& fontName, unsigned int index)
 	{
 		mTab->setFont(fontName,index);
 	}
 
-	void TabPage::setTabFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex)
+	void TabPage::setTabFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex)
 	{
 		mTab->setFont(fontName,startIndex,endIndex);
 	}
 
-	void TabPage::setTabFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences)
+	void TabPage::setTabFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences)
 	{
 		mTab->setFont(fontName,c,allOccurrences);
 	}
 
-	void TabPage::setTabFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences)
+	void TabPage::setTabFont(const std::string& fontName, UTFString s, bool allOccurrences)
 	{
 		mTab->setFont(fontName,s,allOccurrences);
 	}
@@ -431,17 +432,17 @@ namespace QuickGUI
 		}
 	}
 
-	void TabPage::setTabText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void TabPage::setTabText(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mTab->setText(s,fp,cv);
+		mTab->setText(s,font,cv);
 	}
 
-	void TabPage::setTabText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void TabPage::setTabText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
 		mTab->setText(s,fontName,cv);
 	}
 
-	void TabPage::setTabText(Ogre::UTFString s)
+	void TabPage::setTabText(UTFString s)
 	{
 		mTab->setText(s);
 	}
@@ -487,5 +488,10 @@ namespace QuickGUI
 	void TabPage::updateSkinElement()
 	{
 		mSkinElement = NULL;
+	}
+
+	void TabPage::setTabText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setTabText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

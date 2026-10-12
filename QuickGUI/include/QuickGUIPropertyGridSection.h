@@ -28,11 +28,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "PropertyGridSectionDesc"; }
+		virtual std::string getClass() { return "PropertyGridSectionDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "PropertyGridSection"; }
+		virtual std::string getWidgetClass() { return "PropertyGridSection"; }
 
 		/**
 		* Restore properties to default values
@@ -71,28 +71,28 @@ namespace QuickGUI
 		* NOTE: if the index is not valid, the Property is added to the end of the Section.
 		*/
 		PropertyGridBoolProperty* createBoolProperty(int index = -1);
-		PropertyGridBoolProperty* createBoolProperty(const Ogre::UTFString& text, int index = -1);
+		PropertyGridBoolProperty* createBoolProperty(const UTFString& text, int index = -1);
 		PropertyGridBoolProperty* createBoolProperty(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Creates a ComboBox Property for this Section at the given index.  A ComboBox is used to get and set a property value.
 		* NOTE: if the index is not valid, the Property is added to the end of the Section.
 		*/
 		PropertyGridComboBoxProperty* createComboBoxProperty(int index = -1);
-		PropertyGridComboBoxProperty* createComboBoxProperty(const Ogre::UTFString& text, int index = -1);
+		PropertyGridComboBoxProperty* createComboBoxProperty(const UTFString& text, int index = -1);
 		PropertyGridComboBoxProperty* createComboBoxProperty(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Creates a Text Property for this Section at the given index.  A TextBox is used to get and set a property value.
 		* NOTE: if the index is not valid, the Property is added to the end of the Section.
 		*/
 		PropertyGridTextProperty* createTextProperty(int index = -1);
-		PropertyGridTextProperty* createTextProperty(const Ogre::UTFString& text, int index = -1);
+		PropertyGridTextProperty* createTextProperty(const UTFString& text, int index = -1);
 		PropertyGridTextProperty* createTextProperty(std::vector<TextSegment> segments, int index = -1);
 		/**
 		* Creates a child Section, at the given index.
 		* NOTE: if the index is not valid, the Property is added to the end of the Section.
 		*/
 		PropertyGridSection* createSection(int index = -1);
-		PropertyGridSection* createSection(const Ogre::UTFString& text, int index = -1);
+		PropertyGridSection* createSection(const UTFString& text, int index = -1);
 		PropertyGridSection* createSection(std::vector<TextSegment> segments, int index = -1);
 
 		/**
@@ -109,7 +109,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the immediate items belonging to this section.
 		*/
@@ -139,7 +139,7 @@ namespace QuickGUI
 		virtual void updateClientDimensions();
 
 	protected:
-		PropertyGridSection(const Ogre::String& name);
+		PropertyGridSection(const std::string& name);
 		virtual ~PropertyGridSection();
 
 		PropertyGridSectionDesc* mDesc;

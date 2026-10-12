@@ -1,6 +1,7 @@
 #ifndef QUICKGUITEXTBOX_H
 #define QUICKGUITEXTBOX_H
 
+#include "QuickGUIFont.h"
 #include "QuickGUIText.h"
 #include "QuickGUITextCursor.h"
 #include "QuickGUITextInputValidator.h"
@@ -24,7 +25,7 @@ namespace QuickGUI
 		/// Amount of time until a cursor changes from visible to not visible, or vice versa.
 		float textbox_cursorBlinkTime;
 		ColourValue textbox_defaultColor;
-		Ogre::String textbox_defaultFontName;
+		std::string textbox_defaultFontName;
 		/// Horizontal alignment of text within this widget's client area.
 		HorizontalTextAlignment textbox_horizontalTextAlignment;
 		/// Pixel Padding added to left/right side of client area, to allow drawing of text cursor
@@ -34,11 +35,11 @@ namespace QuickGUI
 		/// Amount of time a key must be held down to repeat its input.
 		float textbox_keyRepeatTime;
 		bool textbox_maskText;
-		Ogre::UTFString::code_point textbox_maskSymbol;
+		UTFString::code_point textbox_maskSymbol;
 		unsigned int textbox_maxCharacters;
 		/// Vertical alignment of text within this widget's client area.
 		VerticalTextAlignment textbox_verticalTextAlignment;
-		Ogre::String textbox_textCursorDefaultSkinTypeName;
+		std::string textbox_textCursorDefaultSkinTypeName;
 		Point textbox_textPosition;
 
 		
@@ -49,11 +50,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "TextBoxDesc"; }
+		virtual std::string getClass() { return "TextBoxDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "TextBox"; }
+		virtual std::string getWidgetClass() { return "TextBox"; }
 
 		/**
 		* Restore properties to default values
@@ -71,8 +72,8 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String TEXTOVERLAY;
+		static const std::string BACKGROUND;
+		static const std::string TEXTOVERLAY;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -88,19 +89,21 @@ namespace QuickGUI
 		* Adds a character in front of the TextCursor, and increments the TextCursor
 		* position.
 		*/
-		void addCharacter(Ogre::UTFString::code_point cp);
+		void addCharacter(UTFString::code_point cp);
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void addText(UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
+		void addText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv);
+		void addText(UTFString s, const std::string& fontName, const ColourValue& cv);
 		/**
 		* Adds text to this object.
 		*/
-		void addText(Ogre::UTFString s);
+		void addText(UTFString s);
 		/**
 		* Adds Text using Text Segments.
 		*/
@@ -118,7 +121,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the color used for all newly added characters.
 		*/
@@ -126,7 +129,7 @@ namespace QuickGUI
 		/**
 		* Returns the font used for all newly added characters.
 		*/
-		Ogre::String getDefaultFont();
+		std::string getDefaultFont();
 		/**
 		* Returns the number of pixels padded on the left and right side of the TextBox, allowing
 		* the Cursor to be drawn. (Otherwise the cursor may get partially clipped)
@@ -139,7 +142,7 @@ namespace QuickGUI
 		/**
 		* Returns the symbol used to mask text, if it is to be masked.
 		*/
-		Ogre::UTFString::code_point getMaskSymbol();
+		UTFString::code_point getMaskSymbol();
 		/**
 		* Returns true if the text is masked, false otherwise.
 		*/
@@ -155,7 +158,7 @@ namespace QuickGUI
 		/**
 		* Gets the text in UTFString form.
 		*/
-		Ogre::UTFString getText();
+		UTFString getText();
 		/**
 		* Returns the filtering used when drawing the text of this widget.
 		*/
@@ -167,7 +170,7 @@ namespace QuickGUI
 		/**
 		* Gets the "type" of the Text Cursor used.
 		*/
-		Ogre::String getTextCursorSkinType();
+		std::string getTextCursorSkinType();
 
 		void onWindowDrawn(const EventArgs& args);
 
@@ -191,7 +194,7 @@ namespace QuickGUI
 		/**
 		* Sets the font used when adding character to the TextBox.
 		*/
-		void setDefaultFont(const Ogre::String& fontName);
+		void setDefaultFont(const std::string& fontName);
 		/**
 		* Enabled Widgets receive mouse and keyboard events via injections to the GUIManager.
 		* Disabled Widgets can only receive these events if they are manually fired.
@@ -200,25 +203,25 @@ namespace QuickGUI
 		/**
 		* Sets all characters of the text to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName);
+		void setFont(const std::string& fontName);
 		/**
 		* Sets the character at the index given to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName, unsigned int index);
+		void setFont(const std::string& fontName, unsigned int index);
 		/**
 		* Sets all characters within the defined range to the specified font.
 		*/
-		void setFont(const Ogre::String& fontName, unsigned int startIndex, unsigned int endIndex);
+		void setFont(const std::string& fontName, unsigned int startIndex, unsigned int endIndex);
 		/**
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setFont(const Ogre::String& fontName, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setFont(const std::string& fontName, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be changed to the font specified, otherwise only the first occurrence is changed.
 		*/
-		void setFont(const Ogre::String& fontName, Ogre::UTFString s, bool allOccurrences);
+		void setFont(const std::string& fontName, UTFString s, bool allOccurrences);
 		/**
 		* Sets the number of pixels padded on the left and right side of the TextBox, allowing
 		* the Cursor to be drawn. (Otherwise the cursor may get partially clipped)
@@ -231,7 +234,7 @@ namespace QuickGUI
 		/**
 		* Sets whether or not the Text will be masked. (password box)
 		*/
-		void setMaskText(bool mask, Ogre::UTFString::code_point textbox_maskSymbol);
+		void setMaskText(bool mask, UTFString::code_point textbox_maskSymbol);
 		/**
 		* Sets the maximum number of characters that this TextBox will support.
 		*/
@@ -243,11 +246,13 @@ namespace QuickGUI
 		/**
 		* Sets the text for this object.
 		*/
-		void setText(Ogre::UTFString s);
+		void setText(UTFString s);
 		/**
 		* Sets the text for this object.
 		*/
-		void setText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
+		void setText(UTFString s, const Font& font, const ColourValue& cv);
+		QUICKGUI_DEPRECATED("Use the overload that takes a Font from Root::getFont.")
+		void setText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv);
 		/**
 		* Sets the Text using Text Segments.
 		*/
@@ -272,12 +277,12 @@ namespace QuickGUI
 		* Searches text for c.  If allOccurrences is true, all characters of text matching c
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setTextColor(const ColourValue& cv, Ogre::UTFString::code_point c, bool allOccurrences);
+		void setTextColor(const ColourValue& cv, UTFString::code_point c, bool allOccurrences);
 		/**
 		* Searches text for s.  If allOccurrences is true, all sub strings of text matching s
 		* will be colored, otherwise only the first occurrence is colored.
 		*/
-		void setTextColor(const ColourValue& cv, Ogre::UTFString s, bool allOccurrences);
+		void setTextColor(const ColourValue& cv, UTFString s, bool allOccurrences);
 		/**
 		* Sets the Vertical alignment of Text as displayed within the TextBox area.
 		*/
@@ -285,7 +290,7 @@ namespace QuickGUI
 		/**
 		* Sets the "type" of the Text Cursor used.
 		*/
-		void setTextCursorSkinType(const Ogre::String type);
+		void setTextCursorSkinType(const std::string type);
 		/** Sets the input validator used to determine whether input is accepted.
             @param
                 function member function assigned to process input.  Given in the form of myClass::myFunction.
@@ -295,9 +300,9 @@ namespace QuickGUI
 				setTextInputValidator(myClass::myFunction,this);
 			@note
 				You may see Visual Studio give an error warning such as "error C2660: 'QuickGUI::TextBox::setTextInputValidator' : function does not take x arguments".
-				This is an incorrect error message.  Make sure your function pointer points to a function which returns bool, and takes parameters "Ogre::UTFString::code_point cp, unsigned int index, const Ogre::UTFString& currentText".
+				This is an incorrect error message.  Make sure your function pointer points to a function which returns bool, and takes parameters "UTFString::code_point cp, unsigned int index, const UTFString& currentText".
         */
-		template<typename T> void setTextInputValidator(bool (T::*TextInputValidator)(Ogre::UTFString::code_point cp, unsigned int index, const Ogre::UTFString& currentText), T* obj)
+		template<typename T> void setTextInputValidator(bool (T::*TextInputValidator)(UTFString::code_point cp, unsigned int index, const UTFString& currentText), T* obj)
 		{
 			if(mTextInputValidatorSlot != NULL)
 				OGRE_DELETE_T(mTextInputValidatorSlot,TextInputValidatorSlot,Ogre::MEMCATEGORY_GENERAL);
@@ -342,7 +347,7 @@ namespace QuickGUI
 		using Widget::setWidth;
 
 	protected:
-		TextBox(const Ogre::String& name);
+		TextBox(const std::string& name);
 		virtual ~TextBox();
 
 		Text* mText;
@@ -371,7 +376,7 @@ namespace QuickGUI
 		void keyDownTimerCallback();
 
 		/// Storing reference to font for quick use.
-		Ogre::FontPtr mCurrentFont;
+		const Font* mCurrentFont;
 
 		/// Timer that toggles cursor on and off.
 		Timer* mBlinkTimer;

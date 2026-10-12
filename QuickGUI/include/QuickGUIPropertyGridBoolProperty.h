@@ -21,11 +21,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "PropertyGridBoolPropertyDesc"; }
+		virtual std::string getClass() { return "PropertyGridBoolPropertyDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "PropertyGridBoolProperty"; }
+		virtual std::string getWidgetClass() { return "PropertyGridBoolProperty"; }
 
 		/**
 		* Restore properties to default values
@@ -61,7 +61,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* If the field is set "True", true is returned, false otherwise.
 		*/
@@ -73,7 +73,7 @@ namespace QuickGUI
 		void setProperty(bool b);
 
 	protected:
-		PropertyGridBoolProperty(const Ogre::String& name);
+		PropertyGridBoolProperty(const std::string& name);
 		virtual ~PropertyGridBoolProperty();
 
 		PropertyGridBoolPropertyDesc* mDesc;

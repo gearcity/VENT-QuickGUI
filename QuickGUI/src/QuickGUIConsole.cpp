@@ -10,9 +10,9 @@
 
 namespace QuickGUI
 {
-	const Ogre::String Console::BACKGROUND = "background";
-	const Ogre::String Console::TEXTBOX = "textbox";
-	const Ogre::String Console::TEXTAREA = "textarea";
+	const std::string Console::BACKGROUND = "background";
+	const std::string Console::TEXTBOX = "textbox";
+	const std::string Console::TEXTAREA = "textarea";
 
 	void Console::registerSkinDefinition()
 	{
@@ -59,7 +59,7 @@ namespace QuickGUI
 		b->IO("ConsoleLayout",&console_layout);
 	}
 
-	Console::Console(const Ogre::String& name) :
+	Console::Console(const std::string& name) :
 		ComponentWidget(name),
 		mConsoleInputHandlerSlot(NULL),
 		mDesc(NULL)
@@ -137,17 +137,17 @@ namespace QuickGUI
 		mInputBox->addWidgetEventHandler(WIDGET_EVENT_CHARACTER_KEY,function);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::addDisplayAreaText(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mDisplayArea->addText(s,fp,cv);
+		mDisplayArea->addText(s,font,cv);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void Console::addDisplayAreaText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
 		mDisplayArea->addText(s,fontName,cv);
 	}
 
-	void Console::addDisplayAreaText(Ogre::UTFString s)
+	void Console::addDisplayAreaText(UTFString s)
 	{
 		mDisplayArea->addText(s);
 	}
@@ -157,17 +157,17 @@ namespace QuickGUI
 		mDisplayArea->addText(segments);
 	}
 
-	void Console::addInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::addInputBoxText(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mInputBox->addText(s,fp,cv);
+		mInputBox->addText(s,font,cv);
 	}
 
-	void Console::addInputBoxText(Ogre::UTFString s, const Ogre::String& fontName, const ColourValue& cv)
+	void Console::addInputBoxText(UTFString s, const std::string& fontName, const ColourValue& cv)
 	{
-		addInputBoxText(s,Text::getFont(fontName),cv);
+		addInputBoxText(s,Root::getSingleton().getFont(fontName),cv);
 	}
 
-	void Console::addInputBoxText(Ogre::UTFString s)
+	void Console::addInputBoxText(UTFString s)
 	{
 		addInputBoxText(s,mDesc->console_inputBoxDefaultFontName,mDesc->console_inputBoxDefaultColor);
 	}
@@ -193,7 +193,7 @@ namespace QuickGUI
 			mDesc->sheet->setKeyboardListener(mInputBox);
 	}
 
-	Ogre::String Console::getClass()
+	std::string Console::getClass()
 	{
 		return "Console";
 	}
@@ -203,7 +203,7 @@ namespace QuickGUI
 		return mDesc->console_displayAreaHorizontalAlignment;
 	}
 
-	Ogre::UTFString Console::getDisplayAreaText()
+	UTFString Console::getDisplayAreaText()
 	{
 		return mDisplayArea->getText();
 	}
@@ -218,7 +218,7 @@ namespace QuickGUI
 		return mDesc->console_inputBoxDefaultColor;
 	}
 
-	Ogre::String Console::getInputBoxDefaultFont()
+	std::string Console::getInputBoxDefaultFont()
 	{
 		return mDesc->console_inputBoxDefaultFontName;
 	}
@@ -233,12 +233,12 @@ namespace QuickGUI
 		return mDesc->console_inputBoxHorizontalAlignment;
 	}
 
-	Ogre::UTFString Console::getInputBoxText()
+	UTFString Console::getInputBoxText()
 	{
 		return mInputBox->getText();
 	}
 
-	Ogre::String Console::getInputBoxTextCursorSkinType()
+	std::string Console::getInputBoxTextCursorSkinType()
 	{
 		return mDesc->console_inputBoxTextCursorDefaultSkinTypeName;
 	}
@@ -297,7 +297,7 @@ namespace QuickGUI
 		mInputBox->setDefaultColor(cv);
 	}
 
-	void Console::setInputBoxDefaultFont(const Ogre::String& fontName)
+	void Console::setInputBoxDefaultFont(const std::string& fontName)
 	{
 		mDesc->console_inputBoxDefaultFontName = fontName;
 
@@ -318,14 +318,14 @@ namespace QuickGUI
 		mInputBox->setHorizontalTextAlignment(a);
 	}
 
-	void Console::setInputBoxText(Ogre::UTFString s)
+	void Console::setInputBoxText(UTFString s)
 	{
-		setInputBoxText(s,Text::getFont(mDesc->console_inputBoxDefaultFontName),mDesc->console_inputBoxDefaultColor);
+		setInputBoxText(s,Root::getSingleton().getFont(mDesc->console_inputBoxDefaultFontName),mDesc->console_inputBoxDefaultColor);
 	}
 
-	void Console::setInputBoxText(Ogre::UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	void Console::setInputBoxText(UTFString s, const Font& font, const ColourValue& cv)
 	{
-		mInputBox->setText(s,fp,cv);
+		mInputBox->setText(s,font,cv);
 	}
 
 	void Console::setInputBoxText(std::vector<TextSegment> segments)
@@ -333,7 +333,7 @@ namespace QuickGUI
 		mInputBox->setText(segments);
 	}
 
-	void Console::setInputBoxTextCursorSkinType(const Ogre::String& skinTypeName)
+	void Console::setInputBoxTextCursorSkinType(const std::string& skinTypeName)
 	{
 		mDesc->console_inputBoxTextCursorDefaultSkinTypeName = skinTypeName;
 
@@ -347,10 +347,25 @@ namespace QuickGUI
 		_updateComponentDimensions();
 	}
 
-	void Console::setSkinType(const Ogre::String type)
+	void Console::setSkinType(const std::string type)
 	{
 		ComponentWidget::setSkinType(type);
 
 		_updateComponentDimensions();
+	}
+
+	void Console::addDisplayAreaText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addDisplayAreaText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void Console::addInputBoxText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		addInputBoxText(s,Root::getSingleton().getFont(fp->getName()),cv);
+	}
+
+	void Console::setInputBoxText(UTFString s, Ogre::FontPtr fp, const ColourValue& cv)
+	{
+		setInputBoxText(s,Root::getSingleton().getFont(fp->getName()),cv);
 	}
 }

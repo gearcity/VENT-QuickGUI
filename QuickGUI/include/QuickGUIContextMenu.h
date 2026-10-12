@@ -34,11 +34,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "ContextMenuDesc"; }
+		virtual std::string getClass() { return "ContextMenuDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "ContextMenu"; }
+		virtual std::string getWidgetClass() { return "ContextMenu"; }
 
 		/**
 		* Restore properties to default values
@@ -82,7 +82,7 @@ namespace QuickGUI
 		* Creates a Child MenuImageItem.
 		*/
 		MenuImageItem* createImageItem(int index = -1);
-		MenuImageItem* createImageItem(const Ogre::String& skin, int index = -1);
+		MenuImageItem* createImageItem(const std::string& skin, int index = -1);
 		/**
 		* Creates a Child MenuItem.
 		*/
@@ -90,13 +90,13 @@ namespace QuickGUI
 		/**
 		* Creates a Child MenuTextItem.
 		*/
-		MenuTextItem* createTextItem(const Ogre::UTFString& text, int index = -1);
+		MenuTextItem* createTextItem(const UTFString& text, int index = -1);
 		MenuTextItem* createTextItem(std::vector<TextSegment> segments, int index = -1);
 		MenuTextItem* createTextItem(int index = -1);
 		/**
 		* Creates a Child Menu.
 		*/
-		Menu* createSubMenu(const Ogre::UTFString& text, int index = -1);
+		Menu* createSubMenu(const UTFString& text, int index = -1);
 		Menu* createSubMenu(std::vector<TextSegment> segments, int index = -1);
 		Menu* createSubMenu(int index = -1);
 
@@ -109,7 +109,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the Item at the index given.  If the index is invalid,
 		* NULL is returned.
@@ -155,7 +155,7 @@ namespace QuickGUI
 		void show(const Point& position);
 
 	protected:
-		ContextMenu(const Ogre::String& name);
+		ContextMenu(const std::string& name);
 		virtual ~ContextMenu();
 
 		ContextMenuDesc* mDesc;

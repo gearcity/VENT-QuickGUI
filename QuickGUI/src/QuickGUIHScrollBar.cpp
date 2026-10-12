@@ -10,12 +10,12 @@
 
 namespace QuickGUI
 {
-	const Ogre::String HScrollBar::BAR = "bar";
-	const Ogre::String HScrollBar::LEFT1 = "left1";
-	const Ogre::String HScrollBar::LEFT2 = "left2";
-	const Ogre::String HScrollBar::RIGHT1 = "right1";
-	const Ogre::String HScrollBar::RIGHT2 = "right2";
-	const Ogre::String HScrollBar::SLIDER = "slider";
+	const std::string HScrollBar::BAR = "bar";
+	const std::string HScrollBar::LEFT1 = "left1";
+	const std::string HScrollBar::LEFT2 = "left2";
+	const std::string HScrollBar::RIGHT1 = "right1";
+	const std::string HScrollBar::RIGHT2 = "right2";
+	const std::string HScrollBar::SLIDER = "slider";
 
 	void HScrollBar::registerSkinDefinition()
 	{
@@ -82,7 +82,7 @@ namespace QuickGUI
 		}
 	}
 
-	HScrollBar::HScrollBar(const Ogre::String& name) :
+	HScrollBar::HScrollBar(const std::string& name) :
 		ComponentWidget(name),
 		mButton_Left1(NULL),
 		mButton_Left2(NULL),
@@ -337,7 +337,7 @@ namespace QuickGUI
 		setPercentage(hsd->hscrollbar_sliderPercentage);
 	}
 
-	void HScrollBar::addUserDefinedScrollBarEventHandler(ScrollBarEvent EVENT, const Ogre::String& handlerName)
+	void HScrollBar::addUserDefinedScrollBarEventHandler(ScrollBarEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->hscrollbar_userHandlers[EVENT] = handlerName;
 	}
@@ -385,7 +385,7 @@ namespace QuickGUI
 		return mDesc->hscrollbar_buttonScrollPercent;
 	}
 
-	Ogre::String HScrollBar::getClass()
+	std::string HScrollBar::getClass()
 	{
 		return "HScrollBar";
 	}
@@ -517,7 +517,7 @@ namespace QuickGUI
         }
 	}
 
-	void HScrollBar::setSkinType(const Ogre::String type)
+	void HScrollBar::setSkinType(const std::string type)
 	{
 		if(!SkinTypeManager::getSingleton().hasSkinType(getClass(),type))
 			throw Exception(Exception::ERR_SKINNING,"SkinType \"" + type + "\" does not exist!","Widget::_setSkinType");
@@ -527,10 +527,10 @@ namespace QuickGUI
 
 		mWidgetDesc->widget_skinTypeName = type;
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 #endif
 		// Update client dimensions
@@ -651,12 +651,12 @@ namespace QuickGUI
 		return hiddenInt;
 	}
 
-	void HScrollBar::setHiddenString(Ogre::String str)
+	void HScrollBar::setHiddenString(std::string str)
 	{
 		hiddenString = str;
 	}
 
-	Ogre::String HScrollBar::getHiddenString()
+	std::string HScrollBar::getHiddenString()
 	{
 		return hiddenString;
 	}

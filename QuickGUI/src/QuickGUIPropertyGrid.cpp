@@ -11,12 +11,12 @@
 
 namespace QuickGUI
 {
-	const Ogre::String PropertyGrid::BACKGROUND = "background";
-	const Ogre::String PropertyGrid::EXPAND = "expand";
-	const Ogre::String PropertyGrid::MINIMIZE = "minimize";
-	const Ogre::String PropertyGrid::TEXTFIELD = "textfield";
-	const Ogre::String PropertyGrid::BOOLFIELD = "boolfield";
-	const Ogre::String PropertyGrid::MULTIFIELD = "multifield";
+	const std::string PropertyGrid::BACKGROUND = "background";
+	const std::string PropertyGrid::EXPAND = "expand";
+	const std::string PropertyGrid::MINIMIZE = "minimize";
+	const std::string PropertyGrid::TEXTFIELD = "textfield";
+	const std::string PropertyGrid::BOOLFIELD = "boolfield";
+	const std::string PropertyGrid::MULTIFIELD = "multifield";
 
 	void PropertyGrid::registerSkinDefinition()
 	{
@@ -80,7 +80,7 @@ namespace QuickGUI
 		}
 	}
 
-	PropertyGrid::PropertyGrid(const Ogre::String& name) :
+	PropertyGrid::PropertyGrid(const std::string& name) :
 		ContainerWidget(name),
 		mSelectedProperty(NULL),
 		mDesc(NULL)
@@ -167,7 +167,7 @@ namespace QuickGUI
 			setItemHeight(textHeight);
 	}
 
-	void PropertyGrid::addUserDefinedPropertyGridEventHandler(PropertyGridEvent EVENT, const Ogre::String& handlerName)
+	void PropertyGrid::addUserDefinedPropertyGridEventHandler(PropertyGridEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->propertygrid_userHandlers[EVENT] = handlerName;
 	}
@@ -198,7 +198,7 @@ namespace QuickGUI
 		return createSection("Section",index);
 	}
 
-	PropertyGridSection* PropertyGrid::createSection(const Ogre::UTFString& text, int index)
+	PropertyGridSection* PropertyGrid::createSection(const UTFString& text, int index)
 	{
 		PropertyGridSectionDesc* d = DescManager::getSingletonPtr()->getDefaultPropertyGridSectionDesc();
 		d->resetToDefault();
@@ -242,17 +242,17 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String PropertyGrid::getBoolFieldSkin()
+	std::string PropertyGrid::getBoolFieldSkin()
 	{
 		return mSkinType->getSkinReference(BOOLFIELD)->typeName;
 	}
 
-	Ogre::String PropertyGrid::getClass()
+	std::string PropertyGrid::getClass()
 	{
 		return "PropertyGrid";
 	}
 
-	Ogre::String PropertyGrid::getComboBoxFieldSkin()
+	std::string PropertyGrid::getComboBoxFieldSkin()
 	{
 		return mSkinType->getSkinReference(MULTIFIELD)->typeName;
 	}
@@ -262,7 +262,7 @@ namespace QuickGUI
 		return mDesc->propertygrid_doubleClickToToggle;
 	}
 
-	Ogre::String PropertyGrid::getExpandSkinTypeName()
+	std::string PropertyGrid::getExpandSkinTypeName()
 	{
 		return mSkinType->getSkinReference(EXPAND)->typeName;
 	}
@@ -277,7 +277,7 @@ namespace QuickGUI
 		return static_cast<int>(mSections.size());
 	}
 
-	Ogre::String PropertyGrid::getMinimizeSkinTypeName()
+	std::string PropertyGrid::getMinimizeSkinTypeName()
 	{
 		return mSkinType->getSkinReference(MINIMIZE)->typeName;
 	}
@@ -299,7 +299,7 @@ namespace QuickGUI
 		return list;
 	}
 
-	Ogre::String PropertyGrid::getTextFieldSkin()
+	std::string PropertyGrid::getTextFieldSkin()
 	{
 		return mSkinType->getSkinReference(TEXTFIELD)->typeName;
 	}
@@ -417,7 +417,7 @@ namespace QuickGUI
 		_setScrollY(mVScrollBar->getPercentage());
 	}
 
-	void PropertyGrid::setSkinType(const Ogre::String type)
+	void PropertyGrid::setSkinType(const std::string type)
 	{
 		ContainerWidget::setSkinType(type);
 

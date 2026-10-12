@@ -28,16 +28,16 @@ namespace QuickGUI
 		bool propertygrid_keyNavigation;
 		float propertygrid_propertyFieldWidth;
 		float propertygrid_itemHeight;
-		Ogre::String propertygrid_userHandlers[PROPERTYGRID_EVENT_COUNT];
+		std::string propertygrid_userHandlers[PROPERTYGRID_EVENT_COUNT];
 
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "PropertyGridDesc"; }
+		virtual std::string getClass() { return "PropertyGridDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "PropertyGrid"; }
+		virtual std::string getWidgetClass() { return "PropertyGrid"; }
 
 		/**
 		* Restore properties to default values
@@ -56,12 +56,12 @@ namespace QuickGUI
 	public:
 	public:
 		// Skin Constants
-		static const Ogre::String BACKGROUND;
-		static const Ogre::String EXPAND;
-		static const Ogre::String MINIMIZE;
-		static const Ogre::String TEXTFIELD;
-		static const Ogre::String BOOLFIELD;
-		static const Ogre::String MULTIFIELD;
+		static const std::string BACKGROUND;
+		static const std::string EXPAND;
+		static const std::string MINIMIZE;
+		static const std::string TEXTFIELD;
+		static const std::string BOOLFIELD;
+		static const std::string MULTIFIELD;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 	public:
@@ -85,7 +85,7 @@ namespace QuickGUI
 		* NOTE: A handler of "" essentially removes the handler.
 		* NOTE: If no eventHandler exists with the name provided, nothing will happen.
 		*/
-		void addUserDefinedPropertyGridEventHandler(PropertyGridEvent EVENT, const Ogre::String& handlerName);
+		void addUserDefinedPropertyGridEventHandler(PropertyGridEvent EVENT, const std::string& handlerName);
 		/** Adds an event handler to this widget
 			@param
 				EVENT Defined widget events, for example: WIDGET_EVENT_SIZE_CHANGED, WIDGET_EVENT_MOUSE_WHEEL, etc.
@@ -117,7 +117,7 @@ namespace QuickGUI
 		* NOTE: if the index is not valid, the Section is added to the end of the list.
 		*/
 		PropertyGridSection* createSection(int index = -1);
-		PropertyGridSection* createSection(const Ogre::UTFString& text, int index = -1);
+		PropertyGridSection* createSection(const UTFString& text, int index = -1);
 		PropertyGridSection* createSection(std::vector<TextSegment> segments, int index = -1);
 
 		/**
@@ -129,15 +129,15 @@ namespace QuickGUI
 		/**
 		* Returns the skin name of all Boolean ComboBox fields.
 		*/
-		Ogre::String getBoolFieldSkin();
+		std::string getBoolFieldSkin();
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the skin name of all ComboBox fields.
 		*/
-		Ogre::String getComboBoxFieldSkin();
+		std::string getComboBoxFieldSkin();
 		/**
 		* Returns true if double clicking on a node will toggle its state, false otherwise.
 		*/
@@ -145,7 +145,7 @@ namespace QuickGUI
 		/**
 		* Returns the name of the skinType used to draw nodes in expanded form.
 		*/
-		Ogre::String getExpandSkinTypeName();
+		std::string getExpandSkinTypeName();
 		/**
 		* Returns true if up/down keys will select previous/next node and left/right expands/minimizes node, false otherwise.
 		*/
@@ -153,7 +153,7 @@ namespace QuickGUI
 		/**
 		* Returns the name of the skinType used to draw nodes in minimized form.
 		*/
-		Ogre::String getMinimizeSkinTypeName();
+		std::string getMinimizeSkinTypeName();
 		/**
 		* Gets the height of every created or existing Item in this PropertyGrid.
 		*/
@@ -181,7 +181,7 @@ namespace QuickGUI
 		/**
 		* Returns the skin name of all TextBox fields.
 		*/
-		Ogre::String getTextFieldSkin();
+		std::string getTextFieldSkin();
 
 		/**
 		* Sets whether double clicking on a node will toggle is state.
@@ -209,7 +209,7 @@ namespace QuickGUI
 		* can create several types of Button widgets: "close", "add", "fire.skill.1", etc.
 		* NOTE: The type property determines what is drawn to the screen.
 		*/
-		virtual void setSkinType(const Ogre::String type);
+		virtual void setSkinType(const std::string type);
 
 		/**
 		* Recursively updates property positions and indices.
@@ -221,7 +221,7 @@ namespace QuickGUI
 		virtual void updateVirtualDimensions();
 
 	protected:
-		PropertyGrid(const Ogre::String& name);
+		PropertyGrid(const std::string& name);
 		virtual ~PropertyGrid();
 
 		PropertyGridDesc* mDesc;

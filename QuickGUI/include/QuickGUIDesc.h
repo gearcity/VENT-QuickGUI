@@ -21,7 +21,7 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "Desc"; }
+		virtual std::string getClass() { return "Desc"; }
 
 		/**
 		* Outlines how the desc class is written to XML and read from XML.

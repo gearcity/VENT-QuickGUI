@@ -23,15 +23,15 @@ namespace QuickGUI
 	SkinTypeManager::~SkinTypeManager()
 	{
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		for(std::unordered_map<std::string, std::unordered_map<std::string,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
-			for(std::unordered_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<std::string,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 				OGRE_DELETE_T((*it2).second,SkinType,Ogre::MEMCATEGORY_GENERAL);
 		}
 #else
-		for(std::map<Ogre::String, std::map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		for(std::map<std::string, std::map<std::string,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
-			for(std::map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::map<std::string,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 				OGRE_DELETE_T((*it2).second,SkinType,Ogre::MEMCATEGORY_GENERAL);
 		}
 #endif
@@ -49,7 +49,7 @@ namespace QuickGUI
 		return ( *msSingleton ); 
 	}
 
-	void SkinTypeManager::addSkinType(const Ogre::String& className, const Ogre::String& typeName, SkinType* t)
+	void SkinTypeManager::addSkinType(const std::string& className, const std::string& typeName, SkinType* t)
 	{
 		if(hasSkinType(className,typeName))
 			throw Exception(Exception::ERR_SKINNING,"SkinType already exists for class \"" + className + "\" and type \"" + typeName + "\"!","SkinTypeManager::addSkinType");
@@ -63,7 +63,7 @@ namespace QuickGUI
 		mSkinTypes[className][typeName] = t;
 	}
 
-	SkinType* SkinTypeManager::getSkinType(const Ogre::String& className, const Ogre::String& typeName)
+	SkinType* SkinTypeManager::getSkinType(const std::string& className, const std::string& typeName)
 	{
 		if(!hasSkinType(className,typeName))
 			throw Exception(Exception::ERR_SKINNING,"SkinType does not exist for class \"" + className + "\" and type \"" + typeName + "\"!","SkinTypeManager::getSkinType");
@@ -71,7 +71,7 @@ namespace QuickGUI
 		return mSkinTypes[className][typeName];
 	}
 
-	bool SkinTypeManager::hasSkinType(const Ogre::String& className, const Ogre::String& typeName)
+	bool SkinTypeManager::hasSkinType(const std::string& className, const std::string& typeName)
 	{
 		if(mSkinTypes.find(className) == mSkinTypes.end())
 			return false;
@@ -94,8 +94,8 @@ namespace QuickGUI
 		// Iterate through all found skin definitions, and create SkinTypes for them
 		for(std::list<ScriptDefinition*>::iterator it = defList.begin(); it != defList.end(); ++it)
 		{
-			Ogre::String className = (*it)->getType();
-			Ogre::String skinTypeName = (*it)->getID();
+			std::string className = (*it)->getType();
+			std::string skinTypeName = (*it)->getID();
 
 			sr->begin(className,skinTypeName);
 
@@ -111,27 +111,27 @@ namespace QuickGUI
 		}
 	}
 
-	void SkinTypeManager::saveTypesToFile(const Ogre::String& fileName)
+	void SkinTypeManager::saveTypesToFile(const std::string& fileName)
 	{
 		ScriptWriter::getSingletonPtr()->begin(fileName);
 
 		SerialWriter* sw = SerialWriter::getSingletonPtr();
 
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String, std::unordered_map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+		for(std::unordered_map<std::string, std::unordered_map<std::string,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
 			sw->begin("SkinClass",(*it1).first);
-			for(std::unordered_map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::unordered_map<std::string,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 			{
 				(*it2).second->serialize(sw);
 			}
 			sw->end();
 		}
 #else
-			for(std::map<Ogre::String, std::map<Ogre::String,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
+			for(std::map<std::string, std::map<std::string,SkinType*> >::iterator it1 = mSkinTypes.begin(); it1 != mSkinTypes.end(); ++it1)
 		{
 			sw->begin("SkinClass",(*it1).first);
-			for(std::map<Ogre::String,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
+			for(std::map<std::string,SkinType*>::iterator it2 = (*it1).second.begin(); it2 != (*it1).second.end(); ++it2)
 			{
 				(*it2).second->serialize(sw);
 			}

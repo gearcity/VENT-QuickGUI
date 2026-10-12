@@ -6,12 +6,12 @@
 
 namespace QuickGUI
 {
-	const Ogre::String RadioButton::SELECTED = "selected";
-	const Ogre::String RadioButton::SELECTED_DOWN = "selected_down";
-	const Ogre::String RadioButton::SELECTED_OVER = "selected_over";
-	const Ogre::String RadioButton::UNSELECTED = "unselected";
-	const Ogre::String RadioButton::UNSELECTED_DOWN = "unselected_down";
-	const Ogre::String RadioButton::UNSELECTED_OVER = "unselected_over";
+	const std::string RadioButton::SELECTED = "selected";
+	const std::string RadioButton::SELECTED_DOWN = "selected_down";
+	const std::string RadioButton::SELECTED_OVER = "selected_over";
+	const std::string RadioButton::UNSELECTED = "unselected";
+	const std::string RadioButton::UNSELECTED_DOWN = "unselected_down";
+	const std::string RadioButton::UNSELECTED_OVER = "unselected_over";
 
 	void RadioButton::registerSkinDefinition()
 	{
@@ -70,7 +70,7 @@ namespace QuickGUI
 		}
 	}
 
-	RadioButton::RadioButton(const Ogre::String& name) :
+	RadioButton::RadioButton(const std::string& name) :
 		Widget(name)
 	{
 		Widget::addWidgetEventHandler(WIDGET_EVENT_MOUSE_ENTER,&RadioButton::onMouseEnter,this);
@@ -105,7 +105,7 @@ namespace QuickGUI
 			select();
 	}
 
-	void RadioButton::addUserDefinedRadioButtonEventHandler(RadioButtonEvent EVENT, const Ogre::String& handlerName)
+	void RadioButton::addUserDefinedRadioButtonEventHandler(RadioButtonEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->radiobutton_userHandlers[EVENT] = handlerName;
 	}
@@ -120,7 +120,7 @@ namespace QuickGUI
 		mDesc->radiobutton_userHandlers[EVENT] = "";
 	}
 
-	Ogre::String RadioButton::getClass()
+	std::string RadioButton::getClass()
 	{
 		return "RadioButton";
 	}

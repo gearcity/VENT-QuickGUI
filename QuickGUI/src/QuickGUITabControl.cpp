@@ -13,7 +13,7 @@
 
 namespace QuickGUI
 {
-	const Ogre::String TabControl::BACKGROUND = "background";
+	const std::string TabControl::BACKGROUND = "background";
 
 	void TabControl::registerSkinDefinition()
 	{
@@ -24,7 +24,7 @@ namespace QuickGUI
 		SkinDefinitionManager::getSingleton().registerSkinDefinition("TabControl",d);
 	}
 
-	TabControl::TabControl(const Ogre::String& name) :
+	TabControl::TabControl(const std::string& name) :
 		ContainerWidget(name),
 		mSelectedTab(NULL)
 	{
@@ -112,7 +112,7 @@ namespace QuickGUI
 		selectTabPage(p);
 	}
 
-	void TabControl::addUserDefinedTabControlEventHandler(TabControlEvent EVENT, const Ogre::String& handlerName)
+	void TabControl::addUserDefinedTabControlEventHandler(TabControlEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->tabcontrol_userHandlers[EVENT] = handlerName;
 	}
@@ -150,7 +150,7 @@ namespace QuickGUI
 		return p;
 	}
 
-	TabPage* TabControl::createTabPage(const Ogre::UTFString& text, int index)
+	TabPage* TabControl::createTabPage(const UTFString& text, int index)
 	{
 		TabPageDesc* d = DescManager::getSingletonPtr()->getDefaultTabPageDesc();
 		d->resetToDefault();
@@ -176,7 +176,7 @@ namespace QuickGUI
 		return p;
 	}
 
-	TabPage* TabControl::createTabPageWithIcon(const Ogre::String& imageName, int index)
+	TabPage* TabControl::createTabPageWithIcon(const std::string& imageName, int index)
 	{
 		TabPageDesc* d = DescManager::getSingletonPtr()->getDefaultTabPageDesc();
 		d->resetToDefault();
@@ -190,7 +190,7 @@ namespace QuickGUI
 		return p;
 	}
 
-	TabPage* TabControl::createTabPageWithIcon(const Ogre::String& imageName, const Ogre::UTFString& text, int index)
+	TabPage* TabControl::createTabPageWithIcon(const std::string& imageName, const UTFString& text, int index)
 	{
 		TabPageDesc* d = DescManager::getSingletonPtr()->getDefaultTabPageDesc();
 		d->resetToDefault();
@@ -204,7 +204,7 @@ namespace QuickGUI
 		return p;
 	}
 
-	TabPage* TabControl::createTabPageWithIcon(const Ogre::String& imageName, std::vector<TextSegment> segments, int index)
+	TabPage* TabControl::createTabPageWithIcon(const std::string& imageName, std::vector<TextSegment> segments, int index)
 	{
 		TabPageDesc* d = DescManager::getSingletonPtr()->getDefaultTabPageDesc();
 		d->resetToDefault();
@@ -308,9 +308,9 @@ namespace QuickGUI
 			return NULL;
 
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 		{
 			Widget* w = (*it).second->findWidgetAtPoint(p,ignoreDisabled);
@@ -361,7 +361,7 @@ namespace QuickGUI
 		return userDefinedEventFired;
 	}
 
-	Ogre::String TabControl::getClass()
+	std::string TabControl::getClass()
 	{
 		return "TabControl";
 	}

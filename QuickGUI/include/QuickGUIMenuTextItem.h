@@ -23,11 +23,11 @@ namespace QuickGUI
 		/**
 		* Returns the class of Desc object this is.
 		*/
-		virtual Ogre::String getClass() { return "MenuTextItemDesc"; }
+		virtual std::string getClass() { return "MenuTextItemDesc"; }
 		/**
 		* Returns the class of Widget this desc object is meant for.
 		*/
-		virtual Ogre::String getWidgetClass() { return "MenuTextItem"; }
+		virtual std::string getWidgetClass() { return "MenuTextItem"; }
 
 		/**
 		* Restore properties to default values
@@ -46,9 +46,9 @@ namespace QuickGUI
 	{
 	public:
 		// Skin Constants
-		static const Ogre::String DEFAULT;
-		static const Ogre::String DOWN;
-		static const Ogre::String OVER;
+		static const std::string DEFAULT;
+		static const std::string DOWN;
+		static const std::string OVER;
 		// Define Skin Structure
 		static void registerSkinDefinition();
 
@@ -64,7 +64,7 @@ namespace QuickGUI
 		/**
 		* Returns the class name of this Widget.
 		*/
-		virtual Ogre::String getClass();
+		virtual std::string getClass();
 		/**
 		* Returns the vertical alignment of text within this widget's client area.
 		*/
@@ -76,7 +76,7 @@ namespace QuickGUI
 		void setVerticalTextAlignment(VerticalTextAlignment a);
 
 	protected:
-		MenuTextItem(const Ogre::String& name);
+		MenuTextItem(const std::string& name);
 		virtual ~MenuTextItem();
 
 		MenuTextItemDesc* mDesc;

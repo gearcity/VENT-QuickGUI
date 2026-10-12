@@ -10,12 +10,12 @@
 
 namespace QuickGUI
 {
-	const Ogre::String VScrollBar::BAR = "bar";
-	const Ogre::String VScrollBar::UP1 = "up1";
-	const Ogre::String VScrollBar::UP2 = "up2";
-	const Ogre::String VScrollBar::DOWN1 = "down1";
-	const Ogre::String VScrollBar::DOWN2 = "down2";
-	const Ogre::String VScrollBar::SLIDER = "slider";
+	const std::string VScrollBar::BAR = "bar";
+	const std::string VScrollBar::UP1 = "up1";
+	const std::string VScrollBar::UP2 = "up2";
+	const std::string VScrollBar::DOWN1 = "down1";
+	const std::string VScrollBar::DOWN2 = "down2";
+	const std::string VScrollBar::SLIDER = "slider";
 
 	void VScrollBar::registerSkinDefinition()
 	{
@@ -82,7 +82,7 @@ namespace QuickGUI
 		}
 	}
 
-	VScrollBar::VScrollBar(const Ogre::String& name) :
+	VScrollBar::VScrollBar(const std::string& name) :
 		ComponentWidget(name),
 		mButton_Up1(NULL),
 		mButton_Up2(NULL),
@@ -336,7 +336,7 @@ namespace QuickGUI
 		setPercentage(vsd->vscrollbar_sliderPercentage);
 	}
 
-	void VScrollBar::addUserDefinedScrollBarEventHandler(ScrollBarEvent EVENT, const Ogre::String& handlerName)
+	void VScrollBar::addUserDefinedScrollBarEventHandler(ScrollBarEvent EVENT, const std::string& handlerName)
 	{
 		mDesc->vscrollbar_userHandlers[EVENT] = handlerName;
 	}
@@ -384,7 +384,7 @@ namespace QuickGUI
 		return mDesc->vscrollbar_buttonScrollPercent;
 	}
 
-	Ogre::String VScrollBar::getClass()
+	std::string VScrollBar::getClass()
 	{
 		return "VScrollBar";
 	}
@@ -524,7 +524,7 @@ namespace QuickGUI
 		fireScrollBarEvent(SCROLLBAR_EVENT_ON_SCROLLED,args);
 	}
 
-	void VScrollBar::setSkinType(const Ogre::String type)
+	void VScrollBar::setSkinType(const std::string type)
 	{
 		if(!SkinTypeManager::getSingleton().hasSkinType(getClass(),type))
 			throw Exception(Exception::ERR_SKINNING,"SkinType \"" + type + "\" does not exist!","Widget::_setSkinType");
@@ -535,9 +535,9 @@ namespace QuickGUI
 		mWidgetDesc->widget_skinTypeName = type;
 
 #if USEHASHMAPS
-		for(std::unordered_map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::unordered_map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #else
-		for(std::map<Ogre::String,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
+		for(std::map<std::string,Widget*>::iterator it = mComponents.begin(); it != mComponents.end(); ++it)
 #endif		
 			(*it).second->setSkinType(mSkinType->getSkinReference((*it).first)->typeName);
 

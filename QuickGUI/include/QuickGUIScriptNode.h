@@ -11,29 +11,29 @@ namespace QuickGUI
 	class _QuickGUIExport ScriptNode
 	{
 	public:
-		ScriptNode(ScriptNode* parent, const Ogre::String& name = "untitled");
+		ScriptNode(ScriptNode* parent, const std::string& name = "untitled");
 		~ScriptNode();
 
-		ScriptNode* addChild(const Ogre::String& name = "untitled");
+		ScriptNode* addChild(const std::string& name = "untitled");
 		void addValue(const std::string& value);
 
 		void clearValues();
 
-		ScriptNode* findChild(const Ogre::String& name, bool recursive = false);
+		ScriptNode* findChild(const std::string& name, bool recursive = false);
 
 		std::vector<ScriptNode*>& getChildren();
-		Ogre::String getName();
+		std::string getName();
 		ScriptNode* getParent();
 		ScriptNode* getSibling();
-		Ogre::StringVector& getValues();
+		std::vector<std::string>& getValues();
 
-		void setName(const Ogre::String& name);
+		void setName(const std::string& name);
 		void setParent(ScriptNode* newParent);
 
 	protected:
 	private:
 		std::string name;
-		Ogre::StringVector values;
+		std::vector<std::string> values;
 		std::vector<ScriptNode*> children;
 		ScriptNode* parent;
 
