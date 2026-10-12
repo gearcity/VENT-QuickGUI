@@ -46,74 +46,9 @@ namespace QuickGUI
 		virtual void begin(Brush& b) = 0;
 		/// Called after the render target has been set on the render system.
 		virtual void retarget(Brush& b) = 0;
-		virtual void blend(Brush& b, const BlendFactors& f) = 0;
-		virtual void filter(Brush& b, BrushFilterMode m) = 0;
-		/// Binds the texture the Brush draws with.
-		virtual void texture(Brush& b) = 0;
-	};
 
-	/// Sets state directly on the render system, for render systems with a fixed-function pipeline.
-	class Brush::FixedFunctionStrategy :
-		public Brush::RenderStrategy
-	{
-	public:
-		void begin(Brush& b)
-		{
-			b._applyFixedFunctionDefaults();
-			b._applyPassState();
-		}
-
-		void retarget(Brush& b)
-		{
-			b.mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
-		}
-
-		void blend(Brush& b, const BlendFactors& f)
-		{
-			b.mRenderSystem->_setSeparateSceneBlending(f.sourceColour, f.destColour, f.sourceAlpha, f.destAlpha);
-		}
-
-		void filter(Brush& b, BrushFilterMode m)
-		{
-			Ogre::TextureManager* tm = Ogre::TextureManager::getSingletonPtr();
-
-			switch(m)
-			{
-			case BRUSHFILTER_NONE:
-				tm->getDefaultSampler()->setFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
-				break;
-			case BRUSHFILTER_NEAREST:
-				tm->getDefaultSampler()->setFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_POINT);
-				break;
-			case BRUSHFILTER_LINEAR:
-				tm->getDefaultSampler()->setFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT);
-				break;
-			}
-
-			b.mRenderSystem->_setSampler(0, *tm->getDefaultSampler());
-		}
-
-		void texture(Brush& b)
-		{
-			b.mRenderSystem->_setTexture(0, true, b.mTexture);
-		}
-	};
-
-	/// Draws through GLSL programs set on the material pass, for render systems that have no fixed-function pipeline.
-	class Brush::GlslStrategy :
-		public Brush::RenderStrategy
-	{
-	public:
-		void begin(Brush& b)
-		{
-			b._applyPassState();
-		}
-
-		void retarget(Brush& b)
-		{
-			b._applyPassState();
-		}
-
+		/// The blend factors, filtering and texture are set on the material pass, which Ogre puts on the render
+		/// system itself, so the texture and its sampler are always applied together, in Ogre's order.
 		void blend(Brush& b, const BlendFactors& f)
 		{
 			b.mGUIPass->setSeparateSceneBlending(f.sourceColour, f.destColour, f.sourceAlpha, f.destAlpha);
@@ -156,6 +91,39 @@ namespace QuickGUI
 #endif
 			}
 
+			b._applyPassState();
+		}
+	};
+
+	/// Sets state directly on the render system, for render systems with a fixed-function pipeline.
+	class Brush::FixedFunctionStrategy :
+		public Brush::RenderStrategy
+	{
+	public:
+		void begin(Brush& b)
+		{
+			b._applyFixedFunctionDefaults();
+			b._applyPassState();
+		}
+
+		void retarget(Brush& b)
+		{
+			b.mRenderSystem->_setCullingMode(Ogre::CULL_NONE);
+		}
+	};
+
+	/// Draws through GLSL programs set on the material pass, for render systems that have no fixed-function pipeline.
+	class Brush::GlslStrategy :
+		public Brush::RenderStrategy
+	{
+	public:
+		void begin(Brush& b)
+		{
+			b._applyPassState();
+		}
+
+		void retarget(Brush& b)
+		{
 			b._applyPassState();
 		}
 	};
